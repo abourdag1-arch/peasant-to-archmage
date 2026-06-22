@@ -3,570 +3,945 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#0f172a" />
-  <title>Peasant to Archmage</title>
+  <meta name="theme-color" content="#07111f" />
+  <title>Peasant to Archmage V2</title>
   <style>
     :root {
-      --bg: #020617;
-      --panel: rgba(15, 23, 42, 0.9);
-      --panel2: rgba(30, 41, 59, 0.9);
-      --line: rgba(255,255,255,0.10);
-      --line2: rgba(125,211,252,0.25);
-      --text: #e2e8f0;
-      --muted: #94a3b8;
-      --good: #34d399;
-      --warn: #f59e0b;
-      --bad: #fb7185;
-      --accent: #38bdf8;
-      --accent2: #c084fc;
-      --shadow: 0 18px 40px rgba(0,0,0,0.35);
-      --radius: 22px;
+      --bg: #040812;
+      --panel: rgba(13, 23, 40, 0.92);
+      --panel-soft: rgba(22, 36, 61, 0.72);
+      --card: rgba(5, 12, 25, 0.78);
+      --line: rgba(255, 255, 255, 0.11);
+      --line-bright: rgba(125, 211, 252, 0.34);
+      --text: #e5edf8;
+      --muted: #98a8bd;
+      --muted2: #718096;
+      --blue: #38bdf8;
+      --purple: #c084fc;
+      --green: #34d399;
+      --amber: #f59e0b;
+      --red: #fb7185;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.36);
+      --radius: 24px;
     }
+
     * { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; background: radial-gradient(1200px 800px at 20% 0%, rgba(56,189,248,0.18), transparent 40%), radial-gradient(1200px 800px at 80% 10%, rgba(192,132,252,0.16), transparent 35%), var(--bg); color: var(--text); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-    body { min-height: 100vh; }
-    button { font: inherit; }
-    .wrap { max-width: 1200px; margin: 0 auto; padding: 12px 12px 28px; padding-bottom: calc(28px + env(safe-area-inset-bottom)); }
-    .hero, .panel { background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03)); border: 1px solid var(--line); border-radius: calc(var(--radius) + 6px); box-shadow: var(--shadow); backdrop-filter: blur(12px); }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      background:
+        radial-gradient(900px 520px at 10% 0%, rgba(56, 189, 248, 0.18), transparent 55%),
+        radial-gradient(850px 520px at 90% 8%, rgba(192, 132, 252, 0.16), transparent 52%),
+        linear-gradient(180deg, #06101f 0%, var(--bg) 58%, #030712 100%);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overscroll-behavior: none;
+    }
+
+    button, input { font: inherit; }
+    button { -webkit-tap-highlight-color: transparent; }
+
+    .app {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      padding: 12px 12px calc(26px + env(safe-area-inset-bottom));
+    }
+
+    .hero, .panel {
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.062), rgba(255,255,255,0.028));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      border-radius: calc(var(--radius) + 4px);
+    }
+
     .hero { padding: 16px; }
-    .top { display: flex; flex-wrap: wrap; gap: 12px; align-items: start; justify-content: space-between; }
-    .eyebrow { font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: #7dd3fc; margin-bottom: 8px; }
-    h1 { margin: 0; font-size: clamp(1.45rem, 4vw, 2.4rem); line-height: 1.05; }
-    .subtitle { color: var(--muted); margin-top: 8px; max-width: 70ch; }
-    .pill { display: inline-flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 999px; background: rgba(2,6,23,0.6); border: 1px solid var(--line); color: var(--muted); font-size: 12px; }
-    .hero-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
-    .stat { background: rgba(2,6,23,0.55); border: 1px solid var(--line); border-radius: 18px; padding: 12px; min-height: 72px; }
-    .stat .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.18em; color: var(--muted); }
-    .stat .value { font-size: 1.4rem; margin-top: 6px; font-weight: 700; }
-    .stat .sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
-    .grid { display: grid; gap: 12px; margin-top: 12px; }
-    .cols { display: grid; gap: 12px; grid-template-columns: 1.1fr 0.9fr; }
-    @media (max-width: 900px) { .cols { grid-template-columns: 1fr; } }
+    .topline { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .eyebrow { color: #7dd3fc; letter-spacing: 0.28em; text-transform: uppercase; font-size: 11px; margin-bottom: 8px; }
+    h1 { margin: 0; font-size: clamp(1.55rem, 5vw, 2.55rem); line-height: 1.03; }
+    .subtitle { margin-top: 8px; color: var(--muted); max-width: 72ch; line-height: 1.45; }
+    .version-pill { border: 1px solid var(--line); background: rgba(3,7,18,0.52); padding: 9px 11px; border-radius: 999px; color: var(--muted); font-size: 12px; white-space: nowrap; }
+
+    .grid { display: grid; gap: 12px; }
+    .main-grid { grid-template-columns: 1.05fr 0.95fr; margin-top: 12px; }
+    @media (max-width: 920px) { .main-grid { grid-template-columns: 1fr; } }
+
+    .resources { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 9px; margin-top: 14px; }
+    @media (max-width: 760px) { .resources { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+    .res-card, .quest-card {
+      background: rgba(3, 7, 18, 0.55);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 11px;
+      min-height: 76px;
+      overflow: hidden;
+    }
+    .res-card .label { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; }
+    .res-card .value { font-size: 1.33rem; font-weight: 800; margin-top: 5px; font-variant-numeric: tabular-nums; }
+    .res-card .rate { color: var(--muted2); font-size: 12px; margin-top: 3px; font-variant-numeric: tabular-nums; }
+    .bar { height: 8px; overflow: hidden; border-radius: 999px; background: rgba(255,255,255,0.075); margin-top: 9px; }
+    .fill { height: 100%; width: 0%; border-radius: 999px; background: linear-gradient(90deg, var(--blue), var(--purple)); transition: width .15s ease; }
+    .fill.green { background: linear-gradient(90deg, #22c55e, #86efac); }
+    .fill.amber { background: linear-gradient(90deg, #f59e0b, #fde68a); }
+    .fill.red { background: linear-gradient(90deg, #fb7185, #f472b6); }
+
+    .hero-bottom { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+    @media (max-width: 650px) { .hero-bottom { grid-template-columns: 1fr; } }
+    .quest-card .small-label { color: var(--muted); text-transform: uppercase; letter-spacing: 0.2em; font-size: 10px; }
+    .quest-card .title { font-weight: 800; font-size: 1.08rem; margin-top: 5px; }
+    .quest-card .desc { color: var(--muted); line-height: 1.42; font-size: 13px; margin-top: 5px; }
+
     .panel { padding: 14px; }
-    .panel h2 { margin: 0; font-size: 1.05rem; display: flex; align-items: center; gap: 8px; }
-    .panel .hint { color: var(--muted); font-size: 12px; margin-top: 6px; }
-    .row { display: flex; gap: 8px; flex-wrap: wrap; }
-    .btn { width: 100%; border: 1px solid var(--line); background: linear-gradient(180deg, rgba(15,23,42,0.95), rgba(2,6,23,0.95)); color: var(--text); border-radius: 18px; padding: 14px; text-align: left; cursor: pointer; transition: transform .08s ease, border-color .15s ease, background .15s ease; touch-action: manipulation; }
+    .section-head { display:flex; justify-content:space-between; align-items:flex-start; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+    h2 { margin: 0; font-size: 1.05rem; }
+    .section-sub { color: var(--muted); font-size: 12px; line-height: 1.35; max-width: 58ch; }
+
+    .btn-list { display: grid; gap: 9px; }
+    .button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+    @media (max-width: 580px) { .button-grid { grid-template-columns: 1fr; } }
+
+    .btn {
+      width: 100%;
+      min-height: 58px;
+      border: 1px solid var(--line);
+      color: var(--text);
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.86), rgba(3, 7, 18, 0.86));
+      border-radius: 18px;
+      padding: 13px;
+      cursor: pointer;
+      text-align: left;
+      touch-action: manipulation;
+      transition: transform .08s ease, border-color .15s ease, background .15s ease, opacity .15s ease;
+    }
     .btn:active { transform: scale(0.99); }
-    .btn:hover { border-color: rgba(125,211,252,0.3); }
-    .btn .title { font-weight: 700; font-size: 1rem; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-    .btn .desc { color: var(--muted); font-size: 13px; margin-top: 4px; line-height: 1.35; }
-    .btn .meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-    .tag { font-size: 11px; padding: 5px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); background: rgba(255,255,255,0.03); }
-    .tag.good { color: #bbf7d0; border-color: rgba(52,211,153,0.25); }
-    .tag.warn { color: #fde68a; border-color: rgba(245,158,11,0.25); }
-    .tag.bad { color: #fecdd3; border-color: rgba(251,113,133,0.25); }
-    .tag.accent { color: #bae6fd; border-color: rgba(56,189,248,0.25); }
-    .btn.active { border-color: var(--line2); box-shadow: inset 0 0 0 1px rgba(56,189,248,0.08); }
-    .btn.locked { opacity: 0.55; cursor: not-allowed; }
-    .btn.primary { background: linear-gradient(90deg, rgba(56,189,248,0.16), rgba(192,132,252,0.13)); }
-    .btn.danger { background: linear-gradient(90deg, rgba(251,113,133,0.15), rgba(245,158,11,0.11)); }
-    .split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-    @media (max-width: 540px) { .split { grid-template-columns: 1fr; } .hero-grid { grid-template-columns: 1fr 1fr; } }
-    .bar { height: 10px; border-radius: 999px; background: rgba(255,255,255,0.08); overflow: hidden; margin-top: 10px; }
-    .fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
-    .fill.good { background: linear-gradient(90deg, #34d399, #86efac); }
-    .fill.warn { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
-    .fill.bad { background: linear-gradient(90deg, #fb7185, #f472b6); }
-    .small { font-size: 12px; color: var(--muted); }
-    .log { display: grid; gap: 8px; margin-top: 10px; }
-    .log-item { padding: 10px 12px; border-radius: 16px; border: 1px solid var(--line); background: rgba(2,6,23,0.55); color: #cbd5e1; font-size: 13px; line-height: 1.35; }
-    .footer { margin-top: 12px; color: var(--muted); font-size: 12px; text-align: center; }
-    .section-gap { margin-top: 12px; }
-    .headline-row { display:flex; align-items:center; justify-content:space-between; gap: 10px; flex-wrap: wrap; }
-    .progress { display:grid; gap: 6px; }
-    .boss-card { background: linear-gradient(180deg, rgba(244,63,94,0.1), rgba(2,6,23,0.55)); border-color: rgba(251,113,133,0.18); }
-    .mini { display:grid; gap: 6px; }
-    .mini .line { display:flex; justify-content:space-between; gap: 10px; font-size: 12px; color: var(--muted); }
-    .mono { font-variant-numeric: tabular-nums; }
+    .btn:hover { border-color: rgba(125, 211, 252, 0.28); }
+    .btn.primary { background: linear-gradient(90deg, rgba(56,189,248,0.17), rgba(192,132,252,0.14)); border-color: rgba(125,211,252,0.21); }
+    .btn.good { background: linear-gradient(90deg, rgba(52,211,153,0.16), rgba(56,189,248,0.08)); border-color: rgba(52,211,153,0.22); }
+    .btn.danger { background: linear-gradient(90deg, rgba(251,113,133,0.16), rgba(245,158,11,0.10)); border-color: rgba(251,113,133,0.22); }
+    .btn.locked, .btn:disabled { opacity: 0.54; cursor: not-allowed; }
+    .btn.active { border-color: var(--line-bright); box-shadow: inset 0 0 0 1px rgba(56,189,248,0.12); }
+    .btn-title { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-weight: 800; }
+    .btn-desc { color: var(--muted); font-size: 13px; line-height: 1.38; margin-top: 5px; }
+    .chips { display:flex; gap: 6px; flex-wrap:wrap; margin-top: 10px; }
+    .chip { border: 1px solid var(--line); color: var(--muted); background: rgba(255,255,255,0.035); padding: 5px 8px; border-radius: 999px; font-size: 11px; font-variant-numeric: tabular-nums; }
+    .chip.good { color: #bbf7d0; border-color: rgba(52,211,153,0.28); }
+    .chip.blue { color: #bae6fd; border-color: rgba(56,189,248,0.28); }
+    .chip.amber { color: #fde68a; border-color: rgba(245,158,11,0.30); }
+    .chip.red { color: #fecdd3; border-color: rgba(251,113,133,0.30); }
+
+    .chain { display:grid; gap: 8px; }
+    .chain-row {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(3,7,18,0.47);
+    }
+    .stage-dot { height: 28px; width: 28px; border-radius: 50%; display:flex; align-items:center; justify-content:center; background: rgba(56,189,248,0.14); border: 1px solid rgba(56,189,248,0.24); color: #bae6fd; font-size: 12px; font-weight: 800; }
+    .stage-dot.done { background: rgba(52,211,153,0.14); border-color: rgba(52,211,153,0.28); color: #bbf7d0; }
+    .stage-dot.locked { background: rgba(148,163,184,0.08); border-color: rgba(148,163,184,0.18); color: #94a3b8; }
+    .chain-title { font-weight: 800; }
+    .chain-desc { color: var(--muted); font-size: 12px; line-height: 1.4; margin-top: 3px; }
+
+    .log { display:grid; gap: 8px; }
+    .log-item { color: #cbd5e1; border: 1px solid var(--line); background: rgba(3,7,18,0.5); border-radius: 16px; padding: 10px 11px; font-size: 13px; line-height: 1.35; }
+
+    .footer-actions { display:flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; justify-content:center; }
+    .mini-btn {
+      border: 1px solid var(--line);
+      background: rgba(3,7,18,0.55);
+      color: var(--muted);
+      padding: 8px 10px;
+      border-radius: 999px;
+      cursor:pointer;
+      font-size: 12px;
+    }
+    .footer { color: var(--muted2); text-align:center; font-size: 12px; margin-top: 12px; }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(16px + env(safe-area-inset-bottom));
+      transform: translateX(-50%) translateY(16px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+      z-index: 99;
+      background: rgba(2,6,23,0.94);
+      border: 1px solid rgba(125,211,252,0.26);
+      color: var(--text);
+      padding: 10px 13px;
+      border-radius: 999px;
+      box-shadow: 0 14px 40px rgba(0,0,0,0.4);
+      font-size: 13px;
+      max-width: calc(100% - 24px);
+      text-align:center;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   </style>
 </head>
 <body>
-  <div class="wrap">
+  <div class="app">
     <header class="hero">
-      <div class="top">
+      <div class="topline">
         <div>
-          <div class="eyebrow">Mobile Incremental RPG</div>
-          <h1>From Peasant to Archmage</h1>
-          <div class="subtitle">Start as a peasant, survive, build an academy, rise through magical ranks, and face the Void King in the final battle.</div>
+          <div class="eyebrow">V2 resource chain prototype</div>
+          <h1>Peasant to Archmage</h1>
+          <div class="subtitle">Every career stage introduces a new resource and unlocks automation for the previous resource. Apprentice magic animates farming, mage focus automates mana, academy knowledge automates focus, and archmage arcana automates the academy.</div>
         </div>
-        <div class="pill" id="dayPill">Day 1 • Level 1</div>
+        <div class="version-pill" id="versionPill">Day 1 | Level 1</div>
       </div>
 
-      <div class="hero-grid" id="statGrid"></div>
+      <div class="resources" id="resources"></div>
 
-      <div class="section-gap split">
-        <div class="stat">
-          <div class="label">Current Job</div>
-          <div class="value" id="jobTitle">Peasant</div>
-          <div class="sub" id="jobSubtitle">Tend fields and gather your first resources.</div>
+      <div class="hero-bottom">
+        <div class="quest-card">
+          <div class="small-label">Current stage</div>
+          <div class="title" id="stageTitle">Farmer</div>
+          <div class="desc" id="stageDesc">Grow food, manage energy, and stockpile enough harvest to begin magical study.</div>
         </div>
-        <div class="stat">
-          <div class="label">Main Quest</div>
-          <div class="value">Defeat the Void King</div>
-          <div class="sub mono" id="bossText">Boss HP: 1000 / 1000</div>
+        <div class="quest-card">
+          <div class="small-label">Main quest</div>
+          <div class="title">Defeat the Void King</div>
+          <div class="desc" id="bossSummary">Boss HP: 1000 / 1000. Become an archmage and convert your academy into final battle power.</div>
+          <div class="bar"><div class="fill red" id="bossFill"></div></div>
         </div>
       </div>
     </header>
 
-    <main class="cols grid">
+    <main class="main-grid grid">
       <section class="grid">
         <div class="panel">
-          <div class="headline-row">
-            <h2>Actions</h2>
-            <div class="small">Tap-friendly and mobile-first</div>
+          <div class="section-head">
+            <div>
+              <h2>Manual actions</h2>
+              <div class="section-sub">Tap actions to drive the early game. Automation slowly takes over older work.</div>
+            </div>
           </div>
-          <div class="section-gap split" id="actions"></div>
+          <div class="button-grid" id="actions"></div>
         </div>
 
         <div class="panel">
-          <div class="headline-row">
-            <h2>Jobs</h2>
-            <div class="small">Unlock the next tier by progressing</div>
+          <div class="section-head">
+            <div>
+              <h2>Career stages</h2>
+              <div class="section-sub">Unlock each role by building enough of the previous economy.</div>
+            </div>
           </div>
-          <div class="section-gap grid" id="jobs"></div>
+          <div class="btn-list" id="stages"></div>
         </div>
 
         <div class="panel">
-          <div class="headline-row">
-            <h2>Build the Academy</h2>
-            <div class="small">Buildings improve your economy</div>
+          <div class="section-head">
+            <div>
+              <h2>Automation chain</h2>
+              <div class="section-sub">Each new stage automates the resource from the stage before it.</div>
+            </div>
           </div>
-          <div class="section-gap grid" id="buildings"></div>
+          <div class="btn-list" id="automation"></div>
         </div>
       </section>
 
       <aside class="grid">
         <div class="panel">
-          <div class="headline-row">
-            <h2>Upgrades</h2>
-            <div class="small">Permanent progression</div>
-          </div>
-          <div class="section-gap grid" id="upgrades"></div>
-        </div>
-
-        <div class="panel boss-card">
-          <div class="headline-row">
-            <h2>Boss Fight</h2>
-            <div class="small">Endgame encounter</div>
-          </div>
-          <div class="section-gap progress">
-            <div class="mini">
-              <div class="line"><span>Void King</span><span class="mono" id="bossLine">1000 / 1000</span></div>
-              <div class="bar"><div class="fill bad" id="bossBar" style="width:100%"></div></div>
+          <div class="section-head">
+            <div>
+              <h2>Buildings and upgrades</h2>
+              <div class="section-sub">Use surplus resources to improve production caps and multipliers.</div>
             </div>
-            <div class="small" id="bossNote">Reach archmage status, build the academy, and prepare a final strike.</div>
-            <button class="btn danger" id="bossBtn">Challenge the Void King</button>
           </div>
+          <div class="btn-list" id="upgrades"></div>
         </div>
 
         <div class="panel">
-          <div class="headline-row">
-            <h2>Event Log</h2>
-            <div class="small">Recent actions</div>
+          <div class="section-head">
+            <div>
+              <h2>Chain map</h2>
+              <div class="section-sub">The design rule for this version is visible here.</div>
+            </div>
+          </div>
+          <div class="chain" id="chainMap"></div>
+        </div>
+
+        <div class="panel">
+          <div class="section-head">
+            <div>
+              <h2>Final battle</h2>
+              <div class="section-sub">Arcana, mana, focus, and energy are converted into damage.</div>
+            </div>
+          </div>
+          <button class="btn danger" id="bossButton">
+            <div class="btn-title"><span>Challenge the Void King</span><span class="chip red">Archmage only</span></div>
+            <div class="btn-desc">Cost: 25 arcana, 120 mana, 40 focus, 25 energy. Damage scales with automations.</div>
+          </button>
+        </div>
+
+        <div class="panel">
+          <div class="section-head">
+            <div>
+              <h2>Event log</h2>
+              <div class="section-sub">Recent milestones and warnings.</div>
+            </div>
           </div>
           <div class="log" id="log"></div>
         </div>
       </aside>
     </main>
 
-    <div class="footer">Save, load, and offline progress are built in automatically in your browser.</div>
+    <div class="footer-actions">
+      <button class="mini-btn" id="saveBtn">Save now</button>
+      <button class="mini-btn" id="resetBtn">Reset save</button>
+    </div>
+    <div class="footer">Single-file HTML. Works on GitHub Pages. Autosaves locally in this browser.</div>
   </div>
+  <div class="toast" id="toast">Saved</div>
 
   <script>
-    const STORAGE_KEY = 'peasant-to-archmage-save-v1';
+    const STORAGE_KEY = 'ptarchmage-v2-save';
     const BOSS_MAX = 1000;
 
-    const JOBS = [
+    const RESOURCES = [
+      { key: 'food', label: 'Food', cap: 1000, note: 'Stage 1 resource' },
+      { key: 'mana', label: 'Mana', cap: 1200, note: 'Stage 2 resource' },
+      { key: 'focus', label: 'Focus', cap: 500, note: 'Stage 3 resource' },
+      { key: 'gold', label: 'Gold', cap: 2500, note: 'Trade and tuition' },
+      { key: 'knowledge', label: 'Knowledge', cap: 900, note: 'Stage 4 resource' },
+      { key: 'arcana', label: 'Arcana', cap: 300, note: 'Stage 5 resource' },
+      { key: 'energy', label: 'Energy', cap: 100, note: 'Action stamina' },
+      { key: 'reputation', label: 'Reputation', cap: 250, note: 'Unlock progress' }
+    ];
+
+    const STAGES = [
       {
-        key: 'peasant',
-        title: 'Peasant',
-        subtitle: 'Tend fields and gather your first resources.',
-        workLabel: 'Tend Fields',
-        unlock: (s) => true,
-        work: (s) => ({ gold: 3 + s.upgrades.workmanship, food: 2 + Math.floor(s.upgrades.irrigation / 2), energy: -8, focus: -1, xp: 3 }),
+        key: 'farmer',
+        title: 'Farmer',
+        resource: 'Food',
+        desc: 'Grow food, manage energy, and stockpile enough harvest to begin magical study.',
+        unlockDesc: 'Starting stage.',
+        unlocked: () => true
       },
       {
         key: 'apprentice',
-        title: 'Apprentice',
-        subtitle: 'Study cantrips and begin shaping mana.',
-        workLabel: 'Study Cantrips',
-        unlock: (s) => s.stats.xp >= 30 || s.upgrades.wisdom >= 1,
-        work: (s) => ({ gold: 2 + Math.floor(s.upgrades.tuition / 2), mana: 6 + s.upgrades.wisdom, focus: -8, energy: -6, xp: 4 }),
-      },
-      {
-        key: 'journeyman',
-        title: 'Journeyman',
-        subtitle: 'Teach, research, and grow your reputation.',
-        workLabel: 'Teach & Research',
-        unlock: (s) => s.stats.xp >= 120 && s.buildings.academy >= 1,
-        work: (s) => ({ gold: 8 + s.buildings.academy * 3, mana: 10 + s.buildings.library * 2, focus: -10, energy: -8, xp: 7, reputation: 2 }),
+        title: 'Apprentice Mage',
+        resource: 'Mana',
+        desc: 'Turn food, focus, and energy into mana. Your first spell animates farming.',
+        unlockDesc: 'Need 50 food and level 2.',
+        unlocked: (s) => s.resources.food >= 50 || s.unlocked.apprentice
       },
       {
         key: 'mage',
         title: 'Mage',
-        subtitle: 'Channel arcana and command the academy.',
-        workLabel: 'Channel Arcana',
-        unlock: (s) => s.buildings.academy >= 1 && s.stats.reputation >= 25,
-        work: (s) => ({ gold: 14 + s.buildings.laboratory * 4, mana: 20 + s.upgrades.rituals * 3, focus: -12, energy: -10, xp: 10, reputation: 3 }),
+        resource: 'Focus',
+        desc: 'Use mana to sharpen your mind. Focus powers better spell infrastructure.',
+        unlockDesc: 'Need 80 mana and 1 animated scarecrow.',
+        unlocked: (s) => s.resources.mana >= 80 || s.automation.scarecrow >= 1 || s.unlocked.mage
+      },
+      {
+        key: 'academy',
+        title: 'Academy Founder',
+        resource: 'Knowledge',
+        desc: 'Teach apprentices, earn tuition, and turn knowledge into focus automation.',
+        unlockDesc: 'Need 80 focus, 150 gold, and 25 reputation.',
+        unlocked: (s) => (s.resources.focus >= 80 && s.resources.gold >= 150 && s.resources.reputation >= 25) || s.unlocked.academy
       },
       {
         key: 'archmage',
         title: 'Archmage',
-        subtitle: 'The final form: defend the realm and face the big bad.',
-        workLabel: 'Dominate the Weave',
-        unlock: (s) => s.buildings.academy >= 4 && s.stats.reputation >= 100 && s.stats.mana >= 250,
-        work: (s) => ({ gold: 25 + s.buildings.laboratory * 8, mana: 35 + s.upgrades.rituals * 5, focus: -16, energy: -12, xp: 14, reputation: 5 }),
-      },
+        resource: 'Arcana',
+        desc: 'Compress knowledge, mana, and focus into arcana for the final battle.',
+        unlockDesc: 'Need 250 knowledge, 350 mana, 80 reputation, and academy hall level 2.',
+        unlocked: (s) => (s.resources.knowledge >= 250 && s.resources.mana >= 350 && s.resources.reputation >= 80 && s.upgrades.academyHall >= 2) || s.unlocked.archmage
+      }
     ];
 
-    const BUILDINGS = [
-      { key: 'academy', title: 'Academy', desc: 'Unlocks advanced jobs and increases passive focus recovery.', baseCost: { gold: 120, food: 50 }, effect: (lvl) => `+${lvl * 2} focus cap` },
-      { key: 'library', title: 'Library', desc: 'Improves study output and mana gain.', baseCost: { gold: 90, mana: 20 }, effect: (lvl) => `+${lvl * 2} mana/tick while studying` },
-      { key: 'laboratory', title: 'Laboratory', desc: 'Boosts gold and mana production from magical work.', baseCost: { gold: 180, mana: 60, food: 40 }, effect: (lvl) => `+${lvl * 4} advanced work income` },
+    const AUTOMATION = [
+      {
+        key: 'scarecrow',
+        stage: 'apprentice',
+        title: 'Animated Scarecrow',
+        automates: 'food',
+        desc: 'Apprentice spell: spends mana to animate farm tools. Produces food automatically.',
+        cost: (n) => ({ mana: Math.floor(30 * Math.pow(1.45, n)), food: Math.floor(20 * Math.pow(1.25, n)) }),
+        rate: (s) => 0.55 * s.automation.scarecrow * productionMultiplier(s, 'food')
+      },
+      {
+        key: 'familiar',
+        stage: 'mage',
+        title: 'Mana Familiar',
+        automates: 'mana',
+        desc: 'Mage spell: uses focus to bind a familiar that gathers mana from the air.',
+        cost: (n) => ({ focus: Math.floor(45 * Math.pow(1.48, n)), mana: Math.floor(55 * Math.pow(1.32, n)) }),
+        rate: (s) => 0.42 * s.automation.familiar * productionMultiplier(s, 'mana')
+      },
+      {
+        key: 'circle',
+        stage: 'academy',
+        title: 'Meditation Circle',
+        automates: 'focus',
+        desc: 'Academy ritual: students rotate through meditation shifts to generate focus.',
+        cost: (n) => ({ knowledge: Math.floor(70 * Math.pow(1.5, n)), gold: Math.floor(120 * Math.pow(1.36, n)) }),
+        rate: (s) => 0.28 * s.automation.circle * productionMultiplier(s, 'focus')
+      },
+      {
+        key: 'faculty',
+        stage: 'archmage',
+        title: 'Enchanted Faculty',
+        automates: 'knowledge',
+        desc: 'Archmage spell: arcana enchants the academy staff. Produces knowledge and tuition.',
+        cost: (n) => ({ arcana: Math.floor(18 * Math.pow(1.55, n)), knowledge: Math.floor(160 * Math.pow(1.35, n)), gold: Math.floor(220 * Math.pow(1.34, n)) }),
+        rate: (s) => 0.23 * s.automation.faculty * productionMultiplier(s, 'knowledge'),
+        goldRate: (s) => 0.16 * s.automation.faculty * productionMultiplier(s, 'gold')
+      }
     ];
 
     const UPGRADES = [
-      { key: 'workmanship', title: 'Workmanship', desc: '+1 gold from peasant labor.', cost: { gold: 25 } },
-      { key: 'wisdom', title: 'Wisdom', desc: '+1 mana from study actions.', cost: { gold: 40, focus: 10 } },
-      { key: 'tuition', title: 'Tuition', desc: '+1 gold from apprentice study.', cost: { gold: 60 } },
-      { key: 'irrigation', title: 'Irrigation', desc: '+1 food from field work every 2 levels.', cost: { gold: 55, food: 10 } },
-      { key: 'rituals', title: 'Rituals', desc: '+3 mana from mage/archmage work.', cost: { gold: 80, mana: 25 } },
+      {
+        key: 'tools',
+        title: 'Better Farming Tools',
+        desc: 'Increases manual food gain and animated scarecrow output.',
+        max: 10,
+        cost: (n) => ({ food: Math.floor(28 * Math.pow(1.42, n)), gold: Math.floor(8 * Math.pow(1.35, n)) })
+      },
+      {
+        key: 'spellbook',
+        title: 'Clean Spellbook',
+        desc: 'Increases mana gains from study and mana familiar output.',
+        max: 10,
+        cost: (n) => ({ mana: Math.floor(45 * Math.pow(1.44, n)), food: Math.floor(24 * Math.pow(1.28, n)) })
+      },
+      {
+        key: 'robes',
+        title: 'Quiet Robes',
+        desc: 'Increases focus gain and makes meditation more efficient.',
+        max: 10,
+        cost: (n) => ({ focus: Math.floor(38 * Math.pow(1.47, n)), mana: Math.floor(52 * Math.pow(1.34, n)) })
+      },
+      {
+        key: 'market',
+        title: 'Village Market',
+        desc: 'Improves gold earned from selling food and academy tuition.',
+        max: 10,
+        cost: (n) => ({ gold: Math.floor(75 * Math.pow(1.48, n)), food: Math.floor(70 * Math.pow(1.28, n)) })
+      },
+      {
+        key: 'academyHall',
+        title: 'Academy Hall',
+        desc: 'Raises reputation and unlocks the archmage path at level 2.',
+        max: 5,
+        cost: (n) => ({ gold: Math.floor(180 * Math.pow(1.62, n)), knowledge: Math.floor(65 * Math.pow(1.48, n)), focus: Math.floor(45 * Math.pow(1.28, n)) })
+      },
+      {
+        key: 'ritualTower',
+        title: 'Ritual Tower',
+        desc: 'Increases arcana creation and final boss damage.',
+        max: 8,
+        cost: (n) => ({ arcana: Math.floor(14 * Math.pow(1.58, n)), knowledge: Math.floor(190 * Math.pow(1.42, n)), gold: Math.floor(250 * Math.pow(1.36, n)) })
+      }
     ];
 
-    const initial = () => ({
-      resources: { gold: 20, mana: 0, focus: 30, food: 25, energy: 80, reputation: 0 },
-      stats: { level: 1, xp: 0, bossHp: BOSS_MAX, bossDefeated: false, days: 0 },
-      buildings: { academy: 0, library: 0, laboratory: 0 },
-      upgrades: { workmanship: 0, wisdom: 0, tuition: 0, irrigation: 0, rituals: 0 },
-      log: ['A humble peasant awakens in a small village with a big destiny.'],
-      selectedJob: 'peasant',
-      lastSavedAt: Date.now(),
-    });
+    function initialState() {
+      return {
+        resources: {
+          food: 16,
+          mana: 0,
+          focus: 24,
+          gold: 0,
+          knowledge: 0,
+          arcana: 0,
+          energy: 85,
+          reputation: 0
+        },
+        automation: { scarecrow: 0, familiar: 0, circle: 0, faculty: 0 },
+        upgrades: { tools: 0, spellbook: 0, robes: 0, market: 0, academyHall: 0, ritualTower: 0 },
+        unlocked: { farmer: true, apprentice: false, mage: false, academy: false, archmage: false },
+        currentStage: 'farmer',
+        stats: { level: 1, xp: 0, days: 1, bossHp: BOSS_MAX, bossDefeated: false, totalClicks: 0 },
+        log: [
+          'Version 2 begins: each new stage automates the resource from the previous stage.',
+          'Start by harvesting food, then unlock apprentice magic to automate farming.'
+        ],
+        savedAt: Date.now()
+      };
+    }
 
-    let state = load() || initial();
-    let tickTimer = null;
+    let state = loadGame() || initialState();
+    let lastTick = Date.now();
+    let toastTimer = null;
 
     function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
     function fmt(n) {
-      const num = Math.floor(Number(n) || 0);
-      if (Math.abs(num) < 1000) return String(num);
+      const v0 = Number(n) || 0;
+      const sign = v0 < 0 ? '-' : '';
+      let v = Math.abs(v0);
+      if (v < 1000) return sign + Math.floor(v).toString();
       const units = ['K', 'M', 'B', 'T'];
-      let v = Math.abs(num);
       let u = -1;
       while (v >= 1000 && u < units.length - 1) { v /= 1000; u++; }
-      const sign = num < 0 ? '-' : '';
       return sign + (v >= 100 ? v.toFixed(0) : v >= 10 ? v.toFixed(1) : v.toFixed(2)) + units[u];
     }
-    function money(cost) {
-      return Object.entries(cost).map(([k, v]) => `<span class="tag">${k}: ${v}</span>`).join('');
+    function pct(value, cap) { return clamp((value / cap) * 100, 0, 100); }
+    function capFor(key) {
+      const base = (RESOURCES.find(r => r.key === key) || { cap: 1000 }).cap;
+      if (key === 'food') return base + state.upgrades.tools * 90;
+      if (key === 'mana') return base + state.upgrades.spellbook * 90;
+      if (key === 'focus') return base + state.upgrades.robes * 60 + state.upgrades.academyHall * 35;
+      if (key === 'gold') return base + state.upgrades.market * 250;
+      if (key === 'knowledge') return base + state.upgrades.academyHall * 160;
+      if (key === 'arcana') return base + state.upgrades.ritualTower * 60;
+      if (key === 'energy') return base;
+      if (key === 'reputation') return base + state.upgrades.academyHall * 40;
+      return base;
     }
-    function canAfford(cost) {
-      return Object.entries(cost).every(([k, v]) => (state.resources[k] || 0) >= v);
+    function addResource(key, amount) {
+      state.resources[key] = clamp((state.resources[key] || 0) + amount, 0, capFor(key));
     }
+    function productionMultiplier(s, key) {
+      let mult = 1;
+      if (key === 'food') mult += s.upgrades.tools * 0.16;
+      if (key === 'mana') mult += s.upgrades.spellbook * 0.16;
+      if (key === 'focus') mult += s.upgrades.robes * 0.15;
+      if (key === 'gold') mult += s.upgrades.market * 0.18;
+      if (key === 'knowledge') mult += s.upgrades.academyHall * 0.18;
+      if (key === 'arcana') mult += s.upgrades.ritualTower * 0.22;
+      if (s.stats.bossDefeated) mult += 0.25;
+      return mult;
+    }
+    function currentStage() { return STAGES.find(s => s.key === state.currentStage) || STAGES[0]; }
+    function isUnlocked(stageKey) { return !!state.unlocked[stageKey] || (STAGES.find(s => s.key === stageKey)?.unlocked(state) || false); }
+    function stageIndex(key) { return STAGES.findIndex(s => s.key === key); }
+    function canAfford(cost) { return Object.entries(cost).every(([k, v]) => (state.resources[k] || 0) >= v); }
     function spend(cost) {
       if (!canAfford(cost)) return false;
-      for (const [k, v] of Object.entries(cost)) state.resources[k] -= v;
+      for (const [k, v] of Object.entries(cost)) addResource(k, -v);
       return true;
     }
-    function pushLog(msg) {
-      state.log.unshift(msg);
-      state.log = state.log.slice(0, 6);
-      render();
-      autosave();
+    function chips(cost) {
+      return Object.entries(cost).map(([k, v]) => `<span class="chip">${labelFor(k)}: ${fmt(v)}</span>`).join('');
     }
-
-    function currentJob() {
-      return JOBS.find(j => j.key === state.selectedJob) || JOBS[0];
+    function labelFor(key) { return (RESOURCES.find(r => r.key === key) || { label: key }).label; }
+    function escapeHtml(s) {
+      return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
     }
-
-    function unlockedJobs() {
-      return JOBS.filter(j => j.unlock(state));
+    function pushLog(message, skipRender) {
+      state.log.unshift(message);
+      state.log = state.log.slice(0, 8);
+      if (!skipRender) { render(); saveGame(false); }
     }
-
-    function focusCap() {
-      return 100 + state.buildings.academy * 2;
-    }
-
-    function energyCap() {
-      return 100;
-    }
-
-    function passiveTick() {
-      state.stats.days += 1 / 12;
-      state.resources.mana += state.buildings.library * 1;
-      state.resources.gold += state.buildings.laboratory * 1;
-      state.resources.focus = clamp(state.resources.focus + state.buildings.academy * 0.5, 0, focusCap());
-      state.resources.energy = clamp(state.resources.energy + 0.6 - (1 + Math.max(0, state.stats.level - 1) * 0.1) * 0.2, 0, energyCap());
-      if (state.resources.food > 0) state.resources.food = Math.max(0, state.resources.food - (1 + Math.max(0, state.stats.level - 1) * 0.1) * 0.03);
-      else state.resources.energy = clamp(state.resources.energy - 0.8, 0, energyCap());
-
-      const needed = 20 + (state.stats.level - 1) * 15;
-      if (state.stats.xp >= needed) {
+    function gainXp(amount) {
+      state.stats.xp += amount;
+      let needed = levelNeed();
+      while (state.stats.xp >= needed) {
         state.stats.xp -= needed;
         state.stats.level += 1;
-        state.resources.reputation += 2;
-        state.log.unshift(`Leveled up to ${state.stats.level}. The village notices your growing power.`);
-        state.log = state.log.slice(0, 6);
+        addResource('reputation', 2);
+        pushLog('Level up: you reached level ' + state.stats.level + ' and gained reputation.', true);
+        needed = levelNeed();
       }
-
-      if (state.selectedJob === 'archmage' && !state.stats.bossDefeated) {
-        state.stats.bossHp = clamp(state.stats.bossHp - (2 + state.buildings.library), 0, BOSS_MAX);
-        if (state.stats.bossHp === 0) {
-          state.stats.bossDefeated = true;
-          state.log.unshift('The Void King falls. The realm is saved.');
-          state.log = state.log.slice(0, 6);
+    }
+    function levelNeed() { return 24 + (state.stats.level - 1) * 16; }
+    function revealUnlocks() {
+      let changed = false;
+      for (const st of STAGES) {
+        if (!state.unlocked[st.key] && st.unlocked(state)) {
+          state.unlocked[st.key] = true;
+          changed = true;
+          pushLog('Unlocked stage: ' + st.title + '.', true);
         }
       }
-
-      render();
-      autosave();
+      return changed;
     }
 
-    function setSelectedJob(key) {
-      if (unlockedJobs().some(j => j.key === key)) {
-        state.selectedJob = key;
-        pushLog(`You are now working as a ${JOBS.find(j => j.key === key).title.toLowerCase()}.`);
-      }
+    function doHarvest() {
+      if (state.resources.energy < 6) return pushLog('You are too tired to harvest. Rest or eat first.');
+      addResource('energy', -6);
+      addResource('food', 9 * productionMultiplier(state, 'food'));
+      gainXp(3);
+      state.stats.totalClicks++;
+      addResource('reputation', 0.25);
+      pushLog('You harvested food from the fields.');
     }
 
-    function doWork() {
-      const job = currentJob();
-      if (state.resources.energy < 8 || state.resources.focus < 4) return pushLog('Too tired or unfocused to work.');
-      const delta = job.work(state);
-      for (const [k, v] of Object.entries(delta)) {
-        if (k === 'xp') state.stats.xp += v;
-        else state.resources[k] = clamp((state.resources[k] || 0) + v, 0, 999999999);
-      }
-      state.resources.focus = clamp(state.resources.focus, 0, focusCap());
-      state.resources.energy = clamp(state.resources.energy, 0, energyCap());
-      pushLog(`You used ${job.workLabel.toLowerCase()} as a ${job.title.toLowerCase()}.`);
+    function doStudy() {
+      if (!isUnlocked('apprentice')) return pushLog('You need more food before magical study begins.');
+      if (!spend({ food: 5, energy: 7 })) return pushLog('Studying needs 5 food and 7 energy.');
+      addResource('mana', 8 * productionMultiplier(state, 'mana'));
+      addResource('focus', -2);
+      gainXp(4);
+      state.stats.totalClicks++;
+      pushLog('You studied cantrips and generated mana.');
     }
 
-    function rest() {
-      state.resources.energy = clamp(state.resources.energy + 30, 0, energyCap());
-      state.resources.focus = clamp(state.resources.focus + 15, 0, focusCap());
-      state.resources.food = clamp(state.resources.food - 2, 0, 999999999);
-      pushLog('You sleep and recover energy and focus.');
+    function doMeditate() {
+      if (!isUnlocked('mage')) return pushLog('You need the mage stage before deep focus training.');
+      if (!spend({ mana: 7, energy: 7 })) return pushLog('Meditation needs 7 mana and 7 energy.');
+      addResource('focus', 9 * productionMultiplier(state, 'focus'));
+      gainXp(5);
+      state.stats.totalClicks++;
+      pushLog('You converted mana into focus through meditation.');
     }
 
-    function eat() {
-      if (!spend({ food: 5 })) return pushLog('Not enough food.');
-      state.resources.energy = clamp(state.resources.energy + 18, 0, energyCap());
-      state.resources.focus = clamp(state.resources.focus + 4, 0, focusCap());
-      pushLog('A good meal restores your strength.');
+    function doTeach() {
+      if (!isUnlocked('academy')) return pushLog('You need to found the academy before teaching.');
+      if (!spend({ focus: 10, mana: 10, energy: 8 })) return pushLog('Teaching needs 10 focus, 10 mana, and 8 energy.');
+      addResource('knowledge', 13 * productionMultiplier(state, 'knowledge'));
+      addResource('gold', 16 * productionMultiplier(state, 'gold'));
+      addResource('reputation', 1.5);
+      gainXp(7);
+      state.stats.totalClicks++;
+      pushLog('You taught a class and gained knowledge, gold, and reputation.');
     }
 
-    function meditate() {
-      if (!spend({ energy: 6 })) return pushLog('Too exhausted to meditate.');
-      state.resources.focus = clamp(state.resources.focus + 20, 0, focusCap());
-      state.resources.mana = clamp(state.resources.mana + 8, 0, 999999999);
-      pushLog('Meditation sharpens your mind and channels mana.');
+    function doRitual() {
+      if (!isUnlocked('archmage')) return pushLog('Only an archmage can weave grand rituals.');
+      if (!spend({ knowledge: 22, mana: 28, focus: 12, energy: 10 })) return pushLog('Grand ritual needs 22 knowledge, 28 mana, 12 focus, and 10 energy.');
+      addResource('arcana', 7 * productionMultiplier(state, 'arcana'));
+      addResource('reputation', 2.25);
+      gainXp(9);
+      state.stats.totalClicks++;
+      pushLog('You compressed knowledge, mana, and focus into arcana.');
     }
 
-    function build(key) {
-      const b = BUILDINGS.find(x => x.key === key);
-      const lvl = state.buildings[key];
-      const cost = Object.fromEntries(Object.entries(b.baseCost).map(([k, v]) => [k, Math.floor(v * (1 + lvl * 0.65))]));
-      if (!spend(cost)) return pushLog(`Not enough resources for ${b.title}.`);
-      state.buildings[key] += 1;
-      state.resources.reputation += 4;
-      pushLog(`${b.title} constructed to level ${state.buildings[key]}.`);
+    function doSellFood() {
+      if (!spend({ food: 25 })) return pushLog('You need 25 food to sell a cart at market.');
+      addResource('gold', 16 * productionMultiplier(state, 'gold'));
+      gainXp(2);
+      state.stats.totalClicks++;
+      pushLog('You sold surplus food for gold.');
     }
 
-    function buyUpgrade(upg) {
-      const lvl = state.upgrades[upg.key];
-      const cost = Object.fromEntries(Object.entries(upg.cost).map(([k, v]) => [k, Math.floor(v * (1 + lvl * 0.75))]));
-      if (!spend(cost)) return pushLog(`Not enough resources for ${upg.title}.`);
-      state.upgrades[upg.key] += 1;
-      pushLog(`${upg.title} improved to rank ${state.upgrades[upg.key]}.`);
+    function doRest() {
+      addResource('energy', 28);
+      addResource('focus', 4);
+      if (state.resources.food > 0) addResource('food', -2);
+      gainXp(1);
+      state.stats.totalClicks++;
+      pushLog('You rested and recovered energy.');
+    }
+
+    function buyAutomation(key) {
+      const item = AUTOMATION.find(a => a.key === key);
+      if (!item) return;
+      if (!isUnlocked(item.stage)) return pushLog('Unlock ' + STAGES.find(s => s.key === item.stage).title + ' before buying this automation.');
+      const n = state.automation[key] || 0;
+      const cost = item.cost(n);
+      if (!spend(cost)) return pushLog('Not enough resources for ' + item.title + '.');
+      state.automation[key] = n + 1;
+      addResource('reputation', 1 + stageIndex(item.stage));
+      gainXp(4 + stageIndex(item.stage));
+      pushLog('Automation added: ' + item.title + ' now has ' + state.automation[key] + '.');
+    }
+
+    function buyUpgrade(key) {
+      const u = UPGRADES.find(x => x.key === key);
+      if (!u) return;
+      const n = state.upgrades[key] || 0;
+      if (n >= u.max) return pushLog(u.title + ' is already maxed.');
+      const cost = u.cost(n);
+      if (!spend(cost)) return pushLog('Not enough resources for ' + u.title + '.');
+      state.upgrades[key] = n + 1;
+      addResource('reputation', key === 'academyHall' ? 7 : 2);
+      gainXp(6);
+      pushLog('Upgrade purchased: ' + u.title + ' level ' + state.upgrades[key] + '.');
+    }
+
+    function selectStage(key) {
+      if (!isUnlocked(key)) return pushLog('That stage is still locked.');
+      state.currentStage = key;
+      pushLog('Current stage set to ' + STAGES.find(s => s.key === key).title + '.');
     }
 
     function bossFight() {
-      if (state.selectedJob !== 'archmage') return pushLog('Only an archmage can challenge the Void King.');
-      if (state.stats.bossDefeated) return pushLog('The realm is already saved.');
-      if (!spend({ mana: 80, focus: 20, energy: 20 })) return pushLog('You need mana, focus, and energy to fight.');
-      const dmg = 160 + state.buildings.laboratory * 15 + state.upgrades.rituals * 10;
-      state.stats.bossHp = clamp(state.stats.bossHp - dmg, 0, BOSS_MAX);
-      if (state.stats.bossHp === 0) {
+      if (!isUnlocked('archmage') || state.currentStage !== 'archmage') return pushLog('Become the archmage and select that stage before challenging the Void King.');
+      if (state.stats.bossDefeated) return pushLog('The Void King is already defeated.');
+      if (!spend({ arcana: 25, mana: 120, focus: 40, energy: 25 })) return pushLog('Final strike needs 25 arcana, 120 mana, 40 focus, and 25 energy.');
+      const damage = 115 + state.upgrades.ritualTower * 24 + state.automation.faculty * 12 + state.automation.circle * 6 + state.automation.familiar * 3;
+      state.stats.bossHp = clamp(state.stats.bossHp - damage, 0, BOSS_MAX);
+      gainXp(12);
+      if (state.stats.bossHp <= 0) {
         state.stats.bossDefeated = true;
-        state.resources.reputation += 50;
-        pushLog('The Void King has been defeated!');
+        addResource('reputation', 75);
+        pushLog('Victory: the Void King falls and the realm is saved.');
       } else {
-        pushLog('You strike the Void King, but the battle continues.');
+        pushLog('You hit the Void King for ' + Math.floor(damage) + ' damage. The battle continues.');
       }
     }
 
-    function renderStats() {
-      const statDefs = [
-        ['gold', 'Gold', 'Buy tools, buildings, and progress.', 'good'],
-        ['mana', 'Mana', 'Fuel spells and later-game power.', 'accent'],
-        ['focus', 'Focus', 'Required for work and study.', 'warn'],
-        ['food', 'Food', 'Keeps the village running.', 'good'],
-        ['energy', 'Energy', 'Rest, eat, or meditate to recover.', 'warn'],
-        ['reputation', 'Reputation', 'Unlock higher jobs and big milestones.', 'accent'],
-      ];
-      const grid = document.getElementById('statGrid');
-      grid.innerHTML = statDefs.map(([key, label, sub, cls]) => `
-        <div class="stat">
-          <div class="label">${label}</div>
-          <div class="value mono">${fmt(state.resources[key])}</div>
-          <div class="sub">${sub}</div>
-          <div class="bar"><div class="fill ${cls}" style="width:${Math.min(100, (state.resources[key] || 0) / (key === 'gold' ? 1000 : key === 'mana' ? 500 : key === 'reputation' ? 100 : 100) * 100)}%"></div></div>
-        </div>
-      `).join('');
+    function rates() {
+      return {
+        food: AUTOMATION.find(a => a.key === 'scarecrow').rate(state),
+        mana: AUTOMATION.find(a => a.key === 'familiar').rate(state),
+        focus: AUTOMATION.find(a => a.key === 'circle').rate(state),
+        gold: AUTOMATION.find(a => a.key === 'faculty').goldRate(state),
+        knowledge: AUTOMATION.find(a => a.key === 'faculty').rate(state),
+        arcana: 0,
+        energy: energyRegenRate(),
+        reputation: 0
+      };
+    }
+    function energyRegenRate() {
+      const foodSupport = state.resources.food > 0 ? 0.25 : -0.55;
+      return 0.36 + foodSupport;
+    }
+
+    function tick(seconds) {
+      const r = rates();
+      addResource('food', r.food * seconds);
+      addResource('mana', r.mana * seconds);
+      addResource('focus', r.focus * seconds);
+      addResource('gold', r.gold * seconds);
+      addResource('knowledge', r.knowledge * seconds);
+      addResource('energy', r.energy * seconds);
+
+      const foodDrain = (0.026 + state.stats.level * 0.002) * seconds;
+      if (state.resources.food > 0) addResource('food', -foodDrain);
+
+      state.stats.days += seconds / 60;
+
+      if (state.currentStage === 'archmage' && !state.stats.bossDefeated && state.automation.faculty > 0) {
+        state.stats.bossHp = clamp(state.stats.bossHp - (0.2 + state.upgrades.ritualTower * 0.04) * seconds, 0, BOSS_MAX);
+        if (state.stats.bossHp === 0) {
+          state.stats.bossDefeated = true;
+          pushLog('Your enchanted academy overwhelms the Void King over time.', true);
+        }
+      }
+
+      revealUnlocks();
+    }
+
+    function offlineProgress() {
+      const savedAt = Number(state.savedAt || Date.now());
+      const elapsed = Math.max(0, Math.min(6 * 60 * 60, (Date.now() - savedAt) / 1000));
+      if (elapsed > 10) {
+        tick(elapsed * 0.45);
+        pushLog('Offline progress applied for ' + Math.floor(elapsed / 60) + ' minutes at 45% efficiency.', true);
+      }
+    }
+
+    function renderResources() {
+      const box = document.getElementById('resources');
+      const r = rates();
+      box.innerHTML = RESOURCES.map(res => {
+        const val = state.resources[res.key] || 0;
+        const cap = capFor(res.key);
+        const rate = r[res.key] || 0;
+        let fillClass = '';
+        if (res.key === 'food' || res.key === 'gold' || res.key === 'reputation') fillClass = 'green';
+        if (res.key === 'focus' || res.key === 'energy') fillClass = 'amber';
+        if (res.key === 'arcana') fillClass = 'red';
+        return `
+          <div class="res-card">
+            <div class="label">${res.label}</div>
+            <div class="value">${fmt(val)}</div>
+            <div class="rate">${rate >= 0 ? '+' : ''}${rate.toFixed(2)}/sec | cap ${fmt(cap)}</div>
+            <div class="bar"><div class="fill ${fillClass}" style="width:${pct(val, cap)}%"></div></div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderHero() {
+      revealUnlocks();
+      const st = currentStage();
+      document.getElementById('versionPill').textContent = 'Day ' + Math.floor(state.stats.days) + ' | Level ' + state.stats.level;
+      document.getElementById('stageTitle').textContent = st.title;
+      document.getElementById('stageDesc').textContent = st.desc;
+      const boss = Math.ceil(state.stats.bossHp);
+      document.getElementById('bossSummary').textContent = state.stats.bossDefeated
+        ? 'Victory. The Void King is defeated and the realm is safe.'
+        : 'Boss HP: ' + fmt(boss) + ' / ' + BOSS_MAX + '. Become an archmage and convert your academy into final battle power.';
+      document.getElementById('bossFill').style.width = pct(state.stats.bossHp, BOSS_MAX) + '%';
     }
 
     function renderActions() {
-      const job = currentJob();
-      const actions = document.getElementById('actions');
-      actions.innerHTML = [
-        { title: job.workLabel, desc: `Do ${job.title.toLowerCase()} work.`, cls: 'primary', fn: doWork },
-        { title: 'Rest', desc: 'Recover energy and focus.', fn: rest },
-        { title: 'Eat', desc: 'Spend food for recovery.', fn: eat },
-        { title: 'Meditate', desc: 'Trade energy for mana.', fn: meditate },
-      ].map((a) => `
-        <button class="btn ${a.cls || ''}" data-action="${a.title}">
-          <div class="title"><span>${a.title}</span><span class="tag accent">Tap</span></div>
-          <div class="desc">${a.desc}</div>
+      const actions = [
+        { id: 'harvest', title: 'Harvest Food', desc: 'Farmer action. +food, -energy. This is the base of the whole chain.', fn: doHarvest, active: true },
+        { id: 'study', title: 'Study Cantrips', desc: 'Apprentice action. Converts food and energy into mana.', fn: doStudy, active: isUnlocked('apprentice') },
+        { id: 'meditate', title: 'Deep Meditation', desc: 'Mage action. Converts mana and energy into focus.', fn: doMeditate, active: isUnlocked('mage') },
+        { id: 'teach', title: 'Teach Class', desc: 'Academy action. Converts mana, focus, and energy into knowledge and gold.', fn: doTeach, active: isUnlocked('academy') },
+        { id: 'ritual', title: 'Grand Ritual', desc: 'Archmage action. Converts knowledge, mana, focus, and energy into arcana.', fn: doRitual, active: isUnlocked('archmage') },
+        { id: 'sell', title: 'Sell Food', desc: 'Trade 25 food for gold. Useful before the academy economy starts.', fn: doSellFood, active: true },
+        { id: 'rest', title: 'Rest', desc: 'Recover energy and a little focus. Costs 2 food if available.', fn: doRest, active: true }
+      ];
+      const box = document.getElementById('actions');
+      box.innerHTML = actions.map(a => `
+        <button class="btn ${a.active ? 'primary' : 'locked'}" data-action="${a.id}" ${a.active ? '' : 'disabled'}>
+          <div class="btn-title"><span>${a.title}</span><span class="chip ${a.active ? 'blue' : ''}">${a.active ? 'Tap' : 'Locked'}</span></div>
+          <div class="btn-desc">${a.desc}</div>
         </button>
       `).join('');
-
-      [...actions.querySelectorAll('[data-action]')].forEach((btn, i) => {
-        const fn = [doWork, rest, eat, meditate][i];
-        btn.onclick = fn;
-      });
+      for (const a of actions) {
+        const el = box.querySelector('[data-action="' + a.id + '"]');
+        if (el) el.onclick = a.fn;
+      }
     }
 
-    function renderJobs() {
-      const jobs = document.getElementById('jobs');
-      jobs.innerHTML = JOBS.map((j) => {
-        const unlocked = unlockedJobs().some(x => x.key === j.key);
-        const active = state.selectedJob === j.key;
-        const idx = JOBS.findIndex(x => x.key === j.key) + 1;
+    function renderStages() {
+      const box = document.getElementById('stages');
+      box.innerHTML = STAGES.map((s, i) => {
+        const unlocked = isUnlocked(s.key);
+        const active = state.currentStage === s.key;
         return `
-          <button class="btn ${active ? 'active' : ''} ${unlocked ? '' : 'locked'}" ${unlocked ? '' : 'disabled'} data-job="${j.key}">
-            <div class="title"><span>${idx}. ${j.title}</span><span class="tag ${unlocked ? 'good' : 'bad'}">${unlocked ? 'Unlocked' : 'Locked'}</span></div>
-            <div class="desc">${unlocked ? j.subtitle : 'Reach the right milestones to unlock this job.'}</div>
+          <button class="btn ${active ? 'active' : ''} ${unlocked ? '' : 'locked'}" data-stage="${s.key}" ${unlocked ? '' : 'disabled'}>
+            <div class="btn-title"><span>${i + 1}. ${s.title}</span><span class="chip ${unlocked ? 'good' : 'red'}">${unlocked ? s.resource : 'Locked'}</span></div>
+            <div class="btn-desc">${unlocked ? s.desc : s.unlockDesc}</div>
           </button>
         `;
       }).join('');
-      [...jobs.querySelectorAll('[data-job]')].forEach((btn) => btn.onclick = () => setSelectedJob(btn.dataset.job));
+      [...box.querySelectorAll('[data-stage]')].forEach(btn => btn.onclick = () => selectStage(btn.dataset.stage));
     }
 
-    function renderBuildings() {
-      const box = document.getElementById('buildings');
-      box.innerHTML = BUILDINGS.map((b) => {
-        const lvl = state.buildings[b.key];
-        const cost = Object.fromEntries(Object.entries(b.baseCost).map(([k, v]) => [k, Math.floor(v * (1 + lvl * 0.65))]));
-        const ok = canAfford(cost);
+    function renderAutomation() {
+      const box = document.getElementById('automation');
+      box.innerHTML = AUTOMATION.map((a, idx) => {
+        const n = state.automation[a.key] || 0;
+        const cost = a.cost(n);
+        const unlocked = isUnlocked(a.stage);
+        const ok = unlocked && canAfford(cost);
+        const rate = a.rate(state);
+        const extra = a.goldRate ? ' and +' + a.goldRate(state).toFixed(2) + ' gold/sec' : '';
         return `
-          <button class="btn ${ok ? 'primary' : 'locked'}" data-build="${b.key}">
-            <div class="title"><span>${b.title} Lv. ${lvl}</span><span class="tag ${ok ? 'good' : 'warn'}">${ok ? 'Can build' : 'Need resources'}</span></div>
-            <div class="desc">${b.desc}</div>
-            <div class="meta">${money(cost)}</div>
-            <div class="desc">Next: ${b.effect(lvl + 1)}</div>
+          <button class="btn ${ok ? 'good' : unlocked ? '' : 'locked'}" data-auto="${a.key}" ${unlocked ? '' : 'disabled'}>
+            <div class="btn-title"><span>${a.title} x${n}</span><span class="chip ${ok ? 'good' : unlocked ? 'amber' : 'red'}">Stage ${idx + 2}</span></div>
+            <div class="btn-desc">${a.desc}</div>
+            <div class="chips"><span class="chip blue">Automates ${labelFor(a.automates)}</span><span class="chip good">+${rate.toFixed(2)} ${a.automates}/sec${extra}</span></div>
+            <div class="chips">${chips(cost)}</div>
           </button>
         `;
       }).join('');
-      [...box.querySelectorAll('[data-build]')].forEach((btn) => btn.onclick = () => build(btn.dataset.build));
+      [...box.querySelectorAll('[data-auto]')].forEach(btn => btn.onclick = () => buyAutomation(btn.dataset.auto));
     }
 
     function renderUpgrades() {
       const box = document.getElementById('upgrades');
-      box.innerHTML = UPGRADES.map((u) => {
-        const lvl = state.upgrades[u.key];
-        const cost = Object.fromEntries(Object.entries(u.cost).map(([k, v]) => [k, Math.floor(v * (1 + lvl * 0.75))]));
-        const ok = canAfford(cost);
+      box.innerHTML = UPGRADES.map(u => {
+        const n = state.upgrades[u.key] || 0;
+        const maxed = n >= u.max;
+        const cost = maxed ? {} : u.cost(n);
+        const ok = !maxed && canAfford(cost);
         return `
-          <button class="btn ${ok ? 'primary' : 'locked'}" data-upg="${u.key}">
-            <div class="title"><span>${u.title} Lv. ${lvl}</span><span class="tag ${ok ? 'good' : 'warn'}">${ok ? 'Buy' : 'Need resources'}</span></div>
-            <div class="desc">${u.desc}</div>
-            <div class="meta">${money(cost)}</div>
+          <button class="btn ${ok ? 'good' : maxed ? 'active' : ''}" data-upgrade="${u.key}" ${maxed ? 'disabled' : ''}>
+            <div class="btn-title"><span>${u.title} Lv. ${n}/${u.max}</span><span class="chip ${maxed ? 'good' : ok ? 'good' : 'amber'}">${maxed ? 'Max' : ok ? 'Buy' : 'Need'}</span></div>
+            <div class="btn-desc">${u.desc}</div>
+            <div class="chips">${maxed ? '<span class="chip good">Complete</span>' : chips(cost)}</div>
           </button>
         `;
       }).join('');
-      [...box.querySelectorAll('[data-upg]')].forEach((btn) => btn.onclick = () => buyUpgrade(UPGRADES.find(u => u.key === btn.dataset.upg)));
+      [...box.querySelectorAll('[data-upgrade]')].forEach(btn => btn.onclick = () => buyUpgrade(btn.dataset.upgrade));
     }
 
-    function renderLog() {
-      document.getElementById('log').innerHTML = state.log.map(line => `<div class="log-item">${escapeHtml(line)}</div>`).join('');
+    function renderChainMap() {
+      const rows = [
+        ['Farmer', 'Manual resource: Food. This starts the entire economy.', isUnlocked('farmer')],
+        ['Apprentice Mage', 'New resource: Mana. Spell: Animated Scarecrow automates Food.', isUnlocked('apprentice')],
+        ['Mage', 'New resource: Focus. Spell: Mana Familiar automates Mana.', isUnlocked('mage')],
+        ['Academy Founder', 'New resource: Knowledge. Ritual: Meditation Circle automates Focus.', isUnlocked('academy')],
+        ['Archmage', 'New resource: Arcana. Spell: Enchanted Faculty automates Knowledge and Gold.', isUnlocked('archmage')]
+      ];
+      document.getElementById('chainMap').innerHTML = rows.map((r, i) => `
+        <div class="chain-row">
+          <div class="stage-dot ${r[2] ? 'done' : 'locked'}">${i + 1}</div>
+          <div>
+            <div class="chain-title">${r[0]}</div>
+            <div class="chain-desc">${r[1]}</div>
+          </div>
+        </div>
+      `).join('');
     }
 
     function renderBoss() {
-      document.getElementById('bossText').textContent = `Boss HP: ${fmt(state.stats.bossHp)} / ${BOSS_MAX}`;
-      document.getElementById('bossLine').textContent = `${fmt(state.stats.bossHp)} / ${BOSS_MAX}`;
-      document.getElementById('bossBar').style.width = `${(state.stats.bossHp / BOSS_MAX) * 100}%`;
-      document.getElementById('bossBtn').style.display = state.selectedJob === 'archmage' ? 'block' : 'none';
-      document.getElementById('bossNote').textContent = state.stats.bossDefeated ? 'Victory! The kingdom is safe.' : 'Reach archmage status, build the academy, and prepare a final strike.';
+      const btn = document.getElementById('bossButton');
+      const ready = isUnlocked('archmage') && state.currentStage === 'archmage' && !state.stats.bossDefeated;
+      btn.disabled = !ready;
+      btn.className = 'btn danger ' + (ready ? '' : 'locked');
+      btn.innerHTML = state.stats.bossDefeated
+        ? '<div class="btn-title"><span>Void King Defeated</span><span class="chip good">Victory</span></div><div class="btn-desc">The realm is safe. You can keep growing the academy economy.</div>'
+        : '<div class="btn-title"><span>Challenge the Void King</span><span class="chip red">' + (ready ? 'Ready' : 'Archmage only') + '</span></div><div class="btn-desc">Cost: 25 arcana, 120 mana, 40 focus, 25 energy. Damage scales with automations.</div>';
     }
 
-    function renderTop() {
-      const job = currentJob();
-      document.getElementById('dayPill').textContent = `Day ${Math.floor(state.stats.days)} • Level ${state.stats.level}`;
-      document.getElementById('jobTitle').textContent = job.title;
-      document.getElementById('jobSubtitle').textContent = job.subtitle;
+    function renderLog() {
+      document.getElementById('log').innerHTML = state.log.map(x => '<div class="log-item">' + escapeHtml(x) + '</div>').join('');
     }
 
     function render() {
-      renderTop();
-      renderStats();
+      revealUnlocks();
+      renderHero();
+      renderResources();
       renderActions();
-      renderJobs();
-      renderBuildings();
+      renderStages();
+      renderAutomation();
       renderUpgrades();
-      renderLog();
+      renderChainMap();
       renderBoss();
+      renderLog();
     }
 
-    function savePayload() {
-      return {
-        ...state,
-        savedAt: Date.now(),
-      };
+    function saveGame(show) {
+      state.savedAt = Date.now();
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+      if (show) showToast('Saved');
     }
 
-    function autosave() {
-      state.lastSavedAt = Date.now();
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(savePayload())); } catch (e) {}
-    }
-
-    function load() {
+    function loadGame() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (!raw) return null;
-        const parsed = JSON.parse(raw);
+        const saved = JSON.parse(raw);
+        const base = initialState();
         return {
-          ...initial(),
-          ...parsed,
-          resources: { ...initial().resources, ...(parsed.resources || {}) },
-          stats: { ...initial().stats, ...(parsed.stats || {}) },
-          buildings: { ...initial().buildings, ...(parsed.buildings || {}) },
-          upgrades: { ...initial().upgrades, ...(parsed.upgrades || {}) },
-          log: Array.isArray(parsed.log) && parsed.log.length ? parsed.log : initial().log,
-          selectedJob: parsed.selectedJob || 'peasant',
+          ...base,
+          ...saved,
+          resources: { ...base.resources, ...(saved.resources || {}) },
+          automation: { ...base.automation, ...(saved.automation || {}) },
+          upgrades: { ...base.upgrades, ...(saved.upgrades || {}) },
+          unlocked: { ...base.unlocked, ...(saved.unlocked || {}) },
+          stats: { ...base.stats, ...(saved.stats || {}) },
+          log: Array.isArray(saved.log) ? saved.log : base.log
         };
-      } catch (e) {
-        return null;
-      }
+      } catch (e) { return null; }
     }
 
-    function escapeHtml(str) {
-      return String(str)
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#39;');
+    function resetGame() {
+      if (!confirm('Reset your saved game?')) return;
+      localStorage.removeItem(STORAGE_KEY);
+      state = initialState();
+      lastTick = Date.now();
+      render();
+      saveGame(true);
+      pushLog('Save reset. A new peasant begins again.');
     }
 
-    document.getElementById('bossBtn').addEventListener('click', bossFight);
-    window.addEventListener('visibilitychange', () => { if (!document.hidden) render(); });
-    window.addEventListener('beforeunload', autosave);
+    function showToast(text) {
+      const el = document.getElementById('toast');
+      el.textContent = text;
+      el.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove('show'), 1200);
+    }
 
+    document.getElementById('bossButton').addEventListener('click', bossFight);
+    document.getElementById('saveBtn').addEventListener('click', () => saveGame(true));
+    document.getElementById('resetBtn').addEventListener('click', resetGame);
+    window.addEventListener('beforeunload', () => saveGame(false));
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) saveGame(false);
+      else { lastTick = Date.now(); render(); }
+    });
+
+    offlineProgress();
     render();
-    autosave();
-    tickTimer = setInterval(passiveTick, 1000);
+    saveGame(false);
+    setInterval(() => {
+      const now = Date.now();
+      const elapsed = Math.min(4, Math.max(0, (now - lastTick) / 1000));
+      lastTick = now;
+      tick(elapsed);
+      render();
+      if (Math.floor(now / 5000) !== Math.floor((now - elapsed * 1000) / 5000)) saveGame(false);
+    }, 1000);
   </script>
 </body>
 </html>
