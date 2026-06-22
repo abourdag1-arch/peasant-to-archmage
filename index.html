@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>Peasant to Archmage</title>
+  <style>
+    :root {
+      --bg: #020617;
+      --panel: rgba(15, 23, 42, 0.9);
+      --panel2: rgba(30, 41, 59, 0.9);
+      --line: rgba(255,255,255,0.10);
+      --line2: rgba(125,211,252,0.25);
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --good: #34d399;
+      --warn: #f59e0b;
+      --bad: #fb7185;
+      --accent: #38bdf8;
+      --accent2: #c084fc;
+      --shadow: 0 18px 40px rgba(0,0,0,0.35);
+      --radius: 22px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: radial-gradient(1200px 800px at 20% 0%, rgba(56,189,248,0.18), transparent 40%), radial-gradient(1200px 800px at 80% 10%, rgba(192,132,252,0.16), transparent 35%), var(--bg); color: var(--text); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body { min-height: 100vh; }
+    button { font: inherit; }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 12px 12px 28px; padding-bottom: calc(28px + env(safe-area-inset-bottom)); }
+    .hero, .panel { background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03)); border: 1px solid var(--line); border-radius: calc(var(--radius) + 6px); box-shadow: var(--shadow); backdrop-filter: blur(12px); }
+    .hero { padding: 16px; }
+    .top { display: flex; flex-wrap: wrap; gap: 12px; align-items: start; justify-content: space-between; }
+    .eyebrow { font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: #7dd3fc; margin-bottom: 8px; }
+    h1 { margin: 0; font-size: clamp(1.45rem, 4vw, 2.4rem); line-height: 1.05; }
+    .subtitle { color: var(--muted); margin-top: 8px; max-width: 70ch; }
+    .pill { display: inline-flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 999px; background: rgba(2,6,23,0.6); border: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+    .hero-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
+    .stat { background: rgba(2,6,23,0.55); border: 1px solid var(--line); border-radius: 18px; padding: 12px; min-height: 72px; }
+    .stat .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.18em; color: var(--muted); }
+    .stat .value { font-size: 1.4rem; margin-top: 6px; font-weight: 700; }
+    .stat .sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .grid { display: grid; gap: 12px; margin-top: 12px; }
+    .cols { display: grid; gap: 12px; grid-template-columns: 1.1fr 0.9fr; }
+    @media (max-width: 900px) { .cols { grid-template-columns: 1fr; } }
+    .panel { padding: 14px; }
+    .panel h2 { margin: 0; font-size: 1.05rem; display: flex; align-items: center; gap: 8px; }
+    .panel .hint { color: var(--muted); font-size: 12px; margin-top: 6px; }
+    .row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn { width: 100%; border: 1px solid var(--line); background: linear-gradient(180deg, rgba(15,23,42,0.95), rgba(2,6,23,0.95)); color: var(--text); border-radius: 18px; padding: 14px; text-align: left; cursor: pointer; transition: transform .08s ease, border-color .15s ease, background .15s ease; touch-action: manipulation; }
+    .btn:active { transform: scale(0.99); }
+    .btn:hover { border-color: rgba(125,211,252,0.3); }
+    .btn .title { font-weight: 700; font-size: 1rem; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .btn .desc { color: var(--muted); font-size: 13px; margin-top: 4px; line-height: 1.35; }
+    .btn .meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .tag { font-size: 11px; padding: 5px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); background: rgba(255,255,255,0.03); }
+    .tag.good { color: #bbf7d0; border-color: rgba(52,211,153,0.25); }
+    .tag.warn { color: #fde68a; border-color: rgba(245,158,11,0.25); }
+    .tag.bad { color: #fecdd3; border-color: rgba(251,113,133,0.25); }
+    .tag.accent { color: #bae6fd; border-color: rgba(56,189,248,0.25); }
+    .btn.active { border-color: var(--line2); box-shadow: inset 0 0 0 1px rgba(56,189,248,0.08); }
+    .btn.locked { opacity: 0.55; cursor: not-allowed; }
+    .btn.primary { background: linear-gradient(90deg, rgba(56,189,248,0.16), rgba(192,132,252,0.13)); }
+    .btn.danger { background: linear-gradient(90deg, rgba(251,113,133,0.15), rgba(245,158,11,0.11)); }
+    .split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    @media (max-width: 540px) { .split { grid-template-columns: 1fr; } .hero-grid { grid-template-columns: 1fr 1fr; } }
+    .bar { height: 10px; border-radius: 999px; background: rgba(255,255,255,0.08); overflow: hidden; margin-top: 10px; }
+    .fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+    .fill.good { background: linear-gradient(90deg, #34d399, #86efac); }
+    .fill.warn { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+    .fill.bad { background: linear-gradient(90deg, #fb7185, #f472b6); }
+    .small { font-size: 12px; color: var(--muted); }
+    .log { display: grid; gap: 8px; margin-top: 10px; }
+    .log-item { padding: 10px 12px; border-radius: 16px; border: 1px solid var(--line); background: rgba(2,6,23,0.55); color: #cbd5e1; font-size: 13px; line-height: 1.35; }
+    .footer { margin-top: 12px; color: var(--muted); font-size: 12px; text-align: center; }
+    .section-gap { margin-top: 12px; }
+    .headline-row { display:flex; align-items:center; justify-content:space-between; gap: 10px; flex-wrap: wrap; }
+    .progress { display:grid; gap: 6px; }
+    .boss-card { background: linear-gradient(180deg, rgba(244,63,94,0.1), rgba(2,6,23,0.55)); border-color: rgba(251,113,133,0.18); }
+    .mini { display:grid; gap: 6px; }
+    .mini .line { display:flex; justify-content:space-between; gap: 10px; font-size: 12px; color: var(--muted); }
+    .mono { font-variant-numeric: tabular-nums; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div class="top">
+        <div>
+          <div class="eyebrow">Mobile Incremental RPG</div>
+          <h1>From Peasant to Archmage</h1>
+          <div class="subtitle">Start as a peasant, survive, build an academy, rise through magical ranks, and face the Void King in the final battle.</div>
+        </div>
+        <div class="pill" id="dayPill">Day 1 • Level 1</div>
+      </div>
+
+      <div class="hero-grid" id="statGrid"></div>
+
+      <div class="section-gap split">
+        <div class="stat">
+          <div class="label">Current Job</div>
+          <div class="value" id="jobTitle">Peasant</div>
+          <div class="sub" id="jobSubtitle">Tend fields and gather your first resources.</div>
+        </div>
+        <div class="stat">
+          <div class="label">Main Quest</div>
+          <div class="value">Defeat the Void King</div>
+          <div class="sub mono" id="bossText">Boss HP: 1000 / 1000</div>
+        </div>
+      </div>
+    </header>
+
+    <main class="cols grid">
+      <section class="grid">
+        <div class="panel">
+          <div class="headline-row">
+            <h2>Actions</h2>
+            <div class="small">Tap-friendly and mobile-first</div>
+          </div>
+          <div class="section-gap split" id="actions"></div>
+        </div>
+
+        <div class="panel">
+          <div class="headline-row">
+            <h2>Jobs</h2>
+            <div class="small">Unlock the next tier by progressing</div>
+          </div>
+          <div class="section-gap grid" id="jobs"></div>
+        </div>
+
+        <div class="panel">
+          <div class="headline-row">
+            <h2>Build the Academy</h2>
+            <div class="small">Buildings improve your economy</div>
+          </div>
+          <div class="section-gap grid" id="buildings"></div>
+        </div>
+      </section>
+
+      <aside class="grid">
+        <div class="panel">
+          <div class="headline-row">
+            <h2>Upgrades</h2>
+            <div class="small">Permanent progression</div>
+          </div>
+          <div class="section-gap grid" id="upgrades"></div>
+        </div>
+
+        <div class="panel boss-card">
+          <div class="headline-row">
+            <h2>Boss Fight</h2>
+            <div class="small">Endgame encounter</div>
+          </div>
+          <div class="section-gap progress">
+            <div class="mini">
+              <div class="line"><span>Void King</span><span class="mono" id="bossLine">1000 / 1000</span></div>
+              <div class="bar"><div class="fill bad" id="bossBar" style="width:100%"></div></div>
+            </div>
+            <div class="small" id="bossNote">Reach archmage status, build the academy, and prepare a final strike.</div>
+            <button class="btn danger" id="bossBtn">Challenge the Void King</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="headline-row">
+            <h2>Event Log</h2>
+            <div class="small">Recent actions</div>
+          </div>
+          <div class="log" id="log"></div>
+        </div>
+      </aside>
+    </main>
+
+    <div class="footer">Save, load, and offline progress are built in automatically in your browser.</div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'peasant-to-archmage-save-v1';
+    const BOSS_MAX = 1000;
+
+    const JOBS = [
+      {
+        key: 'peasant',
+        title: 'Peasant',
+        subtitle: 'Tend fields and gather your first resources.',
+        workLabel: 'Tend Fields',
+        unlock: (s) => true,
+        work: (s) => ({ gold: 3 + s.upgrades.workmanship, food: 2 + Math.floor(s.upgrades.irrigation / 2), energy: -8, focus: -1, xp: 3 }),
+      },
+      {
+        key: 'apprentice',
+        title: 'Apprentice',
+        subtitle: 'Study cantrips and begin shaping mana.',
+        workLabel: 'Study Cantrips',
+        unlock: (s) => s.stats.xp >= 30 || s.upgrades.wisdom >= 1,
+        work: (s) => ({ gold: 2 + Math.floor(s.upgrades.tuition / 2), mana: 6 + s.upgrades.wisdom, focus: -8, energy: -6, xp: 4 }),
+      },
+      {
+        key: 'journeyman',
+        title: 'Journeyman',
+        subtitle: 'Teach, research, and grow your reputation.',
+        workLabel: 'Teach & Research',
+        unlock: (s) => s.stats.xp >= 120 && s.buildings.academy >= 1,
+        work: (s) => ({ gold: 8 + s.buildings.academy * 3, mana: 10 + s.buildings.library * 2, focus: -10, energy: -8, xp: 7, reputation: 2 }),
+      },
+      {
+        key: 'mage',
+        title: 'Mage',
+        subtitle: 'Channel arcana and command the academy.',
+        workLabel: 'Channel Arcana',
+        unlock: (s) => s.buildings.academy >= 1 && s.stats.reputation >= 25,
+        work: (s) => ({ gold: 14 + s.buildings.laboratory * 4, mana: 20 + s.upgrades.rituals * 3, focus: -12, energy: -10, xp: 10, reputation: 3 }),
+      },
+      {
+        key: 'archmage',
+        title: 'Archmage',
+        subtitle: 'The final form: defend the realm and face the big bad.',
+        workLabel: 'Dominate the Weave',
+        unlock: (s) => s.buildings.academy >= 4 && s.stats.reputation >= 100 && s.stats.mana >= 250,
+        work: (s) => ({ gold: 25 + s.buildings.laboratory * 8, mana: 35 + s.upgrades.rituals * 5, focus: -16, energy: -12, xp: 14, reputation: 5 }),
+      },
+    ];
+
+    const BUILDINGS = [
+      { key: 'academy', title: 'Academy', desc: 'Unlocks advanced jobs and increases passive focus recovery.', baseCost: { gold: 120, food: 50 }, effect: (lvl) => `+${lvl * 2} focus cap` },
+      { key: 'library', title: 'Library', desc: 'Improves study output and mana gain.', baseCost: { gold: 90, mana: 20 }, effect: (lvl) => `+${lvl * 2} mana/tick while studying` },
+      { key: 'laboratory', title: 'Laboratory', desc: 'Boosts gold and mana production from magical work.', baseCost: { gold: 180, mana: 60, food: 40 }, effect: (lvl) => `+${lvl * 4} advanced work income` },
+    ];
+
+    const UPGRADES = [
+      { key: 'workmanship', title: 'Workmanship', desc: '+1 gold from peasant labor.', cost: { gold: 25 } },
+      { key: 'wisdom', title: 'Wisdom', desc: '+1 mana from study actions.', cost: { gold: 40, focus: 10 } },
+      { key: 'tuition', title: 'Tuition', desc: '+1 gold from apprentice study.', cost: { gold: 60 } },
+      { key: 'irrigation', title: 'Irrigation', desc: '+1 food from field work every 2 levels.', cost: { gold: 55, food: 10 } },
+      { key: 'rituals', title: 'Rituals', desc: '+3 mana from mage/archmage work.', cost: { gold: 80, mana: 25 } },
+    ];
+
+    const initial = () => ({
+      resources: { gold: 20, mana: 0, focus: 30, food: 25, energy: 80, reputation: 0 },
+      stats: { level: 1, xp: 0, bossHp: BOSS_MAX, bossDefeated: false, days: 0 },
+      buildings: { academy: 0, library: 0, laboratory: 0 },
+      upgrades: { workmanship: 0, wisdom: 0, tuition: 0, irrigation: 0, rituals: 0 },
+      log: ['A humble peasant awakens in a small village with a big destiny.'],
+      selectedJob: 'peasant',
+      lastSavedAt: Date.now(),
+    });
+
+    let state = load() || initial();
+    let tickTimer = null;
+
+    function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
+    function fmt(n) {
+      const num = Math.floor(Number(n) || 0);
+      if (Math.abs(num) < 1000) return String(num);
+      const units = ['K', 'M', 'B', 'T'];
+      let v = Math.abs(num);
+      let u = -1;
+      while (v >= 1000 && u < units.length - 1) { v /= 1000; u++; }
+      const sign = num < 0 ? '-' : '';
+      return sign + (v >= 100 ? v.toFixed(0) : v >= 10 ? v.toFixed(1) : v.toFixed(2)) + units[u];
+    }
+    function money(cost) {
+      return Object.entries(cost).map(([k, v]) => `<span class="tag">${k}: ${v}</span>`).join('');
+    }
+    function canAfford(cost) {
+      return Object.entries(cost).every(([k, v]) => (state.resources[k] || 0) >= v);
+    }
+    function spend(cost) {
+      if (!canAfford(cost)) return false;
+      for (const [k, v] of Object.entries(cost)) state.resources[k] -= v;
+      return true;
+    }
+    function pushLog(msg) {
+      state.log.unshift(msg);
+      state.log = state.log.slice(0, 6);
+      render();
+      autosave();
+    }
+
+    function currentJob() {
+      return JOBS.find(j => j.key === state.selectedJob) || JOBS[0];
+    }
+
+    function unlockedJobs() {
+      return JOBS.filter(j => j.unlock(state));
+    }
+
+    function focusCap() {
+      return 100 + state.buildings.academy * 2;
+    }
+
+    function energyCap() {
+      return 100;
+    }
+
+    function passiveTick() {
+      state.stats.days += 1 / 12;
+      state.resources.mana += state.buildings.library * 1;
+      state.resources.gold += state.buildings.laboratory * 1;
+      state.resources.focus = clamp(state.resources.focus + state.buildings.academy * 0.5, 0, focusCap());
+      state.resources.energy = clamp(state.resources.energy + 0.6 - (1 + Math.max(0, state.stats.level - 1) * 0.1) * 0.2, 0, energyCap());
+      if (state.resources.food > 0) state.resources.food = Math.max(0, state.resources.food - (1 + Math.max(0, state.stats.level - 1) * 0.1) * 0.03);
+      else state.resources.energy = clamp(state.resources.energy - 0.8, 0, energyCap());
+
+      const needed = 20 + (state.stats.level - 1) * 15;
+      if (state.stats.xp >= needed) {
+        state.stats.xp -= needed;
+        state.stats.level += 1;
+        state.resources.reputation += 2;
+        state.log.unshift(`Leveled up to ${state.stats.level}. The village notices your growing power.`);
+        state.log = state.log.slice(0, 6);
+      }
+
+      if (state.selectedJob === 'archmage' && !state.stats.bossDefeated) {
+        state.stats.bossHp = clamp(state.stats.bossHp - (2 + state.buildings.library), 0, BOSS_MAX);
+        if (state.stats.bossHp === 0) {
+          state.stats.bossDefeated = true;
+          state.log.unshift('The Void King falls. The realm is saved.');
+          state.log = state.log.slice(0, 6);
+        }
+      }
+
+      render();
+      autosave();
+    }
+
+    function setSelectedJob(key) {
+      if (unlockedJobs().some(j => j.key === key)) {
+        state.selectedJob = key;
+        pushLog(`You are now working as a ${JOBS.find(j => j.key === key).title.toLowerCase()}.`);
+      }
+    }
+
+    function doWork() {
+      const job = currentJob();
+      if (state.resources.energy < 8 || state.resources.focus < 4) return pushLog('Too tired or unfocused to work.');
+      const delta = job.work(state);
+      for (const [k, v] of Object.entries(delta)) {
+        if (k === 'xp') state.stats.xp += v;
+        else state.resources[k] = clamp((state.resources[k] || 0) + v, 0, 999999999);
+      }
+      state.resources.focus = clamp(state.resources.focus, 0, focusCap());
+      state.resources.energy = clamp(state.resources.energy, 0, energyCap());
+      pushLog(`You used ${job.workLabel.toLowerCase()} as a ${job.title.toLowerCase()}.`);
+    }
+
+    function rest() {
+      state.resources.energy = clamp(state.resources.energy + 30, 0, energyCap());
+      state.resources.focus = clamp(state.resources.focus + 15, 0, focusCap());
+      state.resources.food = clamp(state.resources.food - 2, 0, 999999999);
+      pushLog('You sleep and recover energy and focus.');
+    }
+
+    function eat() {
+      if (!spend({ food: 5 })) return pushLog('Not enough food.');
+      state.resources.energy = clamp(state.resources.energy + 18, 0, energyCap());
+      state.resources.focus = clamp(state.resources.focus + 4, 0, focusCap());
+      pushLog('A good meal restores your strength.');
+    }
+
+    function meditate() {
+      if (!spend({ energy: 6 })) return pushLog('Too exhausted to meditate.');
+      state.resources.focus = clamp(state.resources.focus + 20, 0, focusCap());
+      state.resources.mana = clamp(state.resources.mana + 8, 0, 999999999);
+      pushLog('Meditation sharpens your mind and channels mana.');
+    }
+
+    function build(key) {
+      const b = BUILDINGS.find(x => x.key === key);
+      const lvl = state.buildings[key];
+      const cost = Object.fromEntries(Object.entries(b.baseCost).map(([k, v]) => [k, Math.floor(v * (1 + lvl * 0.65))]));
+      if (!spend(cost)) return pushLog(`Not enough resources for ${b.title}.`);
+      state.buildings[key] += 1;
+      state.resources.reputation += 4;
+      pushLog(`${b.title} constructed to level ${state.buildings[key]}.`);
+    }
+
+    function buyUpgrade(upg) {
+      const lvl = state.upgrades[upg.key];
+      const cost = Object.fromEntries(Object.entries(upg.cost).map(([k, v]) => [k, Math.floor(v * (1 + lvl * 0.75))]));
+      if (!spend(cost)) return pushLog(`Not enough resources for ${upg.title}.`);
+      state.upgrades[upg.key] += 1;
+      pushLog(`${upg.title} improved to rank ${state.upgrades[upg.key]}.`);
+    }
+
+    function bossFight() {
+      if (state.selectedJob !== 'archmage') return pushLog('Only an archmage can challenge the Void King.');
+      if (state.stats.bossDefeated) return pushLog('The realm is already saved.');
+      if (!spend({ mana: 80, focus: 20, energy: 20 })) return pushLog('You need mana, focus, and energy to fight.');
+      const dmg = 160 + state.buildings.laboratory * 15 + state.upgrades.rituals * 10;
+      state.stats.bossHp = clamp(state.stats.bossHp - dmg, 0, BOSS_MAX);
+      if (state.stats.bossHp === 0) {
+        state.stats.bossDefeated = true;
+        state.resources.reputation += 50;
+        pushLog('The Void King has been defeated!');
+      } else {
+        pushLog('You strike the Void King, but the battle continues.');
+      }
+    }
+
+    function renderStats() {
+      const statDefs = [
+        ['gold', 'Gold', 'Buy tools, buildings, and progress.', 'good'],
+        ['mana', 'Mana', 'Fuel spells and later-game power.', 'accent'],
+        ['focus', 'Focus', 'Required for work and study.', 'warn'],
+        ['food', 'Food', 'Keeps the village running.', 'good'],
+        ['energy', 'Energy', 'Rest, eat, or meditate to recover.', 'warn'],
+        ['reputation', 'Reputation', 'Unlock higher jobs and big milestones.', 'accent'],
+      ];
+      const grid = document.getElementById('statGrid');
+      grid.innerHTML = statDefs.map(([key, label, sub, cls]) => `
+        <div class="stat">
+          <div class="label">${label}</div>
+          <div class="value mono">${fmt(state.resources[key])}</div>
+          <div class="sub">${sub}</div>
+          <div class="bar"><div class="fill ${cls}" style="width:${Math.min(100, (state.resources[key] || 0) / (key === 'gold' ? 1000 : key === 'mana' ? 500 : key === 'reputation' ? 100 : 100) * 100)}%"></div></div>
+        </div>
+      `).join('');
+    }
+
+    function renderActions() {
+      const job = currentJob();
+      const actions = document.getElementById('actions');
+      actions.innerHTML = [
+        { title: job.workLabel, desc: `Do ${job.title.toLowerCase()} work.`, cls: 'primary', fn: doWork },
+        { title: 'Rest', desc: 'Recover energy and focus.', fn: rest },
+        { title: 'Eat', desc: 'Spend food for recovery.', fn: eat },
+        { title: 'Meditate', desc: 'Trade energy for mana.', fn: meditate },
+      ].map((a) => `
+        <button class="btn ${a.cls || ''}" data-action="${a.title}">
+          <div class="title"><span>${a.title}</span><span class="tag accent">Tap</span></div>
+          <div class="desc">${a.desc}</div>
+        </button>
+      `).join('');
+
+      [...actions.querySelectorAll('[data-action]')].forEach((btn, i) => {
+        const fn = [doWork, rest, eat, meditate][i];
+        btn.onclick = fn;
+      });
+    }
+
+    function renderJobs() {
+      const jobs = document.getElementById('jobs');
+      jobs.innerHTML = JOBS.map((j) => {
+        const unlocked = unlockedJobs().some(x => x.key === j.key);
+        const active = state.selectedJob === j.key;
+        const idx = JOBS.findIndex(x => x.key === j.key) + 1;
+        return `
+          <button class="btn ${active ? 'active' : ''} ${unlocked ? '' : 'locked'}" ${unlocked ? '' : 'disabled'} data-job="${j.key}">
+            <div class="title"><span>${idx}. ${j.title}</span><span class="tag ${unlocked ? 'good' : 'bad'}">${unlocked ? 'Unlocked' : 'Locked'}</span></div>
+            <div class="desc">${unlocked ? j.subtitle : 'Reach the right milestones to unlock this job.'}</div>
+          </button>
+        `;
+      }).join('');
+      [...jobs.querySelectorAll('[data-job]')].forEach((btn) => btn.onclick = () => setSelectedJob(btn.dataset.job));
+    }
+
+    function renderBuildings() {
+      const box = document.getElementById('buildings');
+      box.innerHTML = BUILDINGS.map((b) => {
+        const lvl = state.buildings[b.key];
+        const cost = Object.fromEntries(Object.entries(b.baseCost).map(([k, v]) => [k, Math.floor(v * (1 + lvl * 0.65))]));
+        const ok = canAfford(cost);
+        return `
+          <button class="btn ${ok ? 'primary' : 'locked'}" data-build="${b.key}">
+            <div class="title"><span>${b.title} Lv. ${lvl}</span><span class="tag ${ok ? 'good' : 'warn'}">${ok ? 'Can build' : 'Need resources'}</span></div>
+            <div class="desc">${b.desc}</div>
+            <div class="meta">${money(cost)}</div>
+            <div class="desc">Next: ${b.effect(lvl + 1)}</div>
+          </button>
+        `;
+      }).join('');
+      [...box.querySelectorAll('[data-build]')].forEach((btn) => btn.onclick = () => build(btn.dataset.build));
+    }
+
+    function renderUpgrades() {
+      const box = document.getElementById('upgrades');
+      box.innerHTML = UPGRADES.map((u) => {
+        const lvl = state.upgrades[u.key];
+        const cost = Object.fromEntries(Object.entries(u.cost).map(([k, v]) => [k, Math.floor(v * (1 + lvl * 0.75))]));
+        const ok = canAfford(cost);
+        return `
+          <button class="btn ${ok ? 'primary' : 'locked'}" data-upg="${u.key}">
+            <div class="title"><span>${u.title} Lv. ${lvl}</span><span class="tag ${ok ? 'good' : 'warn'}">${ok ? 'Buy' : 'Need resources'}</span></div>
+            <div class="desc">${u.desc}</div>
+            <div class="meta">${money(cost)}</div>
+          </button>
+        `;
+      }).join('');
+      [...box.querySelectorAll('[data-upg]')].forEach((btn) => btn.onclick = () => buyUpgrade(UPGRADES.find(u => u.key === btn.dataset.upg)));
+    }
+
+    function renderLog() {
+      document.getElementById('log').innerHTML = state.log.map(line => `<div class="log-item">${escapeHtml(line)}</div>`).join('');
+    }
+
+    function renderBoss() {
+      document.getElementById('bossText').textContent = `Boss HP: ${fmt(state.stats.bossHp)} / ${BOSS_MAX}`;
+      document.getElementById('bossLine').textContent = `${fmt(state.stats.bossHp)} / ${BOSS_MAX}`;
+      document.getElementById('bossBar').style.width = `${(state.stats.bossHp / BOSS_MAX) * 100}%`;
+      document.getElementById('bossBtn').style.display = state.selectedJob === 'archmage' ? 'block' : 'none';
+      document.getElementById('bossNote').textContent = state.stats.bossDefeated ? 'Victory! The kingdom is safe.' : 'Reach archmage status, build the academy, and prepare a final strike.';
+    }
+
+    function renderTop() {
+      const job = currentJob();
+      document.getElementById('dayPill').textContent = `Day ${Math.floor(state.stats.days)} • Level ${state.stats.level}`;
+      document.getElementById('jobTitle').textContent = job.title;
+      document.getElementById('jobSubtitle').textContent = job.subtitle;
+    }
+
+    function render() {
+      renderTop();
+      renderStats();
+      renderActions();
+      renderJobs();
+      renderBuildings();
+      renderUpgrades();
+      renderLog();
+      renderBoss();
+    }
+
+    function savePayload() {
+      return {
+        ...state,
+        savedAt: Date.now(),
+      };
+    }
+
+    function autosave() {
+      state.lastSavedAt = Date.now();
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(savePayload())); } catch (e) {}
+    }
+
+    function load() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        return {
+          ...initial(),
+          ...parsed,
+          resources: { ...initial().resources, ...(parsed.resources || {}) },
+          stats: { ...initial().stats, ...(parsed.stats || {}) },
+          buildings: { ...initial().buildings, ...(parsed.buildings || {}) },
+          upgrades: { ...initial().upgrades, ...(parsed.upgrades || {}) },
+          log: Array.isArray(parsed.log) && parsed.log.length ? parsed.log : initial().log,
+          selectedJob: parsed.selectedJob || 'peasant',
+        };
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    document.getElementById('bossBtn').addEventListener('click', bossFight);
+    window.addEventListener('visibilitychange', () => { if (!document.hidden) render(); });
+    window.addEventListener('beforeunload', autosave);
+
+    render();
+    autosave();
+    tickTimer = setInterval(passiveTick, 1000);
+  </script>
+</body>
+</html>
