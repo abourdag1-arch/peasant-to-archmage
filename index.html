@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#07111f" />
-  <title>Peasant to Archmage V2</title>
+  <title>Peasant to Archmage V2.1 Housing</title>
   <style>
     :root {
       --bg: #040812;
@@ -161,6 +161,37 @@
       font-size: 12px;
     }
     .footer { color: var(--muted2); text-align:center; font-size: 12px; margin-top: 12px; }
+
+    .home-summary {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+      margin-bottom: 10px;
+    }
+    @media (max-width: 580px) { .home-summary { grid-template-columns: 1fr; } }
+    .home-card {
+      border: 1px solid var(--line);
+      background: rgba(3,7,18,0.48);
+      border-radius: 18px;
+      padding: 12px;
+    }
+    .home-card .home-label {
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 10px;
+    }
+    .home-card .home-title {
+      font-weight: 900;
+      font-size: 1.05rem;
+      margin-top: 5px;
+    }
+    .home-card .home-desc {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.38;
+      margin-top: 5px;
+    }
 
 
     /* Sticky mobile HUD: resources stay visible while the game scrolls. */
@@ -320,6 +351,7 @@
         <a href="#actionsPanel">Actions</a>
         <a href="#stagesPanel">Stages</a>
         <a href="#automationPanel">Spells</a>
+        <a href="#housingPanel">Home</a>
         <a href="#upgradesPanel">Purchases</a>
         <a href="#battlePanel">Battle</a>
         <a href="#logPanel">Log</a>
@@ -330,11 +362,11 @@
     <header class="hero">
       <div class="topline">
         <div>
-          <div class="eyebrow">V2 resource chain prototype</div>
+          <div class="eyebrow">V2.1 resource chain prototype</div>
           <h1>Peasant to Archmage</h1>
-          <div class="subtitle">Every career stage introduces a new resource and unlocks automation for the previous resource. Apprentice magic animates farming, mage focus automates mana, academy knowledge automates focus, and archmage arcana automates the academy.</div>
+          <div class="subtitle">Every career stage introduces a new resource and unlocks automation for the previous resource. Apprentice magic animates farming, and your home now grows from a hut into an archmage estate that improves passive rest and production.</div>
         </div>
-        <div class="version-pill">V2 sticky HUD</div>
+        <div class="version-pill">V2.1 housing</div>
       </div>
 
       <div class="hero-bottom">
@@ -382,6 +414,18 @@
             </div>
           </div>
           <div class="btn-list" id="automation"></div>
+        </div>
+
+        <div class="panel" id="housingPanel">
+          <div class="section-head">
+            <div>
+              <h2>Housing and passive rest</h2>
+              <div class="section-sub">Buy larger homes with gold, then furnish them for better sleep, passive recovery, and resource generation.</div>
+            </div>
+          </div>
+          <div class="home-summary" id="housingSummary"></div>
+          <button class="btn good" id="houseButton"></button>
+          <div class="section-gap btn-list" id="houseItems"></div>
         </div>
       </section>
 
@@ -537,6 +581,162 @@
       }
     ];
 
+    const HOUSE_TIERS = [
+      {
+        title: 'Peasant Hut',
+        desc: 'A roof, a straw mat, and enough quiet to recover after farm work.',
+        stage: 'farmer',
+        cost: null,
+        restRate: 0.06,
+        restAction: 0,
+        energyCap: 0,
+        foodCap: 0,
+        goldCap: 0
+      },
+      {
+        title: 'Cozy Cottage',
+        desc: 'A real bed and pantry space. Passive rest starts to matter here.',
+        stage: 'apprentice',
+        cost: { gold: 80, food: 60 },
+        restRate: 0.18,
+        restAction: 5,
+        energyCap: 10,
+        foodCap: 80,
+        goldCap: 180
+      },
+      {
+        title: 'Mage Loft',
+        desc: 'A quiet upstairs room where mana settles naturally overnight.',
+        stage: 'mage',
+        cost: { gold: 240, mana: 90 },
+        restRate: 0.34,
+        restAction: 9,
+        energyCap: 18,
+        foodCap: 130,
+        manaCap: 140,
+        goldCap: 420
+      },
+      {
+        title: 'Academy Townhouse',
+        desc: 'Enough rooms for study, storage, and visiting apprentices.',
+        stage: 'academy',
+        cost: { gold: 650, knowledge: 110 },
+        restRate: 0.52,
+        restAction: 14,
+        energyCap: 28,
+        foodCap: 210,
+        manaCap: 230,
+        focusCap: 90,
+        goldCap: 900,
+        knowledgeCap: 180
+      },
+      {
+        title: 'Wizard Tower',
+        desc: 'A vertical home and laboratory where the whole building hums with magic.',
+        stage: 'archmage',
+        cost: { gold: 1450, knowledge: 320, arcana: 18 },
+        restRate: 0.74,
+        restAction: 20,
+        energyCap: 40,
+        foodCap: 320,
+        manaCap: 380,
+        focusCap: 150,
+        goldCap: 1600,
+        knowledgeCap: 340,
+        arcanaCap: 80
+      },
+      {
+        title: 'Archmage Estate',
+        desc: 'A legendary residence with wards, servants, gardens, and ritual wings.',
+        stage: 'archmage',
+        cost: { gold: 3000, knowledge: 620, arcana: 75 },
+        restRate: 1.02,
+        restAction: 28,
+        energyCap: 55,
+        foodCap: 480,
+        manaCap: 560,
+        focusCap: 230,
+        goldCap: 2600,
+        knowledgeCap: 560,
+        arcanaCap: 150
+      }
+    ];
+
+    const HOUSE_ITEMS = [
+      {
+        key: 'bed',
+        title: 'Better Bed',
+        minTier: 0,
+        max: 10,
+        desc: 'Improves passive rest and makes the Rest action stronger.',
+        cost: (n) => ({ gold: Math.floor(22 * Math.pow(1.42, n)), food: Math.floor(18 * Math.pow(1.22, n)) }),
+        effect: (n) => '+' + (0.09 * n).toFixed(2) + ' energy/sec, +' + (5 * n) + ' energy when resting'
+      },
+      {
+        key: 'pantry',
+        title: 'Stocked Pantry',
+        minTier: 0,
+        max: 10,
+        desc: 'Stores food, reduces food drain, and slightly supports farming.',
+        cost: (n) => ({ gold: Math.floor(26 * Math.pow(1.44, n)), food: Math.floor(30 * Math.pow(1.25, n)) }),
+        effect: (n) => '+' + (80 * n) + ' food cap, -' + Math.floor(3 * n) + '% food drain'
+      },
+      {
+        key: 'garden',
+        title: 'Kitchen Garden',
+        minTier: 1,
+        max: 10,
+        desc: 'Adds passive food generation and boosts all food production.',
+        cost: (n) => ({ gold: Math.floor(55 * Math.pow(1.46, n)), food: Math.floor(75 * Math.pow(1.24, n)) }),
+        effect: (n) => '+' + (0.08 * n).toFixed(2) + ' food/sec, +' + Math.floor(4 * n) + '% food output'
+      },
+      {
+        key: 'hearth',
+        title: 'Mana Hearth',
+        minTier: 1,
+        max: 10,
+        desc: 'A small enchanted fireplace that condenses spare mana.',
+        cost: (n) => ({ gold: Math.floor(70 * Math.pow(1.48, n)), mana: Math.floor(55 * Math.pow(1.30, n)) }),
+        effect: (n) => '+' + (0.07 * n).toFixed(2) + ' mana/sec, +' + Math.floor(4 * n) + '% mana output'
+      },
+      {
+        key: 'study',
+        title: 'Quiet Study',
+        minTier: 2,
+        max: 10,
+        desc: 'Improves focus generation, focus recovery, and meditation quality.',
+        cost: (n) => ({ gold: Math.floor(105 * Math.pow(1.50, n)), mana: Math.floor(90 * Math.pow(1.32, n)), focus: Math.floor(30 * Math.pow(1.20, n)) }),
+        effect: (n) => '+' + (0.05 * n).toFixed(2) + ' focus/sec, +' + Math.floor(4 * n) + '% focus output'
+      },
+      {
+        key: 'desk',
+        title: 'Scholar Desk',
+        minTier: 3,
+        max: 10,
+        desc: 'Turns your home into a place where notes become knowledge.',
+        cost: (n) => ({ gold: Math.floor(170 * Math.pow(1.50, n)), knowledge: Math.floor(80 * Math.pow(1.30, n)), focus: Math.floor(45 * Math.pow(1.22, n)) }),
+        effect: (n) => '+' + (0.04 * n).toFixed(2) + ' knowledge/sec, +' + Math.floor(5 * n) + '% knowledge output'
+      },
+      {
+        key: 'workshop',
+        title: 'Enchanted Workshop',
+        minTier: 3,
+        max: 10,
+        desc: 'Produces gold and boosts the academy economy through magical tools.',
+        cost: (n) => ({ gold: Math.floor(210 * Math.pow(1.52, n)), knowledge: Math.floor(110 * Math.pow(1.31, n)), mana: Math.floor(120 * Math.pow(1.25, n)) }),
+        effect: (n) => '+' + (0.05 * n).toFixed(2) + ' gold/sec, +' + Math.floor(5 * n) + '% gold output'
+      },
+      {
+        key: 'observatory',
+        title: 'Stargazing Observatory',
+        minTier: 4,
+        max: 10,
+        desc: 'Late-game home wing that produces arcana and strengthens final battle damage.',
+        cost: (n) => ({ gold: Math.floor(430 * Math.pow(1.55, n)), knowledge: Math.floor(210 * Math.pow(1.34, n)), arcana: Math.floor(14 * Math.pow(1.23, n)) }),
+        effect: (n) => '+' + (0.012 * n).toFixed(3) + ' arcana/sec, +' + (6 * n) + ' boss damage'
+      }
+    ];
+
     const UPGRADES = [
       {
         key: 'tools',
@@ -596,6 +796,7 @@
         },
         automation: { scarecrow: 0, familiar: 0, circle: 0, faculty: 0 },
         upgrades: { tools: 0, spellbook: 0, robes: 0, market: 0, academyHall: 0, ritualTower: 0 },
+        housing: { tier: 0, items: { bed: 0, pantry: 0, garden: 0, hearth: 0, study: 0, desk: 0, workshop: 0, observatory: 0 } },
         unlocked: { farmer: true, apprentice: false, mage: false, academy: false, archmage: false },
         currentStage: 'farmer',
         stats: { level: 1, xp: 0, days: 1, bossHp: BOSS_MAX, bossDefeated: false, totalClicks: 0 },
@@ -623,15 +824,58 @@
       return sign + (v >= 100 ? v.toFixed(0) : v >= 10 ? v.toFixed(1) : v.toFixed(2)) + units[u];
     }
     function pct(value, cap) { return clamp((value / cap) * 100, 0, 100); }
+    function houseTierData(s = state) {
+      return HOUSE_TIERS[(s.housing && Number.isFinite(s.housing.tier)) ? s.housing.tier : 0] || HOUSE_TIERS[0];
+    }
+    function houseItemLevel(key, s = state) {
+      return (s.housing && s.housing.items && s.housing.items[key]) || 0;
+    }
+    function houseItemCap(item, s = state) {
+      const tier = (s.housing && Number.isFinite(s.housing.tier)) ? s.housing.tier : 0;
+      if (tier < item.minTier) return 0;
+      return Math.min(item.max, 2 + (tier - item.minTier) * 2);
+    }
+    function housingBonuses(s = state) {
+      const tier = houseTierData(s);
+      const bed = houseItemLevel('bed', s);
+      const pantry = houseItemLevel('pantry', s);
+      const garden = houseItemLevel('garden', s);
+      const hearth = houseItemLevel('hearth', s);
+      const study = houseItemLevel('study', s);
+      const desk = houseItemLevel('desk', s);
+      const workshop = houseItemLevel('workshop', s);
+      const observatory = houseItemLevel('observatory', s);
+      return {
+        energyRegen: tier.restRate + bed * 0.09,
+        restEnergy: tier.restAction + bed * 5,
+        restFocus: 4 + study * 2 + Math.floor(bed / 2),
+        foodGen: garden * 0.08 + pantry * 0.025,
+        manaGen: hearth * 0.07,
+        focusGen: study * 0.05,
+        knowledgeGen: desk * 0.04,
+        goldGen: workshop * 0.05,
+        arcanaGen: observatory * 0.012,
+        foodDrainMult: Math.max(0.45, 1 - pantry * 0.03),
+        foodMult: 1 + garden * 0.04 + pantry * 0.02,
+        manaMult: 1 + hearth * 0.04,
+        focusMult: 1 + study * 0.04,
+        goldMult: 1 + workshop * 0.05,
+        knowledgeMult: 1 + desk * 0.05,
+        arcanaMult: 1 + observatory * 0.05,
+        bossDamageBonus: observatory * 6 + workshop * 2
+      };
+    }
     function capFor(key) {
       const base = (RESOURCES.find(r => r.key === key) || { cap: 1000 }).cap;
-      if (key === 'food') return base + state.upgrades.tools * 90;
-      if (key === 'mana') return base + state.upgrades.spellbook * 90;
-      if (key === 'focus') return base + state.upgrades.robes * 60 + state.upgrades.academyHall * 35;
-      if (key === 'gold') return base + state.upgrades.market * 250;
-      if (key === 'knowledge') return base + state.upgrades.academyHall * 160;
-      if (key === 'arcana') return base + state.upgrades.ritualTower * 60;
-      if (key === 'energy') return base;
+      const house = houseTierData(state);
+      const pantry = houseItemLevel('pantry');
+      if (key === 'food') return base + state.upgrades.tools * 90 + pantry * 80 + (house.foodCap || 0);
+      if (key === 'mana') return base + state.upgrades.spellbook * 90 + (house.manaCap || 0);
+      if (key === 'focus') return base + state.upgrades.robes * 60 + state.upgrades.academyHall * 35 + (house.focusCap || 0);
+      if (key === 'gold') return base + state.upgrades.market * 250 + (house.goldCap || 0);
+      if (key === 'knowledge') return base + state.upgrades.academyHall * 160 + (house.knowledgeCap || 0);
+      if (key === 'arcana') return base + state.upgrades.ritualTower * 60 + (house.arcanaCap || 0);
+      if (key === 'energy') return base + (house.energyCap || 0) + houseItemLevel('bed') * 2;
       if (key === 'reputation') return base + state.upgrades.academyHall * 40;
       return base;
     }
@@ -646,6 +890,13 @@
       if (key === 'gold') mult += s.upgrades.market * 0.18;
       if (key === 'knowledge') mult += s.upgrades.academyHall * 0.18;
       if (key === 'arcana') mult += s.upgrades.ritualTower * 0.22;
+      const hb = housingBonuses(s);
+      if (key === 'food') mult += hb.foodMult - 1;
+      if (key === 'mana') mult += hb.manaMult - 1;
+      if (key === 'focus') mult += hb.focusMult - 1;
+      if (key === 'gold') mult += hb.goldMult - 1;
+      if (key === 'knowledge') mult += hb.knowledgeMult - 1;
+      if (key === 'arcana') mult += hb.arcanaMult - 1;
       if (s.stats.bossDefeated) mult += 0.25;
       return mult;
     }
@@ -753,12 +1004,14 @@
     }
 
     function doRest() {
-      addResource('energy', 28);
-      addResource('focus', 4);
-      if (state.resources.food > 0) addResource('food', -2);
+      const hb = housingBonuses(state);
+      addResource('energy', 28 + hb.restEnergy);
+      addResource('focus', hb.restFocus);
+      const foodCost = Math.max(0, 2 - Math.floor(houseItemLevel('pantry') / 4));
+      if (state.resources.food > 0 && foodCost > 0) addResource('food', -foodCost);
       gainXp(1);
       state.stats.totalClicks++;
-      pushLog('You rested and recovered energy.');
+      pushLog('You rested at home and recovered energy and focus.');
     }
 
     function buyAutomation(key) {
@@ -772,6 +1025,33 @@
       addResource('reputation', 1 + stageIndex(item.stage));
       gainXp(4 + stageIndex(item.stage));
       pushLog('Automation added: ' + item.title + ' now has ' + state.automation[key] + '.');
+    }
+
+    function buyHouseTier() {
+      const nextIndex = ((state.housing && state.housing.tier) || 0) + 1;
+      const next = HOUSE_TIERS[nextIndex];
+      if (!next) return pushLog('You already own the largest home available in this version.');
+      if (!isUnlocked(next.stage)) return pushLog('Unlock ' + STAGES.find(s => s.key === next.stage).title + ' before moving into ' + next.title + '.');
+      if (!spend(next.cost)) return pushLog('Not enough resources to buy ' + next.title + '.');
+      state.housing.tier = nextIndex;
+      addResource('reputation', 4 + nextIndex * 3);
+      gainXp(8 + nextIndex * 4);
+      pushLog('You moved into ' + next.title + '. Passive rest and furniture capacity improved.');
+    }
+
+    function buyHouseItem(key) {
+      const item = HOUSE_ITEMS.find(x => x.key === key);
+      if (!item) return;
+      const current = houseItemLevel(key);
+      const cap = houseItemCap(item);
+      if (cap <= 0) return pushLog('You need a larger home before buying ' + item.title + '.');
+      if (current >= cap) return pushLog(item.title + ' is capped for your current home size. Upgrade your home to improve it further.');
+      const cost = item.cost(current);
+      if (!spend(cost)) return pushLog('Not enough resources for ' + item.title + '.');
+      state.housing.items[key] = current + 1;
+      addResource('reputation', 1);
+      gainXp(4);
+      pushLog('Home improved: ' + item.title + ' level ' + state.housing.items[key] + '.');
     }
 
     function buyUpgrade(key) {
@@ -797,7 +1077,7 @@
       if (!isUnlocked('archmage') || state.currentStage !== 'archmage') return pushLog('Become the archmage and select that stage before challenging the Void King.');
       if (state.stats.bossDefeated) return pushLog('The Void King is already defeated.');
       if (!spend({ arcana: 25, mana: 120, focus: 40, energy: 25 })) return pushLog('Final strike needs 25 arcana, 120 mana, 40 focus, and 25 energy.');
-      const damage = 115 + state.upgrades.ritualTower * 24 + state.automation.faculty * 12 + state.automation.circle * 6 + state.automation.familiar * 3;
+      const damage = 115 + state.upgrades.ritualTower * 24 + state.automation.faculty * 12 + state.automation.circle * 6 + state.automation.familiar * 3 + housingBonuses(state).bossDamageBonus;
       state.stats.bossHp = clamp(state.stats.bossHp - damage, 0, BOSS_MAX);
       gainXp(12);
       if (state.stats.bossHp <= 0) {
@@ -810,20 +1090,21 @@
     }
 
     function rates() {
+      const hb = housingBonuses(state);
       return {
-        food: AUTOMATION.find(a => a.key === 'scarecrow').rate(state),
-        mana: AUTOMATION.find(a => a.key === 'familiar').rate(state),
-        focus: AUTOMATION.find(a => a.key === 'circle').rate(state),
-        gold: AUTOMATION.find(a => a.key === 'faculty').goldRate(state),
-        knowledge: AUTOMATION.find(a => a.key === 'faculty').rate(state),
-        arcana: 0,
+        food: AUTOMATION.find(a => a.key === 'scarecrow').rate(state) + hb.foodGen * productionMultiplier(state, 'food'),
+        mana: AUTOMATION.find(a => a.key === 'familiar').rate(state) + hb.manaGen * productionMultiplier(state, 'mana'),
+        focus: AUTOMATION.find(a => a.key === 'circle').rate(state) + hb.focusGen * productionMultiplier(state, 'focus'),
+        gold: AUTOMATION.find(a => a.key === 'faculty').goldRate(state) + hb.goldGen * productionMultiplier(state, 'gold'),
+        knowledge: AUTOMATION.find(a => a.key === 'faculty').rate(state) + hb.knowledgeGen * productionMultiplier(state, 'knowledge'),
+        arcana: hb.arcanaGen * productionMultiplier(state, 'arcana'),
         energy: energyRegenRate(),
         reputation: 0
       };
     }
     function energyRegenRate() {
       const foodSupport = state.resources.food > 0 ? 0.25 : -0.55;
-      return 0.36 + foodSupport;
+      return 0.36 + foodSupport + housingBonuses(state).energyRegen;
     }
 
     function tick(seconds) {
@@ -835,7 +1116,7 @@
       addResource('knowledge', r.knowledge * seconds);
       addResource('energy', r.energy * seconds);
 
-      const foodDrain = (0.026 + state.stats.level * 0.002) * seconds;
+      const foodDrain = (0.026 + state.stats.level * 0.002) * housingBonuses(state).foodDrainMult * seconds;
       if (state.resources.food > 0) addResource('food', -foodDrain);
 
       state.stats.days += seconds / 60;
@@ -955,6 +1236,65 @@
       [...box.querySelectorAll('[data-auto]')].forEach(btn => btn.onclick = () => buyAutomation(btn.dataset.auto));
     }
 
+    function renderHousing() {
+      const summary = document.getElementById('housingSummary');
+      const house = houseTierData(state);
+      const hb = housingBonuses(state);
+      const itemLevels = Object.values(state.housing.items || {}).reduce((a, b) => a + (Number(b) || 0), 0);
+      summary.innerHTML = `
+        <div class="home-card">
+          <div class="home-label">Current home</div>
+          <div class="home-title">${house.title}</div>
+          <div class="home-desc">${house.desc}</div>
+          <div class="chips"><span class="chip good">Furniture levels: ${itemLevels}</span><span class="chip blue">Gold cap +${fmt(house.goldCap || 0)}</span></div>
+        </div>
+        <div class="home-card">
+          <div class="home-label">Rest quality</div>
+          <div class="home-title">+${hb.energyRegen.toFixed(2)} energy/sec</div>
+          <div class="home-desc">Rest action: +${fmt(28 + hb.restEnergy)} energy and +${fmt(hb.restFocus)} focus. Pantry can reduce the food cost of resting.</div>
+          <div class="chips"><span class="chip amber">Passive rest</span><span class="chip blue">Energy cap ${fmt(capFor('energy'))}</span></div>
+        </div>
+      `;
+
+      const nextIndex = ((state.housing && state.housing.tier) || 0) + 1;
+      const next = HOUSE_TIERS[nextIndex];
+      const houseBtn = document.getElementById('houseButton');
+      if (!next) {
+        houseBtn.disabled = true;
+        houseBtn.className = 'btn active';
+        houseBtn.innerHTML = '<div class="btn-title"><span>Largest Home Owned</span><span class="chip good">Max</span></div><div class="btn-desc">You own the best residence available in this generation.</div>';
+      } else {
+        const unlocked = isUnlocked(next.stage);
+        const ok = unlocked && canAfford(next.cost);
+        houseBtn.disabled = !unlocked;
+        houseBtn.className = 'btn ' + (ok ? 'good' : unlocked ? '' : 'locked');
+        houseBtn.innerHTML = `
+          <div class="btn-title"><span>Move into ${next.title}</span><span class="chip ${ok ? 'good' : unlocked ? 'amber' : 'red'}">${ok ? 'Buy' : unlocked ? 'Need' : 'Locked'}</span></div>
+          <div class="btn-desc">${next.desc}</div>
+          <div class="chips">${chips(next.cost)}<span class="chip blue">Requires ${STAGES.find(s => s.key === next.stage).title}</span></div>
+        `;
+        houseBtn.onclick = buyHouseTier;
+      }
+
+      const items = document.getElementById('houseItems');
+      items.innerHTML = HOUSE_ITEMS.map(item => {
+        const n = houseItemLevel(item.key);
+        const cap = houseItemCap(item);
+        const locked = cap <= 0;
+        const capped = !locked && n >= cap;
+        const cost = capped || locked ? {} : item.cost(n);
+        const ok = !locked && !capped && canAfford(cost);
+        return `
+          <button class="btn ${ok ? 'good' : locked ? 'locked' : capped ? 'active' : ''}" data-house-item="${item.key}" ${locked ? 'disabled' : ''}>
+            <div class="btn-title"><span>${item.title} Lv. ${n}/${cap || item.max}</span><span class="chip ${ok ? 'good' : locked ? 'red' : capped ? 'good' : 'amber'}">${locked ? 'Bigger home' : capped ? 'Home cap' : ok ? 'Buy' : 'Need'}</span></div>
+            <div class="btn-desc">${item.desc}</div>
+            <div class="chips"><span class="chip blue">${item.effect(n + (capped ? 0 : 1))}</span>${locked || capped ? '' : chips(cost)}</div>
+          </button>
+        `;
+      }).join('');
+      [...items.querySelectorAll('[data-house-item]')].forEach(btn => btn.onclick = () => buyHouseItem(btn.dataset.houseItem));
+    }
+
     function renderUpgrades() {
       const box = document.getElementById('upgrades');
       box.innerHTML = UPGRADES.map(u => {
@@ -1013,6 +1353,7 @@
       renderActions();
       renderStages();
       renderAutomation();
+      renderHousing();
       renderUpgrades();
       renderChainMap();
       renderBoss();
@@ -1037,6 +1378,11 @@
           resources: { ...base.resources, ...(saved.resources || {}) },
           automation: { ...base.automation, ...(saved.automation || {}) },
           upgrades: { ...base.upgrades, ...(saved.upgrades || {}) },
+          housing: {
+            ...base.housing,
+            ...(saved.housing || {}),
+            items: { ...base.housing.items, ...((saved.housing && saved.housing.items) || {}) }
+          },
           unlocked: { ...base.unlocked, ...(saved.unlocked || {}) },
           stats: { ...base.stats, ...(saved.stats || {}) },
           log: Array.isArray(saved.log) ? saved.log : base.log
@@ -1063,6 +1409,7 @@
     }
 
     document.getElementById('bossButton').addEventListener('click', bossFight);
+    document.getElementById('houseButton').addEventListener('click', buyHouseTier);
     document.getElementById('saveBtn').addEventListener('click', () => saveGame(true));
     document.getElementById('resetBtn').addEventListener('click', resetGame);
     window.addEventListener('beforeunload', () => saveGame(false));
