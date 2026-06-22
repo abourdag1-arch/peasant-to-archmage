@@ -162,6 +162,127 @@
     }
     .footer { color: var(--muted2); text-align:center; font-size: 12px; margin-top: 12px; }
 
+
+    /* Sticky mobile HUD: resources stay visible while the game scrolls. */
+    html { scroll-padding-top: 168px; }
+    .sticky-hud {
+      position: sticky;
+      top: 0;
+      z-index: 80;
+      padding: calc(8px + env(safe-area-inset-top)) 10px 8px;
+      border-bottom: 1px solid rgba(125, 211, 252, 0.18);
+      background:
+        radial-gradient(600px 170px at 15% 0%, rgba(56, 189, 248, 0.22), transparent 70%),
+        linear-gradient(180deg, rgba(3, 7, 18, 0.96), rgba(7, 17, 31, 0.90));
+      backdrop-filter: blur(18px);
+      box-shadow: 0 16px 38px rgba(0,0,0,0.34);
+    }
+    .sticky-hud-inner {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+    }
+    .hud-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      min-height: 28px;
+    }
+    .hud-title {
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    .hud-sub {
+      margin-top: 1px;
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 54vw;
+    }
+    .version-pill.compact {
+      padding: 6px 9px;
+      font-size: 11px;
+      background: rgba(3, 7, 18, 0.68);
+    }
+    .sticky-hud .resources {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 6px;
+      margin-top: 7px;
+    }
+    @media (min-width: 760px) {
+      .sticky-hud .resources { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+    }
+    .sticky-hud .res-card {
+      min-height: 45px;
+      padding: 7px 7px 6px;
+      border-radius: 13px;
+      background: rgba(3, 7, 18, 0.62);
+      box-shadow: none;
+    }
+    .sticky-hud .res-card .label {
+      font-size: 8.5px;
+      letter-spacing: 0.12em;
+      line-height: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .sticky-hud .res-card .value {
+      font-size: 0.98rem;
+      line-height: 1.05;
+      margin-top: 4px;
+    }
+    .sticky-hud .res-card .rate {
+      font-size: 9.5px;
+      line-height: 1;
+      margin-top: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .sticky-hud .bar { height: 3px; margin-top: 5px; }
+    .quick-nav {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 7px 1px 1px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .quick-nav::-webkit-scrollbar { display: none; }
+    .quick-nav a {
+      flex: 0 0 auto;
+      border: 1px solid rgba(255,255,255,0.10);
+      color: var(--muted);
+      background: rgba(255,255,255,0.035);
+      border-radius: 999px;
+      padding: 6px 9px;
+      font-size: 11px;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .quick-nav a:active, .quick-nav a:hover {
+      color: #bae6fd;
+      border-color: rgba(56,189,248,0.28);
+    }
+    .hero { margin-top: 12px; }
+    @media (max-width: 430px) {
+      html { scroll-padding-top: 156px; }
+      .app { padding-left: 10px; padding-right: 10px; }
+      .sticky-hud { padding-left: 8px; padding-right: 8px; }
+      .hud-title { font-size: 12px; }
+      .hud-sub { max-width: 48vw; }
+      .sticky-hud .resources { gap: 5px; }
+      .sticky-hud .res-card { padding: 6px 6px 5px; min-height: 43px; }
+      .sticky-hud .res-card .value { font-size: 0.9rem; }
+      .sticky-hud .res-card .rate { font-size: 9px; }
+    }
+
     .toast {
       position: fixed;
       left: 50%;
@@ -185,6 +306,26 @@
   </style>
 </head>
 <body>
+  <div class="sticky-hud" aria-label="Pinned resource bar">
+    <div class="sticky-hud-inner">
+      <div class="hud-row">
+        <div>
+          <div class="hud-title">Peasant to Archmage</div>
+          <div class="hud-sub" id="hudStage">Farmer</div>
+        </div>
+        <div class="version-pill compact" id="versionPill">Day 1 | Level 1</div>
+      </div>
+      <div class="resources" id="resources"></div>
+      <nav class="quick-nav" aria-label="Jump to game section">
+        <a href="#actionsPanel">Actions</a>
+        <a href="#stagesPanel">Stages</a>
+        <a href="#automationPanel">Spells</a>
+        <a href="#upgradesPanel">Purchases</a>
+        <a href="#battlePanel">Battle</a>
+        <a href="#logPanel">Log</a>
+      </nav>
+    </div>
+  </div>
   <div class="app">
     <header class="hero">
       <div class="topline">
@@ -193,10 +334,8 @@
           <h1>Peasant to Archmage</h1>
           <div class="subtitle">Every career stage introduces a new resource and unlocks automation for the previous resource. Apprentice magic animates farming, mage focus automates mana, academy knowledge automates focus, and archmage arcana automates the academy.</div>
         </div>
-        <div class="version-pill" id="versionPill">Day 1 | Level 1</div>
+        <div class="version-pill">V2 sticky HUD</div>
       </div>
-
-      <div class="resources" id="resources"></div>
 
       <div class="hero-bottom">
         <div class="quest-card">
@@ -215,7 +354,7 @@
 
     <main class="main-grid grid">
       <section class="grid">
-        <div class="panel">
+        <div class="panel" id="actionsPanel">
           <div class="section-head">
             <div>
               <h2>Manual actions</h2>
@@ -225,7 +364,7 @@
           <div class="button-grid" id="actions"></div>
         </div>
 
-        <div class="panel">
+        <div class="panel" id="stagesPanel">
           <div class="section-head">
             <div>
               <h2>Career stages</h2>
@@ -235,7 +374,7 @@
           <div class="btn-list" id="stages"></div>
         </div>
 
-        <div class="panel">
+        <div class="panel" id="automationPanel">
           <div class="section-head">
             <div>
               <h2>Automation chain</h2>
@@ -247,7 +386,7 @@
       </section>
 
       <aside class="grid">
-        <div class="panel">
+        <div class="panel" id="upgradesPanel">
           <div class="section-head">
             <div>
               <h2>Buildings and upgrades</h2>
@@ -267,7 +406,7 @@
           <div class="chain" id="chainMap"></div>
         </div>
 
-        <div class="panel">
+        <div class="panel" id="battlePanel">
           <div class="section-head">
             <div>
               <h2>Final battle</h2>
@@ -280,7 +419,7 @@
           </button>
         </div>
 
-        <div class="panel">
+        <div class="panel" id="logPanel">
           <div class="section-head">
             <div>
               <h2>Event log</h2>
@@ -733,10 +872,10 @@
         if (res.key === 'focus' || res.key === 'energy') fillClass = 'amber';
         if (res.key === 'arcana') fillClass = 'red';
         return `
-          <div class="res-card">
+          <div class="res-card res-${res.key}" title="${res.label}: ${fmt(val)} / ${fmt(cap)}">
             <div class="label">${res.label}</div>
             <div class="value">${fmt(val)}</div>
-            <div class="rate">${rate >= 0 ? '+' : ''}${rate.toFixed(2)}/sec | cap ${fmt(cap)}</div>
+            <div class="rate">${rate >= 0 ? '+' : ''}${rate.toFixed(2)}/s</div>
             <div class="bar"><div class="fill ${fillClass}" style="width:${pct(val, cap)}%"></div></div>
           </div>
         `;
@@ -747,6 +886,7 @@
       revealUnlocks();
       const st = currentStage();
       document.getElementById('versionPill').textContent = 'Day ' + Math.floor(state.stats.days) + ' | Level ' + state.stats.level;
+      document.getElementById('hudStage').textContent = st.title + ' | ' + st.resource;
       document.getElementById('stageTitle').textContent = st.title;
       document.getElementById('stageDesc').textContent = st.desc;
       const boss = Math.ceil(state.stats.bossHp);
