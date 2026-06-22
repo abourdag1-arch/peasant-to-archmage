@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#07111f" />
-  <title>Peasant to Archmage V2.1 Housing</title>
+  <title>Peasant to Archmage V2.2 Jobs</title>
   <style>
     :root {
       --bg: #040812;
@@ -27,6 +27,7 @@
 
     * { box-sizing: border-box; }
     html, body { margin: 0; min-height: 100%; }
+    html { scroll-padding-top: 168px; }
     body {
       background:
         radial-gradient(900px 520px at 10% 0%, rgba(56, 189, 248, 0.18), transparent 55%),
@@ -55,7 +56,7 @@
       border-radius: calc(var(--radius) + 4px);
     }
 
-    .hero { padding: 16px; }
+    .hero { padding: 16px; margin-top: 12px; }
     .topline { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
     .eyebrow { color: #7dd3fc; letter-spacing: 0.28em; text-transform: uppercase; font-size: 11px; margin-bottom: 8px; }
     h1 { margin: 0; font-size: clamp(1.55rem, 5vw, 2.55rem); line-height: 1.03; }
@@ -96,6 +97,7 @@
     .section-head { display:flex; justify-content:space-between; align-items:flex-start; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
     h2 { margin: 0; font-size: 1.05rem; }
     .section-sub { color: var(--muted); font-size: 12px; line-height: 1.35; max-width: 58ch; }
+    .section-gap { margin-top: 10px; }
 
     .btn-list { display: grid; gap: 9px; }
     .button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
@@ -129,6 +131,28 @@
     .chip.blue { color: #bae6fd; border-color: rgba(56,189,248,0.28); }
     .chip.amber { color: #fde68a; border-color: rgba(245,158,11,0.30); }
     .chip.red { color: #fecdd3; border-color: rgba(251,113,133,0.30); }
+
+    .job-card, .home-card {
+      border: 1px solid var(--line);
+      background: rgba(3,7,18,0.48);
+      border-radius: 18px;
+      padding: 12px;
+    }
+    .job-card {
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, rgba(56,189,248,0.13), rgba(192,132,252,0.08), rgba(3,7,18,0.62));
+      border-color: rgba(125,211,252,0.20);
+    }
+    .job-top { display:flex; justify-content:space-between; gap: 10px; align-items:flex-start; flex-wrap: wrap; }
+    .job-label, .home-label { color: var(--muted); text-transform: uppercase; letter-spacing: 0.18em; font-size: 10px; }
+    .job-title, .home-title { font-weight: 900; font-size: 1.05rem; margin-top: 5px; }
+    .job-desc, .home-desc { color: var(--muted); font-size: 12px; line-height: 1.38; margin-top: 5px; }
+    .mastery-grid { display:grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-top: 10px; }
+    @media (max-width: 580px) { .mastery-grid { grid-template-columns: 1fr; } }
+    .mini-stat { border: 1px solid var(--line); border-radius: 15px; padding: 9px; background: rgba(3,7,18,0.42); }
+    .mini-stat .mini-label { color: var(--muted2); font-size: 11px; }
+    .mini-stat .mini-value { font-weight: 800; margin-top: 3px; font-variant-numeric: tabular-nums; }
+    .buff-list { display:flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
 
     .chain { display:grid; gap: 8px; }
     .chain-row {
@@ -169,33 +193,7 @@
       margin-bottom: 10px;
     }
     @media (max-width: 580px) { .home-summary { grid-template-columns: 1fr; } }
-    .home-card {
-      border: 1px solid var(--line);
-      background: rgba(3,7,18,0.48);
-      border-radius: 18px;
-      padding: 12px;
-    }
-    .home-card .home-label {
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      font-size: 10px;
-    }
-    .home-card .home-title {
-      font-weight: 900;
-      font-size: 1.05rem;
-      margin-top: 5px;
-    }
-    .home-card .home-desc {
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.38;
-      margin-top: 5px;
-    }
 
-
-    /* Sticky mobile HUD: resources stay visible while the game scrolls. */
-    html { scroll-padding-top: 168px; }
     .sticky-hud {
       position: sticky;
       top: 0;
@@ -208,100 +206,23 @@
       backdrop-filter: blur(18px);
       box-shadow: 0 16px 38px rgba(0,0,0,0.34);
     }
-    .sticky-hud-inner {
-      width: min(1180px, 100%);
-      margin: 0 auto;
-    }
-    .hud-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      min-height: 28px;
-    }
-    .hud-title {
-      font-size: 13px;
-      font-weight: 900;
-      letter-spacing: 0.02em;
-      white-space: nowrap;
-    }
-    .hud-sub {
-      margin-top: 1px;
-      font-size: 11px;
-      color: var(--muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 54vw;
-    }
-    .version-pill.compact {
-      padding: 6px 9px;
-      font-size: 11px;
-      background: rgba(3, 7, 18, 0.68);
-    }
-    .sticky-hud .resources {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 6px;
-      margin-top: 7px;
-    }
-    @media (min-width: 760px) {
-      .sticky-hud .resources { grid-template-columns: repeat(8, minmax(0, 1fr)); }
-    }
-    .sticky-hud .res-card {
-      min-height: 45px;
-      padding: 7px 7px 6px;
-      border-radius: 13px;
-      background: rgba(3, 7, 18, 0.62);
-      box-shadow: none;
-    }
-    .sticky-hud .res-card .label {
-      font-size: 8.5px;
-      letter-spacing: 0.12em;
-      line-height: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .sticky-hud .res-card .value {
-      font-size: 0.98rem;
-      line-height: 1.05;
-      margin-top: 4px;
-    }
-    .sticky-hud .res-card .rate {
-      font-size: 9.5px;
-      line-height: 1;
-      margin-top: 3px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+    .sticky-hud-inner { width: min(1180px, 100%); margin: 0 auto; }
+    .hud-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 28px; }
+    .hud-title { font-weight: 900; font-size: 13px; letter-spacing: 0.02em; }
+    .hud-sub { color: var(--muted); font-size: 11px; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 64vw; }
+    .version-pill.compact { padding: 6px 8px; font-size: 11px; }
+    .sticky-hud .resources { margin-top: 8px; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 6px; }
+    @media (max-width: 760px) { .sticky-hud .resources { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+    .sticky-hud .res-card { min-height: 45px; padding: 7px 7px 6px; border-radius: 13px; background: rgba(3, 7, 18, 0.62); box-shadow: none; }
+    .sticky-hud .res-card .label { font-size: 8.5px; letter-spacing: 0.12em; line-height: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .sticky-hud .res-card .value { font-size: 0.98rem; line-height: 1.05; margin-top: 4px; }
+    .sticky-hud .res-card .rate { font-size: 9.5px; line-height: 1; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .sticky-hud .bar { height: 3px; margin-top: 5px; }
-    .quick-nav {
-      display: flex;
-      gap: 6px;
-      overflow-x: auto;
-      padding: 7px 1px 1px;
-      scrollbar-width: none;
-      -webkit-overflow-scrolling: touch;
-    }
+    .quick-nav { display: flex; gap: 6px; overflow-x: auto; padding: 7px 1px 1px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
     .quick-nav::-webkit-scrollbar { display: none; }
-    .quick-nav a {
-      flex: 0 0 auto;
-      border: 1px solid rgba(255,255,255,0.10);
-      color: var(--muted);
-      background: rgba(255,255,255,0.035);
-      border-radius: 999px;
-      padding: 6px 9px;
-      font-size: 11px;
-      text-decoration: none;
-      white-space: nowrap;
-    }
-    .quick-nav a:active, .quick-nav a:hover {
-      color: #bae6fd;
-      border-color: rgba(56,189,248,0.28);
-    }
-    .hero { margin-top: 12px; }
+    .quick-nav a { flex: 0 0 auto; border: 1px solid rgba(255,255,255,0.10); color: var(--muted); background: rgba(255,255,255,0.035); border-radius: 999px; padding: 6px 9px; font-size: 11px; text-decoration: none; white-space: nowrap; }
+    .quick-nav a:active, .quick-nav a:hover { color: #bae6fd; border-color: rgba(56,189,248,0.28); }
+
     @media (max-width: 430px) {
       html { scroll-padding-top: 156px; }
       .app { padding-left: 10px; padding-right: 10px; }
@@ -342,43 +263,45 @@
       <div class="hud-row">
         <div>
           <div class="hud-title">Peasant to Archmage</div>
-          <div class="hud-sub" id="hudStage">Farmer</div>
+          <div class="hud-sub" id="hudStage">Farmer | Food</div>
         </div>
         <div class="version-pill compact" id="versionPill">Day 1 | Level 1</div>
       </div>
       <div class="resources" id="resources"></div>
       <nav class="quick-nav" aria-label="Jump to game section">
         <a href="#actionsPanel">Actions</a>
-        <a href="#stagesPanel">Stages</a>
+        <a href="#stagesPanel">Jobs</a>
         <a href="#automationPanel">Spells</a>
         <a href="#housingPanel">Home</a>
         <a href="#upgradesPanel">Purchases</a>
+        <a href="#chainPanel">Chain</a>
         <a href="#battlePanel">Battle</a>
         <a href="#logPanel">Log</a>
       </nav>
     </div>
   </div>
+
   <div class="app">
     <header class="hero">
       <div class="topline">
         <div>
-          <div class="eyebrow">V2.1 resource chain prototype</div>
+          <div class="eyebrow">V2.2 job impact prototype</div>
           <h1>Peasant to Archmage</h1>
-          <div class="subtitle">Every career stage introduces a new resource and unlocks automation for the previous resource. Apprentice magic animates farming, and your home now grows from a hut into an archmage estate that improves passive rest and production.</div>
+          <div class="subtitle">Jobs now act like active modes. Selecting a role boosts its core action, improves part of the automation chain, and grows job mastery. Numbers are larger, but the click ratios are tuned to keep the overall progression pace similar.</div>
         </div>
-        <div class="version-pill">V2.1 housing</div>
+        <div class="version-pill">V2.2 jobs + housing</div>
       </div>
 
       <div class="hero-bottom">
         <div class="quest-card">
-          <div class="small-label">Current stage</div>
+          <div class="small-label">Current job</div>
           <div class="title" id="stageTitle">Farmer</div>
           <div class="desc" id="stageDesc">Grow food, manage energy, and stockpile enough harvest to begin magical study.</div>
         </div>
         <div class="quest-card">
           <div class="small-label">Main quest</div>
           <div class="title">Defeat the Void King</div>
-          <div class="desc" id="bossSummary">Boss HP: 1000 / 1000. Become an archmage and convert your academy into final battle power.</div>
+          <div class="desc" id="bossSummary">Boss HP: 1B / 1B. Become an archmage and convert your academy into final battle power.</div>
           <div class="bar"><div class="fill red" id="bossFill"></div></div>
         </div>
       </div>
@@ -390,17 +313,18 @@
           <div class="section-head">
             <div>
               <h2>Manual actions</h2>
-              <div class="section-sub">Tap actions to drive the early game. Automation slowly takes over older work.</div>
+              <div class="section-sub">Tap actions to drive the early game. The selected job makes its matching action and automation much stronger.</div>
             </div>
           </div>
+          <div class="job-card" id="jobCard"></div>
           <div class="button-grid" id="actions"></div>
         </div>
 
         <div class="panel" id="stagesPanel">
           <div class="section-head">
             <div>
-              <h2>Career stages</h2>
-              <div class="section-sub">Unlock each role by building enough of the previous economy.</div>
+              <h2>Career jobs</h2>
+              <div class="section-sub">Unlocked jobs remain available. Select a job when you want to lean into its resource engine.</div>
             </div>
           </div>
           <div class="btn-list" id="stages"></div>
@@ -410,7 +334,7 @@
           <div class="section-head">
             <div>
               <h2>Automation chain</h2>
-              <div class="section-sub">Each new stage automates the resource from the stage before it.</div>
+              <div class="section-sub">Each new job automates the resource from the job before it.</div>
             </div>
           </div>
           <div class="btn-list" id="automation"></div>
@@ -440,11 +364,11 @@
           <div class="btn-list" id="upgrades"></div>
         </div>
 
-        <div class="panel">
+        <div class="panel" id="chainPanel">
           <div class="section-head">
             <div>
               <h2>Chain map</h2>
-              <div class="section-sub">The design rule for this version is visible here.</div>
+              <div class="section-sub">The economy is still built around the previous-stage automation rule.</div>
             </div>
           </div>
           <div class="chain" id="chainMap"></div>
@@ -454,12 +378,12 @@
           <div class="section-head">
             <div>
               <h2>Final battle</h2>
-              <div class="section-sub">Arcana, mana, focus, and energy are converted into damage.</div>
+              <div class="section-sub">Arcana, mana, focus, and energy are converted into massive damage.</div>
             </div>
           </div>
           <button class="btn danger" id="bossButton">
             <div class="btn-title"><span>Challenge the Void King</span><span class="chip red">Archmage only</span></div>
-            <div class="btn-desc">Cost: 25 arcana, 120 mana, 40 focus, 25 energy. Damage scales with automations.</div>
+            <div class="btn-desc">Cost: 25M arcana, 120K mana, 40K focus, 25 energy.</div>
           </button>
         </div>
 
@@ -484,16 +408,17 @@
   <div class="toast" id="toast">Saved</div>
 
   <script>
+    const GAME_VERSION = 22;
     const STORAGE_KEY = 'ptarchmage-v2-save';
-    const BOSS_MAX = 1000;
+    const BOSS_MAX = 1000000000;
 
     const RESOURCES = [
-      { key: 'food', label: 'Food', cap: 1000, note: 'Stage 1 resource' },
-      { key: 'mana', label: 'Mana', cap: 1200, note: 'Stage 2 resource' },
-      { key: 'focus', label: 'Focus', cap: 500, note: 'Stage 3 resource' },
-      { key: 'gold', label: 'Gold', cap: 2500, note: 'Trade and tuition' },
-      { key: 'knowledge', label: 'Knowledge', cap: 900, note: 'Stage 4 resource' },
-      { key: 'arcana', label: 'Arcana', cap: 300, note: 'Stage 5 resource' },
+      { key: 'food', label: 'Food', cap: 12000, note: 'Stage 1 resource' },
+      { key: 'mana', label: 'Mana', cap: 120000, note: 'Stage 2 resource' },
+      { key: 'focus', label: 'Focus', cap: 500000, note: 'Stage 3 resource' },
+      { key: 'gold', label: 'Gold', cap: 2500000, note: 'Trade and tuition' },
+      { key: 'knowledge', label: 'Knowledge', cap: 9000000, note: 'Stage 4 resource' },
+      { key: 'arcana', label: 'Arcana', cap: 300000000, note: 'Stage 5 resource' },
       { key: 'energy', label: 'Energy', cap: 100, note: 'Action stamina' },
       { key: 'reputation', label: 'Reputation', cap: 250, note: 'Unlock progress' }
     ];
@@ -503,43 +428,141 @@
         key: 'farmer',
         title: 'Farmer',
         resource: 'Food',
+        resourceKeys: ['food'],
+        actionId: 'harvest',
         desc: 'Grow food, manage energy, and stockpile enough harvest to begin magical study.',
-        unlockDesc: 'Starting stage.',
+        unlockDesc: 'Starting job.',
         unlocked: () => true
       },
       {
         key: 'apprentice',
         title: 'Apprentice Mage',
         resource: 'Mana',
+        resourceKeys: ['mana'],
+        actionId: 'study',
         desc: 'Turn food, focus, and energy into mana. Your first spell animates farming.',
-        unlockDesc: 'Need 50 food and level 2.',
-        unlocked: (s) => s.resources.food >= 50 || s.unlocked.apprentice
+        unlockDesc: 'Need 500 food.',
+        unlocked: (s) => s.resources.food >= 500 || s.unlocked.apprentice
       },
       {
         key: 'mage',
         title: 'Mage',
         resource: 'Focus',
-        desc: 'Use mana to sharpen your mind. Focus powers better spell infrastructure.',
-        unlockDesc: 'Need 80 mana and 1 animated scarecrow.',
-        unlocked: (s) => s.resources.mana >= 80 || s.automation.scarecrow >= 1 || s.unlocked.mage
+        resourceKeys: ['focus'],
+        actionId: 'meditate',
+        desc: 'Use mana to sharpen your mind. Focus powers stronger magical infrastructure.',
+        unlockDesc: 'Need 8K mana and 1 animated scarecrow.',
+        unlocked: (s) => (s.resources.mana >= 8000 && s.automation.scarecrow >= 1) || s.unlocked.mage
       },
       {
         key: 'academy',
         title: 'Academy Founder',
         resource: 'Knowledge',
+        resourceKeys: ['knowledge', 'gold'],
+        actionId: 'teach',
         desc: 'Teach apprentices, earn tuition, and turn knowledge into focus automation.',
-        unlockDesc: 'Need 80 focus, 150 gold, and 25 reputation.',
-        unlocked: (s) => (s.resources.focus >= 80 && s.resources.gold >= 150 && s.resources.reputation >= 25) || s.unlocked.academy
+        unlockDesc: 'Need 80K focus, 15K gold, and 25 reputation.',
+        unlocked: (s) => (s.resources.focus >= 80000 && s.resources.gold >= 15000 && s.resources.reputation >= 25) || s.unlocked.academy
       },
       {
         key: 'archmage',
         title: 'Archmage',
         resource: 'Arcana',
+        resourceKeys: ['arcana'],
+        actionId: 'ritual',
         desc: 'Compress knowledge, mana, and focus into arcana for the final battle.',
-        unlockDesc: 'Need 250 knowledge, 350 mana, 80 reputation, and academy hall level 2.',
-        unlocked: (s) => (s.resources.knowledge >= 250 && s.resources.mana >= 350 && s.resources.reputation >= 80 && s.upgrades.academyHall >= 2) || s.unlocked.archmage
+        unlockDesc: 'Need 2.5M knowledge, 35K mana, 80 reputation, and Academy Hall level 2.',
+        unlocked: (s) => (s.resources.knowledge >= 2500000 && s.resources.mana >= 35000 && s.resources.reputation >= 80 && s.upgrades.academyHall >= 2) || s.unlocked.archmage
       }
     ];
+
+    const JOB_META = {
+      farmer: {
+        title: 'Farmer',
+        masteryResource: 'food',
+        passiveTarget: 'Animated Scarecrow',
+        bonuses: [
+          '+100% Harvest Food while selected',
+          '+25% Animated Scarecrow food output while selected',
+          '-20% food drain and +0.12 energy/sec while selected'
+        ],
+        signature: {
+          key: 'prepareFields',
+          title: 'Prepare the Fields',
+          desc: 'Spend energy to boost food production and scarecrows for 60 seconds.',
+          duration: 60,
+          cost: () => ({ energy: 25 })
+        }
+      },
+      apprentice: {
+        title: 'Apprentice Mage',
+        masteryResource: 'mana',
+        passiveTarget: 'Animated Scarecrow',
+        bonuses: [
+          '+100% Study Cantrips while selected',
+          '+25% Animated Scarecrow food output while selected',
+          '-20% food cost when studying while selected'
+        ],
+        signature: {
+          key: 'enchantField',
+          title: 'Enchant Field',
+          desc: 'Spend mana to supercharge farming automation for 75 seconds.',
+          duration: 75,
+          cost: () => ({ mana: 2000 })
+        }
+      },
+      mage: {
+        title: 'Mage',
+        masteryResource: 'focus',
+        passiveTarget: 'Mana Familiar',
+        bonuses: [
+          '+100% Deep Meditation while selected',
+          '+30% Mana Familiar output while selected',
+          '+10% mana and focus caps while selected'
+        ],
+        signature: {
+          key: 'bindFamiliar',
+          title: 'Bind Familiar',
+          desc: 'Spend mana and focus to boost mana familiar output for 75 seconds.',
+          duration: 75,
+          cost: () => ({ mana: 5000, focus: 20000 })
+        }
+      },
+      academy: {
+        title: 'Academy Founder',
+        masteryResource: 'knowledge',
+        passiveTarget: 'Meditation Circle',
+        bonuses: [
+          '+100% Teach Class knowledge and gold while selected',
+          '+25% Meditation Circle focus output while selected',
+          '+50% reputation from teaching while selected'
+        ],
+        signature: {
+          key: 'assignStudents',
+          title: 'Assign Students',
+          desc: 'Spend knowledge and gold to boost earlier automation for 90 seconds.',
+          duration: 90,
+          cost: () => ({ knowledge: 500000, gold: 100000 })
+        }
+      },
+      archmage: {
+        title: 'Archmage',
+        masteryResource: 'arcana',
+        passiveTarget: 'All automation',
+        bonuses: [
+          '+100% Grand Ritual while selected',
+          '+25% all automation while selected',
+          'Passive boss damage from the enchanted academy while selected'
+        ],
+        signature: {
+          key: 'archmageEdict',
+          title: 'Archmage Edict',
+          desc: 'Spend arcana to boost all production, automation, and boss damage for 90 seconds.',
+          duration: 90,
+          cost: () => ({ arcana: 30000000 })
+        }
+      }
+    };
 
     const AUTOMATION = [
       {
@@ -548,8 +571,8 @@
         title: 'Animated Scarecrow',
         automates: 'food',
         desc: 'Apprentice spell: spends mana to animate farm tools. Produces food automatically.',
-        cost: (n) => ({ mana: Math.floor(30 * Math.pow(1.45, n)), food: Math.floor(20 * Math.pow(1.25, n)) }),
-        rate: (s) => 0.55 * s.automation.scarecrow * productionMultiplier(s, 'food')
+        cost: (n) => ({ mana: Math.floor(3000 * Math.pow(1.45, n)), food: Math.floor(200 * Math.pow(1.25, n)) }),
+        rate: (s) => 5.5 * s.automation.scarecrow * productionMultiplier(s, 'food') * automationOutputMultiplier(s, 'scarecrow')
       },
       {
         key: 'familiar',
@@ -557,8 +580,8 @@
         title: 'Mana Familiar',
         automates: 'mana',
         desc: 'Mage spell: uses focus to bind a familiar that gathers mana from the air.',
-        cost: (n) => ({ focus: Math.floor(45 * Math.pow(1.48, n)), mana: Math.floor(55 * Math.pow(1.32, n)) }),
-        rate: (s) => 0.42 * s.automation.familiar * productionMultiplier(s, 'mana')
+        cost: (n) => ({ focus: Math.floor(45000 * Math.pow(1.48, n)), mana: Math.floor(5500 * Math.pow(1.32, n)) }),
+        rate: (s) => 42 * s.automation.familiar * productionMultiplier(s, 'mana') * automationOutputMultiplier(s, 'familiar')
       },
       {
         key: 'circle',
@@ -566,8 +589,8 @@
         title: 'Meditation Circle',
         automates: 'focus',
         desc: 'Academy ritual: students rotate through meditation shifts to generate focus.',
-        cost: (n) => ({ knowledge: Math.floor(70 * Math.pow(1.5, n)), gold: Math.floor(120 * Math.pow(1.36, n)) }),
-        rate: (s) => 0.28 * s.automation.circle * productionMultiplier(s, 'focus')
+        cost: (n) => ({ knowledge: Math.floor(700000 * Math.pow(1.50, n)), gold: Math.floor(120000 * Math.pow(1.36, n)) }),
+        rate: (s) => 280 * s.automation.circle * productionMultiplier(s, 'focus') * automationOutputMultiplier(s, 'circle')
       },
       {
         key: 'faculty',
@@ -575,9 +598,9 @@
         title: 'Enchanted Faculty',
         automates: 'knowledge',
         desc: 'Archmage spell: arcana enchants the academy staff. Produces knowledge and tuition.',
-        cost: (n) => ({ arcana: Math.floor(18 * Math.pow(1.55, n)), knowledge: Math.floor(160 * Math.pow(1.35, n)), gold: Math.floor(220 * Math.pow(1.34, n)) }),
-        rate: (s) => 0.23 * s.automation.faculty * productionMultiplier(s, 'knowledge'),
-        goldRate: (s) => 0.16 * s.automation.faculty * productionMultiplier(s, 'gold')
+        cost: (n) => ({ arcana: Math.floor(18000000 * Math.pow(1.55, n)), knowledge: Math.floor(1600000 * Math.pow(1.35, n)), gold: Math.floor(220000 * Math.pow(1.34, n)) }),
+        rate: (s) => 2300 * s.automation.faculty * productionMultiplier(s, 'knowledge') * automationOutputMultiplier(s, 'faculty'),
+        goldRate: (s) => 160 * s.automation.faculty * productionMultiplier(s, 'gold') * automationOutputMultiplier(s, 'faculty')
       }
     ];
 
@@ -595,70 +618,70 @@
       },
       {
         title: 'Cozy Cottage',
-        desc: 'A real bed and pantry space. Passive rest starts to matter here.',
+        desc: 'A real bed and pantry space. This home supports apprentice magic and food storage.',
         stage: 'apprentice',
-        cost: { gold: 80, food: 60 },
+        cost: { gold: 8000, food: 600 },
         restRate: 0.18,
         restAction: 5,
         energyCap: 10,
-        foodCap: 80,
-        goldCap: 180
+        foodCap: 800,
+        goldCap: 18000
       },
       {
         title: 'Mage Loft',
         desc: 'A quiet upstairs room where mana settles naturally overnight.',
         stage: 'mage',
-        cost: { gold: 240, mana: 90 },
+        cost: { gold: 24000, mana: 9000 },
         restRate: 0.34,
         restAction: 9,
         energyCap: 18,
-        foodCap: 130,
-        manaCap: 140,
-        goldCap: 420
+        foodCap: 1300,
+        manaCap: 14000,
+        goldCap: 42000
       },
       {
         title: 'Academy Townhouse',
         desc: 'Enough rooms for study, storage, and visiting apprentices.',
         stage: 'academy',
-        cost: { gold: 650, knowledge: 110 },
+        cost: { gold: 650000, knowledge: 1100000 },
         restRate: 0.52,
         restAction: 14,
         energyCap: 28,
-        foodCap: 210,
-        manaCap: 230,
-        focusCap: 90,
-        goldCap: 900,
-        knowledgeCap: 180
+        foodCap: 2100,
+        manaCap: 23000,
+        focusCap: 90000,
+        goldCap: 900000,
+        knowledgeCap: 1800000
       },
       {
         title: 'Wizard Tower',
         desc: 'A vertical home and laboratory where the whole building hums with magic.',
         stage: 'archmage',
-        cost: { gold: 1450, knowledge: 320, arcana: 18 },
+        cost: { gold: 1450000, knowledge: 3200000, arcana: 18000000 },
         restRate: 0.74,
         restAction: 20,
         energyCap: 40,
-        foodCap: 320,
-        manaCap: 380,
-        focusCap: 150,
-        goldCap: 1600,
-        knowledgeCap: 340,
-        arcanaCap: 80
+        foodCap: 3200,
+        manaCap: 38000,
+        focusCap: 150000,
+        goldCap: 1600000,
+        knowledgeCap: 3400000,
+        arcanaCap: 80000000
       },
       {
         title: 'Archmage Estate',
         desc: 'A legendary residence with wards, servants, gardens, and ritual wings.',
         stage: 'archmage',
-        cost: { gold: 3000, knowledge: 620, arcana: 75 },
+        cost: { gold: 3000000, knowledge: 6200000, arcana: 75000000 },
         restRate: 1.02,
         restAction: 28,
         energyCap: 55,
-        foodCap: 480,
-        manaCap: 560,
-        focusCap: 230,
-        goldCap: 2600,
-        knowledgeCap: 560,
-        arcanaCap: 150
+        foodCap: 4800,
+        manaCap: 56000,
+        focusCap: 230000,
+        goldCap: 2600000,
+        knowledgeCap: 5600000,
+        arcanaCap: 150000000
       }
     ];
 
@@ -669,7 +692,7 @@
         minTier: 0,
         max: 10,
         desc: 'Improves passive rest and makes the Rest action stronger.',
-        cost: (n) => ({ gold: Math.floor(22 * Math.pow(1.42, n)), food: Math.floor(18 * Math.pow(1.22, n)) }),
+        cost: (n) => ({ gold: Math.floor(2200 * Math.pow(1.42, n)), food: Math.floor(180 * Math.pow(1.22, n)) }),
         effect: (n) => '+' + (0.09 * n).toFixed(2) + ' energy/sec, +' + (5 * n) + ' energy when resting'
       },
       {
@@ -678,8 +701,8 @@
         minTier: 0,
         max: 10,
         desc: 'Stores food, reduces food drain, and slightly supports farming.',
-        cost: (n) => ({ gold: Math.floor(26 * Math.pow(1.44, n)), food: Math.floor(30 * Math.pow(1.25, n)) }),
-        effect: (n) => '+' + (80 * n) + ' food cap, -' + Math.floor(3 * n) + '% food drain'
+        cost: (n) => ({ gold: Math.floor(2600 * Math.pow(1.44, n)), food: Math.floor(300 * Math.pow(1.25, n)) }),
+        effect: (n) => '+' + fmt(800 * n) + ' food cap, -' + Math.floor(3 * n) + '% food drain'
       },
       {
         key: 'garden',
@@ -687,8 +710,8 @@
         minTier: 1,
         max: 10,
         desc: 'Adds passive food generation and boosts all food production.',
-        cost: (n) => ({ gold: Math.floor(55 * Math.pow(1.46, n)), food: Math.floor(75 * Math.pow(1.24, n)) }),
-        effect: (n) => '+' + (0.08 * n).toFixed(2) + ' food/sec, +' + Math.floor(4 * n) + '% food output'
+        cost: (n) => ({ gold: Math.floor(5500 * Math.pow(1.46, n)), food: Math.floor(750 * Math.pow(1.24, n)) }),
+        effect: (n) => '+' + (0.8 * n).toFixed(1) + ' food/sec, +' + Math.floor(4 * n) + '% food output'
       },
       {
         key: 'hearth',
@@ -696,8 +719,8 @@
         minTier: 1,
         max: 10,
         desc: 'A small enchanted fireplace that condenses spare mana.',
-        cost: (n) => ({ gold: Math.floor(70 * Math.pow(1.48, n)), mana: Math.floor(55 * Math.pow(1.30, n)) }),
-        effect: (n) => '+' + (0.07 * n).toFixed(2) + ' mana/sec, +' + Math.floor(4 * n) + '% mana output'
+        cost: (n) => ({ gold: Math.floor(7000 * Math.pow(1.48, n)), mana: Math.floor(5500 * Math.pow(1.30, n)) }),
+        effect: (n) => '+' + (7 * n).toFixed(0) + ' mana/sec, +' + Math.floor(4 * n) + '% mana output'
       },
       {
         key: 'study',
@@ -705,8 +728,8 @@
         minTier: 2,
         max: 10,
         desc: 'Improves focus generation, focus recovery, and meditation quality.',
-        cost: (n) => ({ gold: Math.floor(105 * Math.pow(1.50, n)), mana: Math.floor(90 * Math.pow(1.32, n)), focus: Math.floor(30 * Math.pow(1.20, n)) }),
-        effect: (n) => '+' + (0.05 * n).toFixed(2) + ' focus/sec, +' + Math.floor(4 * n) + '% focus output'
+        cost: (n) => ({ gold: Math.floor(10500 * Math.pow(1.50, n)), mana: Math.floor(9000 * Math.pow(1.32, n)), focus: Math.floor(30000 * Math.pow(1.20, n)) }),
+        effect: (n) => '+' + fmt(50 * n) + ' focus/sec, +' + Math.floor(4 * n) + '% focus output'
       },
       {
         key: 'desk',
@@ -714,8 +737,8 @@
         minTier: 3,
         max: 10,
         desc: 'Turns your home into a place where notes become knowledge.',
-        cost: (n) => ({ gold: Math.floor(170 * Math.pow(1.50, n)), knowledge: Math.floor(80 * Math.pow(1.30, n)), focus: Math.floor(45 * Math.pow(1.22, n)) }),
-        effect: (n) => '+' + (0.04 * n).toFixed(2) + ' knowledge/sec, +' + Math.floor(5 * n) + '% knowledge output'
+        cost: (n) => ({ gold: Math.floor(170000 * Math.pow(1.50, n)), knowledge: Math.floor(800000 * Math.pow(1.30, n)), focus: Math.floor(45000 * Math.pow(1.22, n)) }),
+        effect: (n) => '+' + fmt(400 * n) + ' knowledge/sec, +' + Math.floor(5 * n) + '% knowledge output'
       },
       {
         key: 'workshop',
@@ -723,8 +746,8 @@
         minTier: 3,
         max: 10,
         desc: 'Produces gold and boosts the academy economy through magical tools.',
-        cost: (n) => ({ gold: Math.floor(210 * Math.pow(1.52, n)), knowledge: Math.floor(110 * Math.pow(1.31, n)), mana: Math.floor(120 * Math.pow(1.25, n)) }),
-        effect: (n) => '+' + (0.05 * n).toFixed(2) + ' gold/sec, +' + Math.floor(5 * n) + '% gold output'
+        cost: (n) => ({ gold: Math.floor(210000 * Math.pow(1.52, n)), knowledge: Math.floor(1100000 * Math.pow(1.31, n)), mana: Math.floor(12000 * Math.pow(1.25, n)) }),
+        effect: (n) => '+' + fmt(50 * n) + ' gold/sec, +' + Math.floor(5 * n) + '% gold output'
       },
       {
         key: 'observatory',
@@ -732,8 +755,8 @@
         minTier: 4,
         max: 10,
         desc: 'Late-game home wing that produces arcana and strengthens final battle damage.',
-        cost: (n) => ({ gold: Math.floor(430 * Math.pow(1.55, n)), knowledge: Math.floor(210 * Math.pow(1.34, n)), arcana: Math.floor(14 * Math.pow(1.23, n)) }),
-        effect: (n) => '+' + (0.012 * n).toFixed(3) + ' arcana/sec, +' + (6 * n) + ' boss damage'
+        cost: (n) => ({ gold: Math.floor(430000 * Math.pow(1.55, n)), knowledge: Math.floor(2100000 * Math.pow(1.34, n)), arcana: Math.floor(14000000 * Math.pow(1.23, n)) }),
+        effect: (n) => '+' + fmt(12000 * n) + ' arcana/sec, +' + fmt(6000000 * n) + ' boss damage'
       }
     ];
 
@@ -743,51 +766,63 @@
         title: 'Better Farming Tools',
         desc: 'Increases manual food gain and animated scarecrow output.',
         max: 10,
-        cost: (n) => ({ food: Math.floor(28 * Math.pow(1.42, n)), gold: Math.floor(8 * Math.pow(1.35, n)) })
+        cost: (n) => ({ food: Math.floor(280 * Math.pow(1.42, n)), gold: Math.floor(800 * Math.pow(1.35, n)) })
       },
       {
         key: 'spellbook',
         title: 'Clean Spellbook',
         desc: 'Increases mana gains from study and mana familiar output.',
         max: 10,
-        cost: (n) => ({ mana: Math.floor(45 * Math.pow(1.44, n)), food: Math.floor(24 * Math.pow(1.28, n)) })
+        cost: (n) => ({ mana: Math.floor(4500 * Math.pow(1.44, n)), food: Math.floor(240 * Math.pow(1.28, n)) })
       },
       {
         key: 'robes',
         title: 'Quiet Robes',
         desc: 'Increases focus gain and makes meditation more efficient.',
         max: 10,
-        cost: (n) => ({ focus: Math.floor(38 * Math.pow(1.47, n)), mana: Math.floor(52 * Math.pow(1.34, n)) })
+        cost: (n) => ({ focus: Math.floor(38000 * Math.pow(1.47, n)), mana: Math.floor(5200 * Math.pow(1.34, n)) })
       },
       {
         key: 'market',
         title: 'Village Market',
         desc: 'Improves gold earned from selling food and academy tuition.',
         max: 10,
-        cost: (n) => ({ gold: Math.floor(75 * Math.pow(1.48, n)), food: Math.floor(70 * Math.pow(1.28, n)) })
+        cost: (n) => ({ gold: Math.floor(7500 * Math.pow(1.48, n)), food: Math.floor(700 * Math.pow(1.28, n)) })
       },
       {
         key: 'academyHall',
         title: 'Academy Hall',
         desc: 'Raises reputation and unlocks the archmage path at level 2.',
         max: 5,
-        cost: (n) => ({ gold: Math.floor(180 * Math.pow(1.62, n)), knowledge: Math.floor(65 * Math.pow(1.48, n)), focus: Math.floor(45 * Math.pow(1.28, n)) })
+        cost: (n) => ({ gold: Math.floor(180000 * Math.pow(1.62, n)), knowledge: Math.floor(650000 * Math.pow(1.48, n)), focus: Math.floor(45000 * Math.pow(1.28, n)) })
       },
       {
         key: 'ritualTower',
         title: 'Ritual Tower',
         desc: 'Increases arcana creation and final boss damage.',
         max: 8,
-        cost: (n) => ({ arcana: Math.floor(14 * Math.pow(1.58, n)), knowledge: Math.floor(190 * Math.pow(1.42, n)), gold: Math.floor(250 * Math.pow(1.36, n)) })
+        cost: (n) => ({ arcana: Math.floor(14000000 * Math.pow(1.58, n)), knowledge: Math.floor(1900000 * Math.pow(1.42, n)), gold: Math.floor(250000 * Math.pow(1.36, n)) })
       }
     ];
 
+    const RESOURCE_MIGRATION_SCALE = {
+      food: 10,
+      mana: 100,
+      focus: 1000,
+      gold: 100,
+      knowledge: 10000,
+      arcana: 1000000,
+      energy: 1,
+      reputation: 1
+    };
+
     function initialState() {
       return {
+        version: GAME_VERSION,
         resources: {
-          food: 16,
+          food: 160,
           mana: 0,
-          focus: 24,
+          focus: 240,
           gold: 0,
           knowledge: 0,
           arcana: 0,
@@ -797,12 +832,20 @@
         automation: { scarecrow: 0, familiar: 0, circle: 0, faculty: 0 },
         upgrades: { tools: 0, spellbook: 0, robes: 0, market: 0, academyHall: 0, ritualTower: 0 },
         housing: { tier: 0, items: { bed: 0, pantry: 0, garden: 0, hearth: 0, study: 0, desk: 0, workshop: 0, observatory: 0 } },
+        jobMastery: {
+          farmer: { level: 1, xp: 0 },
+          apprentice: { level: 1, xp: 0 },
+          mage: { level: 1, xp: 0 },
+          academy: { level: 1, xp: 0 },
+          archmage: { level: 1, xp: 0 }
+        },
+        buffs: { prepareFields: 0, enchantField: 0, bindFamiliar: 0, assignStudents: 0, archmageEdict: 0 },
         unlocked: { farmer: true, apprentice: false, mage: false, academy: false, archmage: false },
         currentStage: 'farmer',
         stats: { level: 1, xp: 0, days: 1, bossHp: BOSS_MAX, bossDefeated: false, totalClicks: 0 },
         log: [
-          'Version 2 begins: each new stage automates the resource from the previous stage.',
-          'Start by harvesting food, then unlock apprentice magic to automate farming.'
+          'Version 2.2 begins: jobs now act like powerful modes with mastery and signature abilities.',
+          'Start by harvesting food. Apprentice magic will soon automate farming.'
         ],
         savedAt: Date.now()
       };
@@ -813,28 +856,61 @@
     let toastTimer = null;
 
     function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
+
     function fmt(n) {
       const v0 = Number(n) || 0;
       const sign = v0 < 0 ? '-' : '';
       let v = Math.abs(v0);
       if (v < 1000) return sign + Math.floor(v).toString();
-      const units = ['K', 'M', 'B', 'T'];
+      const units = ['K', 'M', 'B', 'T', 'Qa'];
       let u = -1;
       while (v >= 1000 && u < units.length - 1) { v /= 1000; u++; }
       return sign + (v >= 100 ? v.toFixed(0) : v >= 10 ? v.toFixed(1) : v.toFixed(2)) + units[u];
     }
+
+    function fmtRate(n) {
+      const v = Math.abs(Number(n) || 0);
+      if (v < 10) return (Number(n) || 0).toFixed(2);
+      if (v < 1000) return (Number(n) || 0).toFixed(0);
+      return fmt(n);
+    }
+
     function pct(value, cap) { return clamp((value / cap) * 100, 0, 100); }
+    function labelFor(key) { return (RESOURCES.find(r => r.key === key) || { label: key }).label; }
+    function currentStage() { return STAGES.find(s => s.key === state.currentStage) || STAGES[0]; }
+    function stageIndex(key) { return STAGES.findIndex(s => s.key === key); }
+    function isUnlocked(stageKey) { return !!state.unlocked[stageKey] || (STAGES.find(s => s.key === stageKey)?.unlocked(state) || false); }
+    function activeBuff(key, s = state) { return ((s.buffs && s.buffs[key]) || 0) > 0; }
+    function buffTime(key, s = state) { return Math.ceil((s.buffs && s.buffs[key]) || 0); }
+
+    function escapeHtml(s) {
+      return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
+    }
+
+    function chips(cost) {
+      return Object.entries(cost).map(([k, v]) => `<span class="chip">${labelFor(k)}: ${fmt(v)}</span>`).join('');
+    }
+
+    function pushLog(message, skipRender) {
+      state.log.unshift(message);
+      state.log = state.log.slice(0, 8);
+      if (!skipRender) { render(); saveGame(false); }
+    }
+
     function houseTierData(s = state) {
       return HOUSE_TIERS[(s.housing && Number.isFinite(s.housing.tier)) ? s.housing.tier : 0] || HOUSE_TIERS[0];
     }
+
     function houseItemLevel(key, s = state) {
       return (s.housing && s.housing.items && s.housing.items[key]) || 0;
     }
+
     function houseItemCap(item, s = state) {
       const tier = (s.housing && Number.isFinite(s.housing.tier)) ? s.housing.tier : 0;
       if (tier < item.minTier) return 0;
       return Math.min(item.max, 2 + (tier - item.minTier) * 2);
     }
+
     function housingBonuses(s = state) {
       const tier = houseTierData(s);
       const bed = houseItemLevel('bed', s);
@@ -848,13 +924,13 @@
       return {
         energyRegen: tier.restRate + bed * 0.09,
         restEnergy: tier.restAction + bed * 5,
-        restFocus: 4 + study * 2 + Math.floor(bed / 2),
-        foodGen: garden * 0.08 + pantry * 0.025,
-        manaGen: hearth * 0.07,
-        focusGen: study * 0.05,
-        knowledgeGen: desk * 0.04,
-        goldGen: workshop * 0.05,
-        arcanaGen: observatory * 0.012,
+        restFocus: 40 + study * 2000 + Math.floor(bed / 2) * 10,
+        foodGen: garden * 0.8 + pantry * 0.25,
+        manaGen: hearth * 7,
+        focusGen: study * 50,
+        knowledgeGen: desk * 400,
+        goldGen: workshop * 50,
+        arcanaGen: observatory * 12000,
         foodDrainMult: Math.max(0.45, 1 - pantry * 0.03),
         foodMult: 1 + garden * 0.04 + pantry * 0.02,
         manaMult: 1 + hearth * 0.04,
@@ -862,26 +938,89 @@
         goldMult: 1 + workshop * 0.05,
         knowledgeMult: 1 + desk * 0.05,
         arcanaMult: 1 + observatory * 0.05,
-        bossDamageBonus: observatory * 6 + workshop * 2
+        bossDamageBonus: observatory * 6000000 + workshop * 2000000
       };
     }
+
+    function houseStageBonus(stageKey, s = state) {
+      const tier = houseTierData(s);
+      if (tier.stage === stageKey) return 0.25;
+      if ((s.housing?.tier || 0) >= 5 && stageKey === 'archmage') return 0.35;
+      return 0;
+    }
+
     function capFor(key) {
       const base = (RESOURCES.find(r => r.key === key) || { cap: 1000 }).cap;
       const house = houseTierData(state);
       const pantry = houseItemLevel('pantry');
-      if (key === 'food') return base + state.upgrades.tools * 90 + pantry * 80 + (house.foodCap || 0);
-      if (key === 'mana') return base + state.upgrades.spellbook * 90 + (house.manaCap || 0);
-      if (key === 'focus') return base + state.upgrades.robes * 60 + state.upgrades.academyHall * 35 + (house.focusCap || 0);
-      if (key === 'gold') return base + state.upgrades.market * 250 + (house.goldCap || 0);
-      if (key === 'knowledge') return base + state.upgrades.academyHall * 160 + (house.knowledgeCap || 0);
-      if (key === 'arcana') return base + state.upgrades.ritualTower * 60 + (house.arcanaCap || 0);
-      if (key === 'energy') return base + (house.energyCap || 0) + houseItemLevel('bed') * 2;
-      if (key === 'reputation') return base + state.upgrades.academyHall * 40;
-      return base;
+      let cap = base;
+      if (key === 'food') cap += state.upgrades.tools * 900 + pantry * 800 + (house.foodCap || 0);
+      if (key === 'mana') cap += state.upgrades.spellbook * 9000 + (house.manaCap || 0);
+      if (key === 'focus') cap += state.upgrades.robes * 60000 + state.upgrades.academyHall * 35000 + (house.focusCap || 0);
+      if (key === 'gold') cap += state.upgrades.market * 250000 + (house.goldCap || 0);
+      if (key === 'knowledge') cap += state.upgrades.academyHall * 1600000 + (house.knowledgeCap || 0);
+      if (key === 'arcana') cap += state.upgrades.ritualTower * 60000000 + (house.arcanaCap || 0);
+      if (key === 'energy') cap += (house.energyCap || 0) + houseItemLevel('bed') * 2;
+      if (key === 'reputation') cap += state.upgrades.academyHall * 40;
+
+      if (state.currentStage === 'mage' && (key === 'mana' || key === 'focus')) cap *= 1.10;
+      return cap;
     }
+
     function addResource(key, amount) {
       state.resources[key] = clamp((state.resources[key] || 0) + amount, 0, capFor(key));
     }
+
+    function canAfford(cost) { return Object.entries(cost).every(([k, v]) => (state.resources[k] || 0) >= v); }
+
+    function spend(cost) {
+      if (!canAfford(cost)) return false;
+      for (const [k, v] of Object.entries(cost)) addResource(k, -v);
+      return true;
+    }
+
+    function masteryLevel(stageKey, s = state) {
+      return (s.jobMastery && s.jobMastery[stageKey] && s.jobMastery[stageKey].level) || 1;
+    }
+
+    function masteryXp(stageKey, s = state) {
+      return (s.jobMastery && s.jobMastery[stageKey] && s.jobMastery[stageKey].xp) || 0;
+    }
+
+    function masteryNeed(stageKey, s = state) {
+      const lvl = masteryLevel(stageKey, s);
+      return 150 + (lvl - 1) * 90;
+    }
+
+    function gainMastery(stageKey, amount, skipLog) {
+      if (!state.jobMastery[stageKey]) state.jobMastery[stageKey] = { level: 1, xp: 0 };
+      const m = state.jobMastery[stageKey];
+      m.xp += amount;
+      let need = masteryNeed(stageKey);
+      while (m.xp >= need) {
+        m.xp -= need;
+        m.level += 1;
+        addResource('reputation', 1);
+        if (!skipLog) pushLog(JOB_META[stageKey].title + ' mastery reached level ' + m.level + '.', true);
+        need = masteryNeed(stageKey);
+      }
+    }
+
+    function masteryStageForResource(key) {
+      if (key === 'food') return 'farmer';
+      if (key === 'mana') return 'apprentice';
+      if (key === 'focus') return 'mage';
+      if (key === 'knowledge' || key === 'gold') return 'academy';
+      if (key === 'arcana') return 'archmage';
+      return null;
+    }
+
+    function masteryProductionBonus(s, key) {
+      const stage = masteryStageForResource(key);
+      if (!stage) return 0;
+      return Math.max(0, masteryLevel(stage, s) - 1) * 0.05;
+    }
+
     function productionMultiplier(s, key) {
       let mult = 1;
       if (key === 'food') mult += s.upgrades.tools * 0.16;
@@ -890,6 +1029,7 @@
       if (key === 'gold') mult += s.upgrades.market * 0.18;
       if (key === 'knowledge') mult += s.upgrades.academyHall * 0.18;
       if (key === 'arcana') mult += s.upgrades.ritualTower * 0.22;
+
       const hb = housingBonuses(s);
       if (key === 'food') mult += hb.foodMult - 1;
       if (key === 'mana') mult += hb.manaMult - 1;
@@ -897,30 +1037,41 @@
       if (key === 'gold') mult += hb.goldMult - 1;
       if (key === 'knowledge') mult += hb.knowledgeMult - 1;
       if (key === 'arcana') mult += hb.arcanaMult - 1;
+
+      mult += masteryProductionBonus(s, key);
+
+      for (const st of STAGES) {
+        if (st.resourceKeys.includes(key)) mult += houseStageBonus(st.key, s);
+      }
+
+      if (activeBuff('prepareFields', s) && key === 'food') mult += 1.0;
+      if (activeBuff('archmageEdict', s)) mult += 0.25;
       if (s.stats.bossDefeated) mult += 0.25;
       return mult;
     }
-    function currentStage() { return STAGES.find(s => s.key === state.currentStage) || STAGES[0]; }
-    function isUnlocked(stageKey) { return !!state.unlocked[stageKey] || (STAGES.find(s => s.key === stageKey)?.unlocked(state) || false); }
-    function stageIndex(key) { return STAGES.findIndex(s => s.key === key); }
-    function canAfford(cost) { return Object.entries(cost).every(([k, v]) => (state.resources[k] || 0) >= v); }
-    function spend(cost) {
-      if (!canAfford(cost)) return false;
-      for (const [k, v] of Object.entries(cost)) addResource(k, -v);
-      return true;
+
+    function selectedActionMultiplier(actionId) {
+      const st = currentStage();
+      if (st.actionId === actionId) return 2 + houseStageBonus(st.key);
+      if (state.currentStage === 'farmer' && actionId === 'sell') return 1.25;
+      return 1;
     }
-    function chips(cost) {
-      return Object.entries(cost).map(([k, v]) => `<span class="chip">${labelFor(k)}: ${fmt(v)}</span>`).join('');
+
+    function automationOutputMultiplier(s, autoKey) {
+      let mult = 1;
+      if (s.currentStage === 'apprentice' && autoKey === 'scarecrow') mult += 0.25;
+      if (s.currentStage === 'mage' && autoKey === 'familiar') mult += 0.30;
+      if (s.currentStage === 'academy' && autoKey === 'circle') mult += 0.25;
+      if (s.currentStage === 'archmage') mult += 0.25;
+
+      if (activeBuff('prepareFields', s) && autoKey === 'scarecrow') mult += 1.0;
+      if (activeBuff('enchantField', s) && autoKey === 'scarecrow') mult += 1.5;
+      if (activeBuff('bindFamiliar', s) && autoKey === 'familiar') mult += 1.5;
+      if (activeBuff('assignStudents', s) && ['scarecrow', 'familiar', 'circle'].includes(autoKey)) mult += 0.75;
+      if (activeBuff('archmageEdict', s)) mult += 1.0;
+      return mult;
     }
-    function labelFor(key) { return (RESOURCES.find(r => r.key === key) || { label: key }).label; }
-    function escapeHtml(s) {
-      return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
-    }
-    function pushLog(message, skipRender) {
-      state.log.unshift(message);
-      state.log = state.log.slice(0, 8);
-      if (!skipRender) { render(); saveGame(false); }
-    }
+
     function gainXp(amount) {
       state.stats.xp += amount;
       let needed = levelNeed();
@@ -932,24 +1083,36 @@
         needed = levelNeed();
       }
     }
-    function levelNeed() { return 24 + (state.stats.level - 1) * 16; }
+
+    function levelNeed() { return 240 + (state.stats.level - 1) * 160; }
+
     function revealUnlocks() {
       let changed = false;
       for (const st of STAGES) {
         if (!state.unlocked[st.key] && st.unlocked(state)) {
           state.unlocked[st.key] = true;
           changed = true;
-          pushLog('Unlocked stage: ' + st.title + '.', true);
+          pushLog('Unlocked job: ' + st.title + '.', true);
         }
       }
       return changed;
     }
 
+    function actionPreview(actionId) {
+      if (actionId === 'harvest') return '+' + fmt(90 * productionMultiplier(state, 'food') * selectedActionMultiplier('harvest')) + ' food';
+      if (actionId === 'study') return '+' + fmt(800 * productionMultiplier(state, 'mana') * selectedActionMultiplier('study')) + ' mana';
+      if (actionId === 'meditate') return '+' + fmt(9000 * productionMultiplier(state, 'focus') * selectedActionMultiplier('meditate')) + ' focus';
+      if (actionId === 'teach') return '+' + fmt(130000 * productionMultiplier(state, 'knowledge') * selectedActionMultiplier('teach')) + ' knowledge';
+      if (actionId === 'ritual') return '+' + fmt(7000000 * productionMultiplier(state, 'arcana') * selectedActionMultiplier('ritual')) + ' arcana';
+      return '';
+    }
+
     function doHarvest() {
       if (state.resources.energy < 6) return pushLog('You are too tired to harvest. Rest or eat first.');
       addResource('energy', -6);
-      addResource('food', 9 * productionMultiplier(state, 'food'));
-      gainXp(3);
+      addResource('food', 90 * productionMultiplier(state, 'food') * selectedActionMultiplier('harvest'));
+      gainXp(30);
+      gainMastery('farmer', 30);
       state.stats.totalClicks++;
       addResource('reputation', 0.25);
       pushLog('You harvested food from the fields.');
@@ -957,61 +1120,87 @@
 
     function doStudy() {
       if (!isUnlocked('apprentice')) return pushLog('You need more food before magical study begins.');
-      if (!spend({ food: 5, energy: 7 })) return pushLog('Studying needs 5 food and 7 energy.');
-      addResource('mana', 8 * productionMultiplier(state, 'mana'));
-      addResource('focus', -2);
-      gainXp(4);
+      const foodCost = state.currentStage === 'apprentice' ? 40 : 50;
+      if (!spend({ food: foodCost, energy: 7 })) return pushLog('Studying needs ' + foodCost + ' food and 7 energy.');
+      addResource('mana', 800 * productionMultiplier(state, 'mana') * selectedActionMultiplier('study'));
+      addResource('focus', -20);
+      addResource('reputation', 0.35);
+      gainXp(40);
+      gainMastery('apprentice', 40);
       state.stats.totalClicks++;
       pushLog('You studied cantrips and generated mana.');
     }
 
     function doMeditate() {
-      if (!isUnlocked('mage')) return pushLog('You need the mage stage before deep focus training.');
-      if (!spend({ mana: 7, energy: 7 })) return pushLog('Meditation needs 7 mana and 7 energy.');
-      addResource('focus', 9 * productionMultiplier(state, 'focus'));
-      gainXp(5);
+      if (!isUnlocked('mage')) return pushLog('You need the mage job before deep focus training.');
+      if (!spend({ mana: 700, energy: 7 })) return pushLog('Meditation needs 700 mana and 7 energy.');
+      addResource('focus', 9000 * productionMultiplier(state, 'focus') * selectedActionMultiplier('meditate'));
+      addResource('reputation', 0.5);
+      gainXp(50);
+      gainMastery('mage', 50);
       state.stats.totalClicks++;
       pushLog('You converted mana into focus through meditation.');
     }
 
     function doTeach() {
       if (!isUnlocked('academy')) return pushLog('You need to found the academy before teaching.');
-      if (!spend({ focus: 10, mana: 10, energy: 8 })) return pushLog('Teaching needs 10 focus, 10 mana, and 8 energy.');
-      addResource('knowledge', 13 * productionMultiplier(state, 'knowledge'));
-      addResource('gold', 16 * productionMultiplier(state, 'gold'));
-      addResource('reputation', 1.5);
-      gainXp(7);
+      if (!spend({ focus: 10000, mana: 10000, energy: 8 })) return pushLog('Teaching needs 10K focus, 10K mana, and 8 energy.');
+      const mult = selectedActionMultiplier('teach');
+      addResource('knowledge', 130000 * productionMultiplier(state, 'knowledge') * mult);
+      addResource('gold', 160000 * productionMultiplier(state, 'gold') * mult);
+      addResource('reputation', state.currentStage === 'academy' ? 2.25 : 1.5);
+      gainXp(70);
+      gainMastery('academy', 70);
       state.stats.totalClicks++;
       pushLog('You taught a class and gained knowledge, gold, and reputation.');
     }
 
     function doRitual() {
       if (!isUnlocked('archmage')) return pushLog('Only an archmage can weave grand rituals.');
-      if (!spend({ knowledge: 22, mana: 28, focus: 12, energy: 10 })) return pushLog('Grand ritual needs 22 knowledge, 28 mana, 12 focus, and 10 energy.');
-      addResource('arcana', 7 * productionMultiplier(state, 'arcana'));
+      if (!spend({ knowledge: 220000, mana: 28000, focus: 120000, energy: 10 })) return pushLog('Grand ritual needs 220K knowledge, 28K mana, 120K focus, and 10 energy.');
+      addResource('arcana', 7000000 * productionMultiplier(state, 'arcana') * selectedActionMultiplier('ritual'));
       addResource('reputation', 2.25);
-      gainXp(9);
+      gainXp(90);
+      gainMastery('archmage', 90);
       state.stats.totalClicks++;
       pushLog('You compressed knowledge, mana, and focus into arcana.');
     }
 
     function doSellFood() {
-      if (!spend({ food: 25 })) return pushLog('You need 25 food to sell a cart at market.');
-      addResource('gold', 16 * productionMultiplier(state, 'gold'));
-      gainXp(2);
+      if (!spend({ food: 250 })) return pushLog('You need 250 food to sell a cart at market.');
+      addResource('gold', 1600 * productionMultiplier(state, 'gold') * selectedActionMultiplier('sell'));
+      addResource('reputation', 0.4);
+      gainXp(20);
+      gainMastery('farmer', 15);
       state.stats.totalClicks++;
       pushLog('You sold surplus food for gold.');
     }
 
     function doRest() {
       const hb = housingBonuses(state);
-      addResource('energy', 28 + hb.restEnergy);
-      addResource('focus', hb.restFocus);
+      const farmerRest = state.currentStage === 'farmer' ? 8 : 0;
+      const mageFocus = state.currentStage === 'mage' ? 5000 : 0;
+      addResource('energy', 28 + hb.restEnergy + farmerRest);
+      addResource('focus', hb.restFocus + mageFocus);
       const foodCost = Math.max(0, 2 - Math.floor(houseItemLevel('pantry') / 4));
-      if (state.resources.food > 0 && foodCost > 0) addResource('food', -foodCost);
-      gainXp(1);
+      if (state.resources.food > 0 && foodCost > 0) addResource('food', -foodCost * 10);
+      gainXp(10);
+      gainMastery(state.currentStage, 8, true);
       state.stats.totalClicks++;
       pushLog('You rested at home and recovered energy and focus.');
+    }
+
+    function useSignature() {
+      const st = currentStage();
+      const sig = JOB_META[st.key].signature;
+      if (!sig) return;
+      if (activeBuff(sig.key)) return pushLog(sig.title + ' is already active for ' + buffTime(sig.key) + 's.');
+      const cost = sig.cost();
+      if (!spend(cost)) return pushLog('Not enough resources for ' + sig.title + '.');
+      state.buffs[sig.key] = sig.duration;
+      gainXp(35 + stageIndex(st.key) * 15);
+      gainMastery(st.key, 45 + stageIndex(st.key) * 15);
+      pushLog('Signature ability active: ' + sig.title + ' for ' + sig.duration + ' seconds.');
     }
 
     function buyAutomation(key) {
@@ -1023,7 +1212,11 @@
       if (!spend(cost)) return pushLog('Not enough resources for ' + item.title + '.');
       state.automation[key] = n + 1;
       addResource('reputation', 1 + stageIndex(item.stage));
-      gainXp(4 + stageIndex(item.stage));
+      gainXp(40 + stageIndex(item.stage) * 10);
+      if (key === 'scarecrow') gainMastery('farmer', 30);
+      if (key === 'familiar') gainMastery('apprentice', 35);
+      if (key === 'circle') gainMastery('mage', 40);
+      if (key === 'faculty') gainMastery('academy', 45);
       pushLog('Automation added: ' + item.title + ' now has ' + state.automation[key] + '.');
     }
 
@@ -1035,8 +1228,9 @@
       if (!spend(next.cost)) return pushLog('Not enough resources to buy ' + next.title + '.');
       state.housing.tier = nextIndex;
       addResource('reputation', 4 + nextIndex * 3);
-      gainXp(8 + nextIndex * 4);
-      pushLog('You moved into ' + next.title + '. Passive rest and furniture capacity improved.');
+      gainXp(80 + nextIndex * 40);
+      gainMastery(next.stage, 55 + nextIndex * 10);
+      pushLog('You moved into ' + next.title + '. Passive rest, caps, and job support improved.');
     }
 
     function buyHouseItem(key) {
@@ -1050,7 +1244,7 @@
       if (!spend(cost)) return pushLog('Not enough resources for ' + item.title + '.');
       state.housing.items[key] = current + 1;
       addResource('reputation', 1);
-      gainXp(4);
+      gainXp(40);
       pushLog('Home improved: ' + item.title + ' level ' + state.housing.items[key] + '.');
     }
 
@@ -1063,29 +1257,32 @@
       if (!spend(cost)) return pushLog('Not enough resources for ' + u.title + '.');
       state.upgrades[key] = n + 1;
       addResource('reputation', key === 'academyHall' ? 7 : 2);
-      gainXp(6);
+      gainXp(60);
       pushLog('Upgrade purchased: ' + u.title + ' level ' + state.upgrades[key] + '.');
     }
 
     function selectStage(key) {
-      if (!isUnlocked(key)) return pushLog('That stage is still locked.');
+      if (!isUnlocked(key)) return pushLog('That job is still locked.');
       state.currentStage = key;
-      pushLog('Current stage set to ' + STAGES.find(s => s.key === key).title + '.');
+      pushLog('Current job set to ' + STAGES.find(s => s.key === key).title + '.');
     }
 
     function bossFight() {
-      if (!isUnlocked('archmage') || state.currentStage !== 'archmage') return pushLog('Become the archmage and select that stage before challenging the Void King.');
+      if (!isUnlocked('archmage') || state.currentStage !== 'archmage') return pushLog('Become the archmage and select that job before challenging the Void King.');
       if (state.stats.bossDefeated) return pushLog('The Void King is already defeated.');
-      if (!spend({ arcana: 25, mana: 120, focus: 40, energy: 25 })) return pushLog('Final strike needs 25 arcana, 120 mana, 40 focus, and 25 energy.');
-      const damage = 115 + state.upgrades.ritualTower * 24 + state.automation.faculty * 12 + state.automation.circle * 6 + state.automation.familiar * 3 + housingBonuses(state).bossDamageBonus;
+      if (!spend({ arcana: 25000000, mana: 120000, focus: 40000, energy: 25 })) return pushLog('Final strike needs 25M arcana, 120K mana, 40K focus, and 25 energy.');
+      let damage = 115000000 + state.upgrades.ritualTower * 24000000 + state.automation.faculty * 12000000 + state.automation.circle * 6000000 + state.automation.familiar * 3000000 + housingBonuses(state).bossDamageBonus;
+      damage *= 1 + Math.max(0, masteryLevel('archmage') - 1) * 0.05;
+      if (activeBuff('archmageEdict')) damage *= 1.75;
       state.stats.bossHp = clamp(state.stats.bossHp - damage, 0, BOSS_MAX);
-      gainXp(12);
+      gainXp(120);
+      gainMastery('archmage', 100);
       if (state.stats.bossHp <= 0) {
         state.stats.bossDefeated = true;
         addResource('reputation', 75);
         pushLog('Victory: the Void King falls and the realm is saved.');
       } else {
-        pushLog('You hit the Void King for ' + Math.floor(damage) + ' damage. The battle continues.');
+        pushLog('You hit the Void King for ' + fmt(damage) + ' damage. The battle continues.');
       }
     }
 
@@ -1102,27 +1299,42 @@
         reputation: 0
       };
     }
+
     function energyRegenRate() {
       const foodSupport = state.resources.food > 0 ? 0.25 : -0.55;
-      return 0.36 + foodSupport + housingBonuses(state).energyRegen;
+      const farmerRest = state.currentStage === 'farmer' ? 0.12 : 0;
+      return 0.36 + foodSupport + housingBonuses(state).energyRegen + farmerRest;
     }
 
     function tick(seconds) {
+      for (const key of Object.keys(state.buffs || {})) {
+        state.buffs[key] = Math.max(0, (state.buffs[key] || 0) - seconds);
+      }
+
       const r = rates();
       addResource('food', r.food * seconds);
       addResource('mana', r.mana * seconds);
       addResource('focus', r.focus * seconds);
       addResource('gold', r.gold * seconds);
       addResource('knowledge', r.knowledge * seconds);
+      addResource('arcana', r.arcana * seconds);
       addResource('energy', r.energy * seconds);
 
-      const foodDrain = (0.026 + state.stats.level * 0.002) * housingBonuses(state).foodDrainMult * seconds;
+      const farmerDrain = state.currentStage === 'farmer' ? 0.8 : 1;
+      const foodDrain = (0.26 + state.stats.level * 0.02) * housingBonuses(state).foodDrainMult * farmerDrain * seconds;
       if (state.resources.food > 0) addResource('food', -foodDrain);
 
       state.stats.days += seconds / 60;
 
+      if (state.automation.scarecrow > 0) gainMastery('farmer', 0.04 * state.automation.scarecrow * seconds, true);
+      if (state.automation.familiar > 0) gainMastery('apprentice', 0.04 * state.automation.familiar * seconds, true);
+      if (state.automation.circle > 0) gainMastery('mage', 0.04 * state.automation.circle * seconds, true);
+      if (state.automation.faculty > 0) gainMastery('academy', 0.04 * state.automation.faculty * seconds, true);
+
       if (state.currentStage === 'archmage' && !state.stats.bossDefeated && state.automation.faculty > 0) {
-        state.stats.bossHp = clamp(state.stats.bossHp - (0.2 + state.upgrades.ritualTower * 0.04) * seconds, 0, BOSS_MAX);
+        let passiveDamage = (200000 + state.upgrades.ritualTower * 40000 + houseItemLevel('observatory') * 40000) * seconds;
+        if (activeBuff('archmageEdict')) passiveDamage *= 2;
+        state.stats.bossHp = clamp(state.stats.bossHp - passiveDamage, 0, BOSS_MAX);
         if (state.stats.bossHp === 0) {
           state.stats.bossDefeated = true;
           pushLog('Your enchanted academy overwhelms the Void King over time.', true);
@@ -1156,7 +1368,7 @@
           <div class="res-card res-${res.key}" title="${res.label}: ${fmt(val)} / ${fmt(cap)}">
             <div class="label">${res.label}</div>
             <div class="value">${fmt(val)}</div>
-            <div class="rate">${rate >= 0 ? '+' : ''}${rate.toFixed(2)}/s</div>
+            <div class="rate">${rate >= 0 ? '+' : ''}${fmtRate(rate)}/s</div>
             <div class="bar"><div class="fill ${fillClass}" style="width:${pct(val, cap)}%"></div></div>
           </div>
         `;
@@ -1167,33 +1379,85 @@
       revealUnlocks();
       const st = currentStage();
       document.getElementById('versionPill').textContent = 'Day ' + Math.floor(state.stats.days) + ' | Level ' + state.stats.level;
-      document.getElementById('hudStage').textContent = st.title + ' | ' + st.resource;
+      document.getElementById('hudStage').textContent = st.title + ' | ' + st.resource + ' | M' + masteryLevel(st.key);
       document.getElementById('stageTitle').textContent = st.title;
       document.getElementById('stageDesc').textContent = st.desc;
       const boss = Math.ceil(state.stats.bossHp);
       document.getElementById('bossSummary').textContent = state.stats.bossDefeated
         ? 'Victory. The Void King is defeated and the realm is safe.'
-        : 'Boss HP: ' + fmt(boss) + ' / ' + BOSS_MAX + '. Become an archmage and convert your academy into final battle power.';
+        : 'Boss HP: ' + fmt(boss) + ' / ' + fmt(BOSS_MAX) + '. Become an archmage and convert your academy into final battle power.';
       document.getElementById('bossFill').style.width = pct(state.stats.bossHp, BOSS_MAX) + '%';
     }
 
+    function renderJobCard() {
+      const st = currentStage();
+      const meta = JOB_META[st.key];
+      const lvl = masteryLevel(st.key);
+      const xp = masteryXp(st.key);
+      const need = masteryNeed(st.key);
+      const sig = meta.signature;
+      const sigCost = sig.cost();
+      const activeBuffs = Object.entries(state.buffs || {}).filter(([, v]) => v > 0);
+      document.getElementById('jobCard').innerHTML = `
+        <div class="job-top">
+          <div>
+            <div class="job-label">Selected job mode</div>
+            <div class="job-title">${st.title}</div>
+            <div class="job-desc">${st.desc}</div>
+          </div>
+          <div class="chips"><span class="chip blue">Mastery ${lvl}</span><span class="chip good">+${Math.floor((lvl - 1) * 5)}% ${labelFor(meta.masteryResource)}</span></div>
+        </div>
+        <div class="mastery-grid">
+          <div class="mini-stat">
+            <div class="mini-label">Mastery progress</div>
+            <div class="mini-value">${fmt(xp)} / ${fmt(need)} XP</div>
+            <div class="bar"><div class="fill green" style="width:${pct(xp, need)}%"></div></div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-label">Signature ability</div>
+            <div class="mini-value">${sig.title}${activeBuff(sig.key) ? ' (' + buffTime(sig.key) + 's)' : ''}</div>
+            <div class="job-desc">${sig.desc}</div>
+          </div>
+        </div>
+        <div class="chips">${meta.bonuses.map(b => '<span class="chip blue">' + b + '</span>').join('')}</div>
+        <div class="buff-list">${activeBuffs.length ? activeBuffs.map(([k, v]) => '<span class="chip amber">' + buffName(k) + ': ' + Math.ceil(v) + 's</span>').join('') : '<span class="chip">No timed buffs active</span>'}</div>
+        <div class="chips"><span class="chip">Signature cost</span>${chips(sigCost)}</div>
+      `;
+    }
+
+    function buffName(key) {
+      for (const meta of Object.values(JOB_META)) {
+        if (meta.signature.key === key) return meta.signature.title;
+      }
+      return key;
+    }
+
     function renderActions() {
+      const st = currentStage();
+      const sig = JOB_META[st.key].signature;
+      const sigCost = sig.cost();
+      const signatureReady = canAfford(sigCost) && !activeBuff(sig.key);
       const actions = [
-        { id: 'harvest', title: 'Harvest Food', desc: 'Farmer action. +food, -energy. This is the base of the whole chain.', fn: doHarvest, active: true },
-        { id: 'study', title: 'Study Cantrips', desc: 'Apprentice action. Converts food and energy into mana.', fn: doStudy, active: isUnlocked('apprentice') },
-        { id: 'meditate', title: 'Deep Meditation', desc: 'Mage action. Converts mana and energy into focus.', fn: doMeditate, active: isUnlocked('mage') },
-        { id: 'teach', title: 'Teach Class', desc: 'Academy action. Converts mana, focus, and energy into knowledge and gold.', fn: doTeach, active: isUnlocked('academy') },
-        { id: 'ritual', title: 'Grand Ritual', desc: 'Archmage action. Converts knowledge, mana, focus, and energy into arcana.', fn: doRitual, active: isUnlocked('archmage') },
-        { id: 'sell', title: 'Sell Food', desc: 'Trade 25 food for gold. Useful before the academy economy starts.', fn: doSellFood, active: true },
-        { id: 'rest', title: 'Rest', desc: 'Recover energy and a little focus. Costs 2 food if available.', fn: doRest, active: true }
+        { id: 'signature', title: sig.title, desc: sig.desc, fn: useSignature, active: true, preview: activeBuff(sig.key) ? buffTime(sig.key) + 's active' : (signatureReady ? 'Ready' : 'Need resources'), cost: sigCost },
+        { id: 'harvest', title: 'Harvest Food', desc: 'Farmer action. +food, -energy. This is the base of the whole chain.', fn: doHarvest, active: true, preview: actionPreview('harvest'), cost: { energy: 6 } },
+        { id: 'study', title: 'Study Cantrips', desc: 'Apprentice action. Converts food and energy into mana.', fn: doStudy, active: isUnlocked('apprentice'), preview: actionPreview('study'), cost: { food: state.currentStage === 'apprentice' ? 40 : 50, energy: 7 } },
+        { id: 'meditate', title: 'Deep Meditation', desc: 'Mage action. Converts mana and energy into focus.', fn: doMeditate, active: isUnlocked('mage'), preview: actionPreview('meditate'), cost: { mana: 700, energy: 7 } },
+        { id: 'teach', title: 'Teach Class', desc: 'Academy action. Converts mana, focus, and energy into knowledge and gold.', fn: doTeach, active: isUnlocked('academy'), preview: actionPreview('teach') + ', +' + fmt(160000 * productionMultiplier(state, 'gold') * selectedActionMultiplier('teach')) + ' gold', cost: { focus: 10000, mana: 10000, energy: 8 } },
+        { id: 'ritual', title: 'Grand Ritual', desc: 'Archmage action. Converts knowledge, mana, focus, and energy into arcana.', fn: doRitual, active: isUnlocked('archmage'), preview: actionPreview('ritual'), cost: { knowledge: 220000, mana: 28000, focus: 120000, energy: 10 } },
+        { id: 'sell', title: 'Sell Food', desc: 'Trade food for gold. Farmer mode gives a small bonus.', fn: doSellFood, active: true, preview: '+' + fmt(1600 * productionMultiplier(state, 'gold') * selectedActionMultiplier('sell')) + ' gold', cost: { food: 250 } },
+        { id: 'rest', title: 'Rest', desc: 'Recover energy and focus. Housing makes rest much stronger.', fn: doRest, active: true, preview: '+' + fmt(28 + housingBonuses(state).restEnergy + (state.currentStage === 'farmer' ? 8 : 0)) + ' energy', cost: {} }
       ];
       const box = document.getElementById('actions');
-      box.innerHTML = actions.map(a => `
-        <button class="btn ${a.active ? 'primary' : 'locked'}" data-action="${a.id}" ${a.active ? '' : 'disabled'}>
-          <div class="btn-title"><span>${a.title}</span><span class="chip ${a.active ? 'blue' : ''}">${a.active ? 'Tap' : 'Locked'}</span></div>
-          <div class="btn-desc">${a.desc}</div>
-        </button>
-      `).join('');
+      box.innerHTML = actions.map(a => {
+        const ok = a.active && (Object.keys(a.cost || {}).length === 0 || canAfford(a.cost));
+        return `
+          <button class="btn ${a.id === 'signature' ? 'good' : ok ? 'primary' : a.active ? '' : 'locked'}" data-action="${a.id}" ${a.active ? '' : 'disabled'}>
+            <div class="btn-title"><span>${a.title}</span><span class="chip ${ok ? 'blue' : a.active ? 'amber' : 'red'}">${a.active ? a.preview : 'Locked'}</span></div>
+            <div class="btn-desc">${a.desc}</div>
+            <div class="chips">${chips(a.cost || {})}</div>
+          </button>
+        `;
+      }).join('');
       for (const a of actions) {
         const el = box.querySelector('[data-action="' + a.id + '"]');
         if (el) el.onclick = a.fn;
@@ -1205,10 +1469,14 @@
       box.innerHTML = STAGES.map((s, i) => {
         const unlocked = isUnlocked(s.key);
         const active = state.currentStage === s.key;
+        const meta = JOB_META[s.key];
+        const lvl = masteryLevel(s.key);
+        const bonus = Math.floor((lvl - 1) * 5);
         return `
           <button class="btn ${active ? 'active' : ''} ${unlocked ? '' : 'locked'}" data-stage="${s.key}" ${unlocked ? '' : 'disabled'}>
             <div class="btn-title"><span>${i + 1}. ${s.title}</span><span class="chip ${unlocked ? 'good' : 'red'}">${unlocked ? s.resource : 'Locked'}</span></div>
             <div class="btn-desc">${unlocked ? s.desc : s.unlockDesc}</div>
+            <div class="chips"><span class="chip blue">Mastery ${lvl}</span><span class="chip good">+${bonus}% ${labelFor(meta.masteryResource)}</span><span class="chip">Signature: ${meta.signature.title}</span></div>
           </button>
         `;
       }).join('');
@@ -1223,12 +1491,12 @@
         const unlocked = isUnlocked(a.stage);
         const ok = unlocked && canAfford(cost);
         const rate = a.rate(state);
-        const extra = a.goldRate ? ' and +' + a.goldRate(state).toFixed(2) + ' gold/sec' : '';
+        const extra = a.goldRate ? ' and +' + fmtRate(a.goldRate(state)) + ' gold/s' : '';
         return `
           <button class="btn ${ok ? 'good' : unlocked ? '' : 'locked'}" data-auto="${a.key}" ${unlocked ? '' : 'disabled'}>
             <div class="btn-title"><span>${a.title} x${n}</span><span class="chip ${ok ? 'good' : unlocked ? 'amber' : 'red'}">Stage ${idx + 2}</span></div>
             <div class="btn-desc">${a.desc}</div>
-            <div class="chips"><span class="chip blue">Automates ${labelFor(a.automates)}</span><span class="chip good">+${rate.toFixed(2)} ${a.automates}/sec${extra}</span></div>
+            <div class="chips"><span class="chip blue">Automates ${labelFor(a.automates)}</span><span class="chip good">+${fmtRate(rate)} ${a.automates}/s${extra}</span></div>
             <div class="chips">${chips(cost)}</div>
           </button>
         `;
@@ -1246,12 +1514,12 @@
           <div class="home-label">Current home</div>
           <div class="home-title">${house.title}</div>
           <div class="home-desc">${house.desc}</div>
-          <div class="chips"><span class="chip good">Furniture levels: ${itemLevels}</span><span class="chip blue">Gold cap +${fmt(house.goldCap || 0)}</span></div>
+          <div class="chips"><span class="chip good">Furniture levels: ${itemLevels}</span><span class="chip blue">Supports ${JOB_META[house.stage].title}</span></div>
         </div>
         <div class="home-card">
           <div class="home-label">Rest quality</div>
           <div class="home-title">+${hb.energyRegen.toFixed(2)} energy/sec</div>
-          <div class="home-desc">Rest action: +${fmt(28 + hb.restEnergy)} energy and +${fmt(hb.restFocus)} focus. Pantry can reduce the food cost of resting.</div>
+          <div class="home-desc">Rest action: +${fmt(28 + hb.restEnergy)} energy and +${fmt(hb.restFocus)} focus. Matching homes give +25% to their supported job's resource.</div>
           <div class="chips"><span class="chip amber">Passive rest</span><span class="chip blue">Energy cap ${fmt(capFor('energy'))}</span></div>
         </div>
       `;
@@ -1315,7 +1583,7 @@
 
     function renderChainMap() {
       const rows = [
-        ['Farmer', 'Manual resource: Food. This starts the entire economy.', isUnlocked('farmer')],
+        ['Farmer', 'Manual resource: Food. Farmer mode makes harvest and survival stronger.', isUnlocked('farmer')],
         ['Apprentice Mage', 'New resource: Mana. Spell: Animated Scarecrow automates Food.', isUnlocked('apprentice')],
         ['Mage', 'New resource: Focus. Spell: Mana Familiar automates Mana.', isUnlocked('mage')],
         ['Academy Founder', 'New resource: Knowledge. Ritual: Meditation Circle automates Focus.', isUnlocked('academy')],
@@ -1339,7 +1607,7 @@
       btn.className = 'btn danger ' + (ready ? '' : 'locked');
       btn.innerHTML = state.stats.bossDefeated
         ? '<div class="btn-title"><span>Void King Defeated</span><span class="chip good">Victory</span></div><div class="btn-desc">The realm is safe. You can keep growing the academy economy.</div>'
-        : '<div class="btn-title"><span>Challenge the Void King</span><span class="chip red">' + (ready ? 'Ready' : 'Archmage only') + '</span></div><div class="btn-desc">Cost: 25 arcana, 120 mana, 40 focus, 25 energy. Damage scales with automations.</div>';
+        : '<div class="btn-title"><span>Challenge the Void King</span><span class="chip red">' + (ready ? 'Ready' : 'Archmage only') + '</span></div><div class="btn-desc">Cost: 25M arcana, 120K mana, 40K focus, 25 energy. Damage scales with automation, housing, ritual towers, and archmage mastery.</div>';
     }
 
     function renderLog() {
@@ -1350,6 +1618,7 @@
       revealUnlocks();
       renderHero();
       renderResources();
+      renderJobCard();
       renderActions();
       renderStages();
       renderAutomation();
@@ -1361,20 +1630,40 @@
     }
 
     function saveGame(show) {
+      state.version = GAME_VERSION;
       state.savedAt = Date.now();
       try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
       if (show) showToast('Saved');
+    }
+
+    function migrateSave(saved) {
+      const version = Number(saved.version || 0);
+      if (version >= GAME_VERSION) return saved;
+      const migrated = { ...saved };
+      migrated.resources = { ...(saved.resources || {}) };
+      for (const [key, scale] of Object.entries(RESOURCE_MIGRATION_SCALE)) {
+        if (key in migrated.resources) migrated.resources[key] = migrated.resources[key] * scale;
+      }
+      migrated.stats = { ...(saved.stats || {}) };
+      if (!migrated.stats.bossDefeated) migrated.stats.bossHp = BOSS_MAX;
+      else migrated.stats.bossHp = 0;
+      if (typeof migrated.stats.xp === 'number') migrated.stats.xp *= 10;
+      migrated.version = GAME_VERSION;
+      migrated.log = Array.isArray(saved.log) ? saved.log.slice(0, 6) : [];
+      migrated.log.unshift('Save migrated to V2.2: resource numbers were scaled up and job mastery was added.');
+      return migrated;
     }
 
     function loadGame() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (!raw) return null;
-        const saved = JSON.parse(raw);
+        const saved = migrateSave(JSON.parse(raw));
         const base = initialState();
         return {
           ...base,
           ...saved,
+          version: GAME_VERSION,
           resources: { ...base.resources, ...(saved.resources || {}) },
           automation: { ...base.automation, ...(saved.automation || {}) },
           upgrades: { ...base.upgrades, ...(saved.upgrades || {}) },
@@ -1383,6 +1672,11 @@
             ...(saved.housing || {}),
             items: { ...base.housing.items, ...((saved.housing && saved.housing.items) || {}) }
           },
+          jobMastery: {
+            ...base.jobMastery,
+            ...(saved.jobMastery || {})
+          },
+          buffs: { ...base.buffs, ...(saved.buffs || {}) },
           unlocked: { ...base.unlocked, ...(saved.unlocked || {}) },
           stats: { ...base.stats, ...(saved.stats || {}) },
           log: Array.isArray(saved.log) ? saved.log : base.log
