@@ -1,260 +1,273 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#07111f" />
-  <title>Peasant to Archmage V2.2 Jobs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Peasant to Archmage V2.3</title>
   <style>
     :root {
-      --bg: #040812;
-      --panel: rgba(13, 23, 40, 0.92);
-      --panel-soft: rgba(22, 36, 61, 0.72);
-      --card: rgba(5, 12, 25, 0.78);
-      --line: rgba(255, 255, 255, 0.11);
-      --line-bright: rgba(125, 211, 252, 0.34);
-      --text: #e5edf8;
-      --muted: #98a8bd;
-      --muted2: #718096;
-      --blue: #38bdf8;
-      --purple: #c084fc;
-      --green: #34d399;
-      --amber: #f59e0b;
-      --red: #fb7185;
-      --shadow: 0 20px 60px rgba(0, 0, 0, 0.36);
-      --radius: 24px;
+      --bg: #070a12;
+      --bg2: #111827;
+      --panel: rgba(15, 23, 42, 0.82);
+      --panel2: rgba(30, 41, 59, 0.76);
+      --line: rgba(148, 163, 184, 0.20);
+      --text: #f8fafc;
+      --muted: #aeb8c7;
+      --faint: #64748b;
+      --gold: #fbbf24;
+      --green: #86efac;
+      --blue: #93c5fd;
+      --purple: #c4b5fd;
+      --red: #fca5a5;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.40);
+      --radius: 20px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     * { box-sizing: border-box; }
-    html, body { margin: 0; min-height: 100%; }
-    html { scroll-padding-top: 168px; }
+    html { scroll-behavior: smooth; }
     body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
       background:
-        radial-gradient(900px 520px at 10% 0%, rgba(56, 189, 248, 0.18), transparent 55%),
-        radial-gradient(850px 520px at 90% 8%, rgba(192, 132, 252, 0.16), transparent 52%),
-        linear-gradient(180deg, #06101f 0%, var(--bg) 58%, #030712 100%);
-      color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      -webkit-font-smoothing: antialiased;
-      overscroll-behavior: none;
+        radial-gradient(circle at 12% 8%, rgba(59, 130, 246, 0.28), transparent 34%),
+        radial-gradient(circle at 80% 12%, rgba(168, 85, 247, 0.20), transparent 36%),
+        radial-gradient(circle at 50% 102%, rgba(251, 191, 36, 0.13), transparent 42%),
+        linear-gradient(180deg, #070a12 0%, #0b1020 55%, #060913 100%);
+      overflow-x: hidden;
     }
 
-    button, input { font: inherit; }
-    button { -webkit-tap-highlight-color: transparent; }
-
-    .app {
-      width: min(1180px, 100%);
-      margin: 0 auto;
-      padding: 12px 12px calc(26px + env(safe-area-inset-bottom));
-    }
-
-    .hero, .panel {
-      border: 1px solid var(--line);
-      background: linear-gradient(180deg, rgba(255,255,255,0.062), rgba(255,255,255,0.028));
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
-      border-radius: calc(var(--radius) + 4px);
-    }
-
-    .hero { padding: 16px; margin-top: 12px; }
-    .topline { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-    .eyebrow { color: #7dd3fc; letter-spacing: 0.28em; text-transform: uppercase; font-size: 11px; margin-bottom: 8px; }
-    h1 { margin: 0; font-size: clamp(1.55rem, 5vw, 2.55rem); line-height: 1.03; }
-    .subtitle { margin-top: 8px; color: var(--muted); max-width: 72ch; line-height: 1.45; }
-    .version-pill { border: 1px solid var(--line); background: rgba(3,7,18,0.52); padding: 9px 11px; border-radius: 999px; color: var(--muted); font-size: 12px; white-space: nowrap; }
-
-    .grid { display: grid; gap: 12px; }
-    .main-grid { grid-template-columns: 1.05fr 0.95fr; margin-top: 12px; }
-    @media (max-width: 920px) { .main-grid { grid-template-columns: 1fr; } }
-
-    .resources { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 9px; margin-top: 14px; }
-    @media (max-width: 760px) { .resources { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-
-    .res-card, .quest-card {
-      background: rgba(3, 7, 18, 0.55);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 11px;
-      min-height: 76px;
-      overflow: hidden;
-    }
-    .res-card .label { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; }
-    .res-card .value { font-size: 1.33rem; font-weight: 800; margin-top: 5px; font-variant-numeric: tabular-nums; }
-    .res-card .rate { color: var(--muted2); font-size: 12px; margin-top: 3px; font-variant-numeric: tabular-nums; }
-    .bar { height: 8px; overflow: hidden; border-radius: 999px; background: rgba(255,255,255,0.075); margin-top: 9px; }
-    .fill { height: 100%; width: 0%; border-radius: 999px; background: linear-gradient(90deg, var(--blue), var(--purple)); transition: width .15s ease; }
-    .fill.green { background: linear-gradient(90deg, #22c55e, #86efac); }
-    .fill.amber { background: linear-gradient(90deg, #f59e0b, #fde68a); }
-    .fill.red { background: linear-gradient(90deg, #fb7185, #f472b6); }
-
-    .hero-bottom { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
-    @media (max-width: 650px) { .hero-bottom { grid-template-columns: 1fr; } }
-    .quest-card .small-label { color: var(--muted); text-transform: uppercase; letter-spacing: 0.2em; font-size: 10px; }
-    .quest-card .title { font-weight: 800; font-size: 1.08rem; margin-top: 5px; }
-    .quest-card .desc { color: var(--muted); line-height: 1.42; font-size: 13px; margin-top: 5px; }
-
-    .panel { padding: 14px; }
-    .section-head { display:flex; justify-content:space-between; align-items:flex-start; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
-    h2 { margin: 0; font-size: 1.05rem; }
-    .section-sub { color: var(--muted); font-size: 12px; line-height: 1.35; max-width: 58ch; }
-    .section-gap { margin-top: 10px; }
-
-    .btn-list { display: grid; gap: 9px; }
-    .button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
-    @media (max-width: 580px) { .button-grid { grid-template-columns: 1fr; } }
-
-    .btn {
-      width: 100%;
-      min-height: 58px;
-      border: 1px solid var(--line);
-      color: var(--text);
-      background: linear-gradient(180deg, rgba(15, 23, 42, 0.86), rgba(3, 7, 18, 0.86));
-      border-radius: 18px;
-      padding: 13px;
-      cursor: pointer;
-      text-align: left;
-      touch-action: manipulation;
-      transition: transform .08s ease, border-color .15s ease, background .15s ease, opacity .15s ease;
-    }
-    .btn:active { transform: scale(0.99); }
-    .btn:hover { border-color: rgba(125, 211, 252, 0.28); }
-    .btn.primary { background: linear-gradient(90deg, rgba(56,189,248,0.17), rgba(192,132,252,0.14)); border-color: rgba(125,211,252,0.21); }
-    .btn.good { background: linear-gradient(90deg, rgba(52,211,153,0.16), rgba(56,189,248,0.08)); border-color: rgba(52,211,153,0.22); }
-    .btn.danger { background: linear-gradient(90deg, rgba(251,113,133,0.16), rgba(245,158,11,0.10)); border-color: rgba(251,113,133,0.22); }
-    .btn.locked, .btn:disabled { opacity: 0.54; cursor: not-allowed; }
-    .btn.active { border-color: var(--line-bright); box-shadow: inset 0 0 0 1px rgba(56,189,248,0.12); }
-    .btn-title { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-weight: 800; }
-    .btn-desc { color: var(--muted); font-size: 13px; line-height: 1.38; margin-top: 5px; }
-    .chips { display:flex; gap: 6px; flex-wrap:wrap; margin-top: 10px; }
-    .chip { border: 1px solid var(--line); color: var(--muted); background: rgba(255,255,255,0.035); padding: 5px 8px; border-radius: 999px; font-size: 11px; font-variant-numeric: tabular-nums; }
-    .chip.good { color: #bbf7d0; border-color: rgba(52,211,153,0.28); }
-    .chip.blue { color: #bae6fd; border-color: rgba(56,189,248,0.28); }
-    .chip.amber { color: #fde68a; border-color: rgba(245,158,11,0.30); }
-    .chip.red { color: #fecdd3; border-color: rgba(251,113,133,0.30); }
-
-    .job-card, .home-card {
-      border: 1px solid var(--line);
-      background: rgba(3,7,18,0.48);
-      border-radius: 18px;
-      padding: 12px;
-    }
-    .job-card {
-      margin-bottom: 10px;
-      background: linear-gradient(135deg, rgba(56,189,248,0.13), rgba(192,132,252,0.08), rgba(3,7,18,0.62));
-      border-color: rgba(125,211,252,0.20);
-    }
-    .job-top { display:flex; justify-content:space-between; gap: 10px; align-items:flex-start; flex-wrap: wrap; }
-    .job-label, .home-label { color: var(--muted); text-transform: uppercase; letter-spacing: 0.18em; font-size: 10px; }
-    .job-title, .home-title { font-weight: 900; font-size: 1.05rem; margin-top: 5px; }
-    .job-desc, .home-desc { color: var(--muted); font-size: 12px; line-height: 1.38; margin-top: 5px; }
-    .mastery-grid { display:grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-top: 10px; }
-    @media (max-width: 580px) { .mastery-grid { grid-template-columns: 1fr; } }
-    .mini-stat { border: 1px solid var(--line); border-radius: 15px; padding: 9px; background: rgba(3,7,18,0.42); }
-    .mini-stat .mini-label { color: var(--muted2); font-size: 11px; }
-    .mini-stat .mini-value { font-weight: 800; margin-top: 3px; font-variant-numeric: tabular-nums; }
-    .buff-list { display:flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
-
-    .chain { display:grid; gap: 8px; }
-    .chain-row {
-      display: grid;
-      grid-template-columns: 28px 1fr;
-      gap: 10px;
-      align-items: start;
-      padding: 10px;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: rgba(3,7,18,0.47);
-    }
-    .stage-dot { height: 28px; width: 28px; border-radius: 50%; display:flex; align-items:center; justify-content:center; background: rgba(56,189,248,0.14); border: 1px solid rgba(56,189,248,0.24); color: #bae6fd; font-size: 12px; font-weight: 800; }
-    .stage-dot.done { background: rgba(52,211,153,0.14); border-color: rgba(52,211,153,0.28); color: #bbf7d0; }
-    .stage-dot.locked { background: rgba(148,163,184,0.08); border-color: rgba(148,163,184,0.18); color: #94a3b8; }
-    .chain-title { font-weight: 800; }
-    .chain-desc { color: var(--muted); font-size: 12px; line-height: 1.4; margin-top: 3px; }
-
-    .log { display:grid; gap: 8px; }
-    .log-item { color: #cbd5e1; border: 1px solid var(--line); background: rgba(3,7,18,0.5); border-radius: 16px; padding: 10px 11px; font-size: 13px; line-height: 1.35; }
-
-    .footer-actions { display:flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; justify-content:center; }
-    .mini-btn {
-      border: 1px solid var(--line);
-      background: rgba(3,7,18,0.55);
-      color: var(--muted);
-      padding: 8px 10px;
-      border-radius: 999px;
-      cursor:pointer;
-      font-size: 12px;
-    }
-    .footer { color: var(--muted2); text-align:center; font-size: 12px; margin-top: 12px; }
-
-    .home-summary {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 9px;
-      margin-bottom: 10px;
-    }
-    @media (max-width: 580px) { .home-summary { grid-template-columns: 1fr; } }
+    button { font: inherit; }
+    .app { width: min(1200px, calc(100% - 32px)); margin: 0 auto; padding: 162px 0 34px; }
 
     .sticky-hud {
-      position: sticky;
-      top: 0;
-      z-index: 80;
-      padding: calc(8px + env(safe-area-inset-top)) 10px 8px;
-      border-bottom: 1px solid rgba(125, 211, 252, 0.18);
-      background:
-        radial-gradient(600px 170px at 15% 0%, rgba(56, 189, 248, 0.22), transparent 70%),
-        linear-gradient(180deg, rgba(3, 7, 18, 0.96), rgba(7, 17, 31, 0.90));
-      backdrop-filter: blur(18px);
-      box-shadow: 0 16px 38px rgba(0,0,0,0.34);
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 30;
+      background: linear-gradient(180deg, rgba(7, 10, 18, 0.96), rgba(7, 10, 18, 0.80));
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 16px 50px rgba(0,0,0,0.30);
     }
-    .sticky-hud-inner { width: min(1180px, 100%); margin: 0 auto; }
-    .hud-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 28px; }
-    .hud-title { font-weight: 900; font-size: 13px; letter-spacing: 0.02em; }
-    .hud-sub { color: var(--muted); font-size: 11px; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 64vw; }
-    .version-pill.compact { padding: 6px 8px; font-size: 11px; }
-    .sticky-hud .resources { margin-top: 8px; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 6px; }
-    @media (max-width: 760px) { .sticky-hud .resources { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-    .sticky-hud .res-card { min-height: 45px; padding: 7px 7px 6px; border-radius: 13px; background: rgba(3, 7, 18, 0.62); box-shadow: none; }
-    .sticky-hud .res-card .label { font-size: 8.5px; letter-spacing: 0.12em; line-height: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .sticky-hud .res-card .value { font-size: 0.98rem; line-height: 1.05; margin-top: 4px; }
-    .sticky-hud .res-card .rate { font-size: 9.5px; line-height: 1; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .sticky-hud .bar { height: 3px; margin-top: 5px; }
-    .quick-nav { display: flex; gap: 6px; overflow-x: auto; padding: 7px 1px 1px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
-    .quick-nav::-webkit-scrollbar { display: none; }
-    .quick-nav a { flex: 0 0 auto; border: 1px solid rgba(255,255,255,0.10); color: var(--muted); background: rgba(255,255,255,0.035); border-radius: 999px; padding: 6px 9px; font-size: 11px; text-decoration: none; white-space: nowrap; }
-    .quick-nav a:active, .quick-nav a:hover { color: #bae6fd; border-color: rgba(56,189,248,0.28); }
+    .sticky-hud-inner { width: min(1200px, calc(100% - 24px)); margin: 0 auto; padding: 10px 0 12px; }
+    .hud-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .hud-title { font-weight: 900; letter-spacing: 0.02em; }
+    .hud-sub { margin-top: 2px; color: var(--muted); font-size: 12px; }
+    .version-pill {
+      border: 1px solid rgba(251, 191, 36, 0.35);
+      border-radius: 999px;
+      padding: 7px 11px;
+      color: #fde68a;
+      background: rgba(120, 53, 15, 0.20);
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .version-pill.compact { color: #bfdbfe; border-color: rgba(147,197,253,0.24); background: rgba(30, 64, 175, 0.15); }
 
-    @media (max-width: 430px) {
-      html { scroll-padding-top: 156px; }
-      .app { padding-left: 10px; padding-right: 10px; }
-      .sticky-hud { padding-left: 8px; padding-right: 8px; }
-      .hud-title { font-size: 12px; }
-      .hud-sub { max-width: 48vw; }
-      .sticky-hud .resources { gap: 5px; }
-      .sticky-hud .res-card { padding: 6px 6px 5px; min-height: 43px; }
-      .sticky-hud .res-card .value { font-size: 0.9rem; }
-      .sticky-hud .res-card .rate { font-size: 9px; }
+    .resources {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
     }
+    .res-card {
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      background: rgba(3, 7, 18, 0.58);
+      border-radius: 16px;
+      padding: 9px 10px;
+      min-height: 60px;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.18);
+    }
+    .res-card .label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; }
+    .res-card .value { font-size: 20px; font-weight: 900; margin-top: 2px; }
+    .res-card .rate { font-size: 10px; color: var(--faint); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .bar { height: 8px; border-radius: 999px; background: rgba(148, 163, 184, 0.13); overflow: hidden; margin-top: 8px; }
+    .fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #60a5fa, #a78bfa); width: 0%; transition: width .25s ease; }
+    .fill.green { background: linear-gradient(90deg, #4ade80, #bef264); }
+    .fill.gold { background: linear-gradient(90deg, #f59e0b, #fde68a); }
+    .fill.red { background: linear-gradient(90deg, #fb7185, #f97316); }
+
+    .quick-nav { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+    .quick-nav a {
+      color: var(--muted);
+      text-decoration: none;
+      border: 1px solid rgba(148, 163, 184, 0.15);
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 12px;
+      background: rgba(15, 23, 42, 0.55);
+    }
+    .quick-nav a:hover { color: var(--text); border-color: rgba(147,197,253,0.35); }
+
+    .hero {
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 28px;
+      background:
+        linear-gradient(135deg, rgba(30, 41, 59, 0.88), rgba(15, 23, 42, 0.76)),
+        radial-gradient(circle at 76% 18%, rgba(251, 191, 36, 0.13), transparent 35%);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 360px;
+      height: 360px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(147, 197, 253, 0.13), transparent 65%);
+      right: -90px;
+      top: -110px;
+      pointer-events: none;
+    }
+    .topline { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; position: relative; z-index: 2; }
+    .eyebrow { color: #fcd34d; text-transform: uppercase; letter-spacing: 0.14em; font-weight: 900; font-size: 12px; }
+    h1 { margin: 6px 0 8px; font-size: clamp(36px, 7vw, 64px); line-height: 0.92; letter-spacing: -0.05em; }
+    .subtitle { color: var(--muted); max-width: 780px; line-height: 1.6; }
+    .hero-bottom { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 0.8fr); gap: 14px; margin-top: 22px; position: relative; z-index: 2; }
+    .quest-card {
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      background: rgba(2, 6, 23, 0.42);
+      border-radius: 20px;
+      padding: 16px;
+    }
+    .small-label { color: var(--faint); text-transform: uppercase; letter-spacing: 0.11em; font-size: 11px; font-weight: 900; }
+    .title { margin-top: 5px; font-size: 20px; font-weight: 900; }
+    .desc { color: var(--muted); line-height: 1.45; margin-top: 6px; }
+    .hint { color: #fde68a; margin-top: 8px; font-size: 13px; }
+
+    .grid { display: grid; gap: 16px; }
+    .main-grid { grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.85fr); margin-top: 16px; align-items: start; }
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      background: var(--panel);
+      box-shadow: 0 14px 42px rgba(0,0,0,0.24);
+    }
+    .section-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
+    h2 { margin: 0; font-size: 20px; letter-spacing: -0.02em; }
+    .section-sub { color: var(--muted); line-height: 1.45; margin-top: 4px; font-size: 13px; }
+    .section-gap { margin-top: 12px; }
+    .btn-list, .button-grid { display: grid; gap: 10px; }
+    .button-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    .btn, .mini-btn, .card-button {
+      appearance: none;
+      border: 1px solid rgba(148, 163, 184, 0.20);
+      color: var(--text);
+      background: rgba(15, 23, 42, 0.76);
+      border-radius: 16px;
+      padding: 12px 13px;
+      text-align: left;
+      cursor: pointer;
+      transition: transform .15s ease, border-color .15s ease, background .15s ease, opacity .15s ease;
+    }
+    .btn:hover, .mini-btn:hover, .card-button:hover { transform: translateY(-1px); border-color: rgba(147,197,253,0.42); background: rgba(30, 41, 59, 0.92); }
+    .btn:disabled, .card-button:disabled, .mini-btn:disabled { cursor: not-allowed; opacity: 0.48; transform: none; }
+    .btn.good { border-color: rgba(134, 239, 172, 0.32); background: rgba(20, 83, 45, 0.28); }
+    .btn.danger { border-color: rgba(248, 113, 113, 0.38); background: rgba(127, 29, 29, 0.25); }
+    .btn-title { display: flex; justify-content: space-between; gap: 10px; align-items: center; font-weight: 900; }
+    .btn-desc { color: var(--muted); margin-top: 6px; font-size: 13px; line-height: 1.42; }
+    .cost-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      background: rgba(2, 6, 23, 0.34);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 3px 7px;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+    .chip.good { color: #bbf7d0; border-color: rgba(134,239,172,0.28); }
+    .chip.gold { color: #fde68a; border-color: rgba(251,191,36,0.28); }
+    .chip.red { color: #fecaca; border-color: rgba(248,113,113,0.30); }
+    .status {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .job-card {
+      border: 1px solid rgba(251, 191, 36, 0.22);
+      border-radius: 18px;
+      padding: 13px;
+      background: linear-gradient(135deg, rgba(120, 53, 15, 0.22), rgba(30, 41, 59, 0.48));
+      margin-bottom: 12px;
+    }
+    .job-card .job-row { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
+    .job-name { font-weight: 950; font-size: 18px; }
+    .mastery-bar { height: 7px; background: rgba(148,163,184,0.14); border-radius: 999px; overflow: hidden; margin-top: 9px; }
+    .mastery-bar > div { height: 100%; width: 0%; background: linear-gradient(90deg, #fbbf24, #f472b6); border-radius: 999px; transition: width .25s ease; }
+
+    .split-row { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+    .log { display: grid; gap: 8px; color: var(--muted); font-size: 13px; line-height: 1.4; }
+    .log-item { border-left: 2px solid rgba(147,197,253,0.32); padding: 7px 9px; background: rgba(2,6,23,0.25); border-radius: 8px; }
+    .chain { display: grid; gap: 9px; }
+    .chain-item { display: grid; grid-template-columns: 1fr auto; gap: 8px; border: 1px solid rgba(148,163,184,0.14); border-radius: 13px; padding: 10px; background: rgba(2,6,23,0.24); }
+    .chain-item .name { font-weight: 850; }
+    .chain-item .sub { color: var(--muted); font-size: 12px; margin-top: 2px; }
+    .home-summary { border: 1px solid rgba(148,163,184,0.14); border-radius: 16px; padding: 12px; background: rgba(2,6,23,0.30); color: var(--muted); line-height: 1.45; margin-bottom: 10px; }
+    .footer-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 18px 0 0; }
+    .mini-btn { padding: 8px 11px; border-radius: 999px; text-align: center; font-size: 12px; }
+    .footer { color: var(--faint); text-align: center; font-size: 12px; margin: 14px 0 0; }
+
+    .dev-tools {
+      width: min(780px, 100%);
+      margin: 14px auto 0;
+      border: 1px solid rgba(251,191,36,0.24);
+      background: rgba(120, 53, 15, 0.18);
+      border-radius: 16px;
+      padding: 10px 12px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .dev-tools summary { cursor: pointer; font-weight: 900; color: #fde68a; }
+    .dev-tools-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; align-items: center; }
+    #devSpeedBadge { color: #bfdbfe; font-weight: 900; margin-left: 8px; }
 
     .toast {
       position: fixed;
       left: 50%;
-      bottom: calc(16px + env(safe-area-inset-bottom));
+      bottom: 22px;
       transform: translateX(-50%) translateY(16px);
       opacity: 0;
       pointer-events: none;
-      transition: opacity .2s ease, transform .2s ease;
-      z-index: 99;
-      background: rgba(2,6,23,0.94);
-      border: 1px solid rgba(125,211,252,0.26);
-      color: var(--text);
-      padding: 10px 13px;
+      transition: opacity .18s ease, transform .18s ease;
+      border: 1px solid rgba(134,239,172,0.30);
+      background: rgba(5, 46, 22, 0.92);
+      color: #dcfce7;
       border-radius: 999px;
-      box-shadow: 0 14px 40px rgba(0,0,0,0.4);
-      font-size: 13px;
+      padding: 10px 14px;
+      box-shadow: 0 16px 46px rgba(0,0,0,0.40);
+      z-index: 60;
       max-width: calc(100% - 24px);
-      text-align:center;
+      text-align: center;
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 980px) {
+      .resources { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .main-grid, .hero-bottom { grid-template-columns: 1fr; }
+      .button-grid { grid-template-columns: 1fr; }
+      .app { padding-top: 218px; }
+    }
+    @media (max-width: 620px) {
+      .app { width: min(100% - 20px, 1200px); padding-top: 250px; }
+      .resources { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .topline { flex-direction: column; }
+      .hero { padding: 20px; }
+    }
   </style>
 </head>
 <body>
@@ -285,18 +298,18 @@
     <header class="hero">
       <div class="topline">
         <div>
-          <div class="eyebrow">V2.2 job impact prototype</div>
+          <div class="eyebrow">V2.3 foundation cleanup</div>
           <h1>Peasant to Archmage</h1>
-          <div class="subtitle">Jobs now act like active modes. Selecting a role boosts its core action, improves part of the automation chain, and grows job mastery. Numbers are larger, but the click ratios are tuned to keep the overall progression pace similar.</div>
+          <div class="subtitle">A single-file incremental game. Resources and jobs now reveal as your path expands, Reputation has been removed, and development commands live at the bottom for fast testing.</div>
         </div>
-        <div class="version-pill">V2.2 jobs + housing</div>
+        <div class="version-pill">V2.3 progression + dev tools</div>
       </div>
-
       <div class="hero-bottom">
         <div class="quest-card">
           <div class="small-label">Current job</div>
           <div class="title" id="stageTitle">Farmer</div>
           <div class="desc" id="stageDesc">Grow food, manage energy, and stockpile enough harvest to begin magical study.</div>
+          <div class="hint" id="nextHint"></div>
         </div>
         <div class="quest-card">
           <div class="small-label">Main quest</div>
@@ -313,7 +326,7 @@
           <div class="section-head">
             <div>
               <h2>Manual actions</h2>
-              <div class="section-sub">Tap actions to drive the early game. The selected job makes its matching action and automation much stronger.</div>
+              <div class="section-sub">Tap actions to drive the early game. The selected job makes its matching action much stronger.</div>
             </div>
           </div>
           <div class="job-card" id="jobCard"></div>
@@ -324,7 +337,7 @@
           <div class="section-head">
             <div>
               <h2>Career jobs</h2>
-              <div class="section-sub">Unlocked jobs remain available. Select a job when you want to lean into its resource engine.</div>
+              <div class="section-sub">Jobs only appear when your progress has reached them. Unlocked jobs remain available.</div>
             </div>
           </div>
           <div class="btn-list" id="stages"></div>
@@ -334,7 +347,7 @@
           <div class="section-head">
             <div>
               <h2>Automation chain</h2>
-              <div class="section-sub">Each new job automates the resource from the job before it.</div>
+              <div class="section-sub">Each revealed magical job automates the resource from the job before it.</div>
             </div>
           </div>
           <div class="btn-list" id="automation"></div>
@@ -344,11 +357,11 @@
           <div class="section-head">
             <div>
               <h2>Housing and passive rest</h2>
-              <div class="section-sub">Buy larger homes with gold, then furnish them for better sleep, passive recovery, and resource generation.</div>
+              <div class="section-sub">Buy larger homes with gold, then furnish them for better sleep and passive resource generation.</div>
             </div>
           </div>
           <div class="home-summary" id="housingSummary"></div>
-          <button class="btn good" id="houseButton"></button>
+          <button class="btn good" id="houseButton" type="button"></button>
           <div class="section-gap btn-list" id="houseItems"></div>
         </div>
       </section>
@@ -368,7 +381,7 @@
           <div class="section-head">
             <div>
               <h2>Chain map</h2>
-              <div class="section-sub">The economy is still built around the previous-stage automation rule.</div>
+              <div class="section-sub">Only discovered links in the economy chain are shown.</div>
             </div>
           </div>
           <div class="chain" id="chainMap"></div>
@@ -378,10 +391,10 @@
           <div class="section-head">
             <div>
               <h2>Final battle</h2>
-              <div class="section-sub">Arcana, mana, focus, and energy are converted into massive damage.</div>
+              <div class="section-sub" id="battleSub">The final threat is distant. Become an archmage to challenge it directly.</div>
             </div>
           </div>
-          <button class="btn danger" id="bossButton">
+          <button class="btn danger" id="bossButton" type="button">
             <div class="btn-title"><span>Challenge the Void King</span><span class="chip red">Archmage only</span></div>
             <div class="btn-desc">Cost: 25M arcana, 120K mana, 40K focus, 25 energy.</div>
           </button>
@@ -400,27 +413,40 @@
     </main>
 
     <div class="footer-actions">
-      <button class="mini-btn" id="saveBtn">Save now</button>
-      <button class="mini-btn" id="resetBtn">Reset save</button>
+      <button class="mini-btn" id="saveBtn" type="button">Save now</button>
+      <button class="mini-btn" id="resetBtn" type="button">Reset save</button>
     </div>
+
+    <details class="dev-tools" id="devToolsPanel">
+      <summary>Development commands <span id="devSpeedBadge">Time: 1x</span></summary>
+      <div class="dev-tools-row">
+        <button class="mini-btn" id="devResetBtn" type="button">Reset progress</button>
+        <button class="mini-btn" id="devResourcesBtn" type="button">Add resources</button>
+        <button class="mini-btn" id="devTime1Btn" type="button">Time 1x</button>
+        <button class="mini-btn" id="devTime10Btn" type="button">Time 10x</button>
+        <button class="mini-btn" id="devTime100Btn" type="button">Time 100x</button>
+      </div>
+    </details>
+
     <div class="footer">Single-file HTML. Works on GitHub Pages. Autosaves locally in this browser.</div>
   </div>
+
   <div class="toast" id="toast">Saved</div>
 
   <script>
-    const GAME_VERSION = 22;
+    const GAME_VERSION = 23;
     const STORAGE_KEY = 'ptarchmage-v2-save';
     const BOSS_MAX = 1000000000;
+    const TICK_MS = 250;
 
     const RESOURCES = [
       { key: 'food', label: 'Food', cap: 12000, note: 'Stage 1 resource' },
+      { key: 'energy', label: 'Energy', cap: 100, note: 'Action stamina' },
       { key: 'mana', label: 'Mana', cap: 120000, note: 'Stage 2 resource' },
       { key: 'focus', label: 'Focus', cap: 500000, note: 'Stage 3 resource' },
       { key: 'gold', label: 'Gold', cap: 2500000, note: 'Trade and tuition' },
       { key: 'knowledge', label: 'Knowledge', cap: 9000000, note: 'Stage 4 resource' },
-      { key: 'arcana', label: 'Arcana', cap: 300000000, note: 'Stage 5 resource' },
-      { key: 'energy', label: 'Energy', cap: 100, note: 'Action stamina' },
-      { key: 'reputation', label: 'Reputation', cap: 250, note: 'Unlock progress' }
+      { key: 'arcana', label: 'Arcana', cap: 300000000, note: 'Stage 5 resource' }
     ];
 
     const STAGES = [
@@ -432,7 +458,8 @@
         actionId: 'harvest',
         desc: 'Grow food, manage energy, and stockpile enough harvest to begin magical study.',
         unlockDesc: 'Starting job.',
-        unlocked: () => true
+        nextHint: 'Harvest until you have 500 food. The next job will reveal itself then.',
+        unlocked: function() { return true; }
       },
       {
         key: 'apprentice',
@@ -440,9 +467,10 @@
         resource: 'Mana',
         resourceKeys: ['mana'],
         actionId: 'study',
-        desc: 'Turn food, focus, and energy into mana. Your first spell animates farming.',
+        desc: 'Turn food and energy into mana. Your first spell animates farming.',
         unlockDesc: 'Need 500 food.',
-        unlocked: (s) => s.resources.food >= 500 || s.unlocked.apprentice
+        nextHint: 'Study cantrips and buy one Animated Scarecrow to reveal the mage path.',
+        unlocked: function(s) { return (s.resources.food || 0) >= 500 || !!s.unlocked.apprentice; }
       },
       {
         key: 'mage',
@@ -451,8 +479,9 @@
         resourceKeys: ['focus'],
         actionId: 'meditate',
         desc: 'Use mana to sharpen your mind. Focus powers stronger magical infrastructure.',
-        unlockDesc: 'Need 8K mana and 1 animated scarecrow.',
-        unlocked: (s) => (s.resources.mana >= 8000 && s.automation.scarecrow >= 1) || s.unlocked.mage
+        unlockDesc: 'Need 8K mana and 1 Animated Scarecrow.',
+        nextHint: 'Gather 80K focus and 15K gold to reveal the academy path.',
+        unlocked: function(s) { return ((s.resources.mana || 0) >= 8000 && (s.automation.scarecrow || 0) >= 1) || !!s.unlocked.mage; }
       },
       {
         key: 'academy',
@@ -461,8 +490,9 @@
         resourceKeys: ['knowledge', 'gold'],
         actionId: 'teach',
         desc: 'Teach apprentices, earn tuition, and turn knowledge into focus automation.',
-        unlockDesc: 'Need 80K focus, 15K gold, and 25 reputation.',
-        unlocked: (s) => (s.resources.focus >= 80000 && s.resources.gold >= 15000 && s.resources.reputation >= 25) || s.unlocked.academy
+        unlockDesc: 'Need 80K focus and 15K gold.',
+        nextHint: 'Build Academy Hall level 2, then gather 2.5M knowledge and 35K mana to reveal the archmage path.',
+        unlocked: function(s) { return ((s.resources.focus || 0) >= 80000 && (s.resources.gold || 0) >= 15000) || !!s.unlocked.academy; }
       },
       {
         key: 'archmage',
@@ -471,8 +501,9 @@
         resourceKeys: ['arcana'],
         actionId: 'ritual',
         desc: 'Compress knowledge, mana, and focus into arcana for the final battle.',
-        unlockDesc: 'Need 2.5M knowledge, 35K mana, 80 reputation, and Academy Hall level 2.',
-        unlocked: (s) => (s.resources.knowledge >= 2500000 && s.resources.mana >= 35000 && s.resources.reputation >= 80 && s.upgrades.academyHall >= 2) || s.unlocked.archmage
+        unlockDesc: 'Need 2.5M knowledge, 35K mana, and Academy Hall level 2.',
+        nextHint: 'Create arcana, strengthen the academy, and challenge the Void King.',
+        unlocked: function(s) { return ((s.resources.knowledge || 0) >= 2500000 && (s.resources.mana || 0) >= 35000 && (s.upgrades.academyHall || 0) >= 2) || !!s.unlocked.archmage; }
       }
     ];
 
@@ -491,7 +522,7 @@
           title: 'Prepare the Fields',
           desc: 'Spend energy to boost food production and scarecrows for 60 seconds.',
           duration: 60,
-          cost: () => ({ energy: 25 })
+          cost: function() { return { energy: 25 }; }
         }
       },
       apprentice: {
@@ -508,7 +539,7 @@
           title: 'Enchant Field',
           desc: 'Spend mana to supercharge farming automation for 75 seconds.',
           duration: 75,
-          cost: () => ({ mana: 2000 })
+          cost: function() { return { mana: 2000 }; }
         }
       },
       mage: {
@@ -525,7 +556,7 @@
           title: 'Bind Familiar',
           desc: 'Spend mana and focus to boost mana familiar output for 75 seconds.',
           duration: 75,
-          cost: () => ({ mana: 5000, focus: 20000 })
+          cost: function() { return { mana: 5000, focus: 20000 }; }
         }
       },
       academy: {
@@ -535,14 +566,14 @@
         bonuses: [
           '+100% Teach Class knowledge and gold while selected',
           '+25% Meditation Circle focus output while selected',
-          '+50% reputation from teaching while selected'
+          '+25% academy gold from teaching while selected'
         ],
         signature: {
           key: 'assignStudents',
           title: 'Assign Students',
           desc: 'Spend knowledge and gold to boost earlier automation for 90 seconds.',
           duration: 90,
-          cost: () => ({ knowledge: 500000, gold: 100000 })
+          cost: function() { return { knowledge: 500000, gold: 100000 }; }
         }
       },
       archmage: {
@@ -559,10 +590,86 @@
           title: 'Archmage Edict',
           desc: 'Spend arcana to boost all production, automation, and boss damage for 90 seconds.',
           duration: 90,
-          cost: () => ({ arcana: 30000000 })
+          cost: function() { return { arcana: 30000000 }; }
         }
       }
     };
+
+    const ACTIONS = [
+      {
+        key: 'harvest',
+        title: 'Harvest Food',
+        stage: 'farmer',
+        desc: 'Spend a little energy to gather food.',
+        cost: function() { return { energy: 2 }; },
+        effect: function() { return { food: 42 * actionMultiplier('farmer') * productionMultiplier('food') }; },
+        xp: 8
+      },
+      {
+        key: 'rest',
+        title: 'Rest',
+        stage: null,
+        desc: 'Recover energy at home. Better housing improves this action.',
+        cost: function() { return {}; },
+        effect: function() {
+          const h = housingBonuses();
+          return { energy: 18 + h.restEnergy, focus: isStageKnown('mage') ? h.restFocus : 0 };
+        },
+        xp: 3
+      },
+      {
+        key: 'study',
+        title: 'Study Cantrips',
+        stage: 'apprentice',
+        desc: 'Spend food and energy to condense your first mana.',
+        cost: function() {
+          const foodCost = state.currentStage === 'apprentice' ? 72 : 90;
+          return { food: foodCost, energy: 5 };
+        },
+        effect: function() { return { mana: 360 * actionMultiplier('apprentice') * productionMultiplier('mana') }; },
+        xp: 12
+      },
+      {
+        key: 'meditate',
+        title: 'Deep Meditation',
+        stage: 'mage',
+        desc: 'Spend mana and energy to sharpen focus.',
+        cost: function() { return { mana: 650, energy: 7 }; },
+        effect: function() { return { focus: 1500 * actionMultiplier('mage') * productionMultiplier('focus') }; },
+        xp: 14
+      },
+      {
+        key: 'sellFood',
+        title: 'Sell Surplus Food',
+        stage: 'mage',
+        desc: 'Trade a chunk of food for gold at the village market.',
+        cost: function() { return { food: 500 }; },
+        effect: function() { return { gold: 650 * productionMultiplier('gold') }; },
+        xp: 9
+      },
+      {
+        key: 'teach',
+        title: 'Teach Class',
+        stage: 'academy',
+        desc: 'Spend focus, mana, and energy to teach apprentices for knowledge and tuition.',
+        cost: function() { return { focus: 3000, mana: 600, energy: 10 }; },
+        effect: function() {
+          const mult = actionMultiplier('academy');
+          const goldBonus = state.currentStage === 'academy' ? 1.25 : 1;
+          return { knowledge: 40000 * mult * productionMultiplier('knowledge'), gold: 3000 * mult * goldBonus * productionMultiplier('gold') };
+        },
+        xp: 18
+      },
+      {
+        key: 'ritual',
+        title: 'Grand Ritual',
+        stage: 'archmage',
+        desc: 'Compress knowledge, mana, and focus into arcana.',
+        cost: function() { return { knowledge: 250000, mana: 3500, focus: 7000, energy: 15 }; },
+        effect: function() { return { arcana: 2000000 * actionMultiplier('archmage') * productionMultiplier('arcana') }; },
+        xp: 26
+      }
+    ];
 
     const AUTOMATION = [
       {
@@ -571,8 +678,8 @@
         title: 'Animated Scarecrow',
         automates: 'food',
         desc: 'Apprentice spell: spends mana to animate farm tools. Produces food automatically.',
-        cost: (n) => ({ mana: Math.floor(3000 * Math.pow(1.45, n)), food: Math.floor(200 * Math.pow(1.25, n)) }),
-        rate: (s) => 5.5 * s.automation.scarecrow * productionMultiplier(s, 'food') * automationOutputMultiplier(s, 'scarecrow')
+        cost: function(n) { return { mana: Math.floor(3000 * Math.pow(1.45, n)), food: Math.floor(200 * Math.pow(1.25, n)) }; },
+        rate: function(s) { return 5.5 * (s.automation.scarecrow || 0) * productionMultiplier('food', s) * automationOutputMultiplier('scarecrow', s); }
       },
       {
         key: 'familiar',
@@ -580,8 +687,8 @@
         title: 'Mana Familiar',
         automates: 'mana',
         desc: 'Mage spell: uses focus to bind a familiar that gathers mana from the air.',
-        cost: (n) => ({ focus: Math.floor(45000 * Math.pow(1.48, n)), mana: Math.floor(5500 * Math.pow(1.32, n)) }),
-        rate: (s) => 42 * s.automation.familiar * productionMultiplier(s, 'mana') * automationOutputMultiplier(s, 'familiar')
+        cost: function(n) { return { focus: Math.floor(45000 * Math.pow(1.48, n)), mana: Math.floor(5500 * Math.pow(1.32, n)) }; },
+        rate: function(s) { return 42 * (s.automation.familiar || 0) * productionMultiplier('mana', s) * automationOutputMultiplier('familiar', s); }
       },
       {
         key: 'circle',
@@ -589,8 +696,8 @@
         title: 'Meditation Circle',
         automates: 'focus',
         desc: 'Academy ritual: students rotate through meditation shifts to generate focus.',
-        cost: (n) => ({ knowledge: Math.floor(700000 * Math.pow(1.50, n)), gold: Math.floor(120000 * Math.pow(1.36, n)) }),
-        rate: (s) => 280 * s.automation.circle * productionMultiplier(s, 'focus') * automationOutputMultiplier(s, 'circle')
+        cost: function(n) { return { knowledge: Math.floor(700000 * Math.pow(1.50, n)), gold: Math.floor(120000 * Math.pow(1.36, n)) }; },
+        rate: function(s) { return 280 * (s.automation.circle || 0) * productionMultiplier('focus', s) * automationOutputMultiplier('circle', s); }
       },
       {
         key: 'faculty',
@@ -598,211 +705,39 @@
         title: 'Enchanted Faculty',
         automates: 'knowledge',
         desc: 'Archmage spell: arcana enchants the academy staff. Produces knowledge and tuition.',
-        cost: (n) => ({ arcana: Math.floor(18000000 * Math.pow(1.55, n)), knowledge: Math.floor(1600000 * Math.pow(1.35, n)), gold: Math.floor(220000 * Math.pow(1.34, n)) }),
-        rate: (s) => 2300 * s.automation.faculty * productionMultiplier(s, 'knowledge') * automationOutputMultiplier(s, 'faculty'),
-        goldRate: (s) => 160 * s.automation.faculty * productionMultiplier(s, 'gold') * automationOutputMultiplier(s, 'faculty')
+        cost: function(n) { return { arcana: Math.floor(18000000 * Math.pow(1.55, n)), knowledge: Math.floor(1600000 * Math.pow(1.35, n)), gold: Math.floor(220000 * Math.pow(1.34, n)) }; },
+        rate: function(s) { return 2300 * (s.automation.faculty || 0) * productionMultiplier('knowledge', s) * automationOutputMultiplier('faculty', s); },
+        goldRate: function(s) { return 160 * (s.automation.faculty || 0) * productionMultiplier('gold', s) * automationOutputMultiplier('faculty', s); }
       }
     ];
 
     const HOUSE_TIERS = [
-      {
-        title: 'Peasant Hut',
-        desc: 'A roof, a straw mat, and enough quiet to recover after farm work.',
-        stage: 'farmer',
-        cost: null,
-        restRate: 0.06,
-        restAction: 0,
-        energyCap: 0,
-        foodCap: 0,
-        goldCap: 0
-      },
-      {
-        title: 'Cozy Cottage',
-        desc: 'A real bed and pantry space. This home supports apprentice magic and food storage.',
-        stage: 'apprentice',
-        cost: { gold: 8000, food: 600 },
-        restRate: 0.18,
-        restAction: 5,
-        energyCap: 10,
-        foodCap: 800,
-        goldCap: 18000
-      },
-      {
-        title: 'Mage Loft',
-        desc: 'A quiet upstairs room where mana settles naturally overnight.',
-        stage: 'mage',
-        cost: { gold: 24000, mana: 9000 },
-        restRate: 0.34,
-        restAction: 9,
-        energyCap: 18,
-        foodCap: 1300,
-        manaCap: 14000,
-        goldCap: 42000
-      },
-      {
-        title: 'Academy Townhouse',
-        desc: 'Enough rooms for study, storage, and visiting apprentices.',
-        stage: 'academy',
-        cost: { gold: 650000, knowledge: 1100000 },
-        restRate: 0.52,
-        restAction: 14,
-        energyCap: 28,
-        foodCap: 2100,
-        manaCap: 23000,
-        focusCap: 90000,
-        goldCap: 900000,
-        knowledgeCap: 1800000
-      },
-      {
-        title: 'Wizard Tower',
-        desc: 'A vertical home and laboratory where the whole building hums with magic.',
-        stage: 'archmage',
-        cost: { gold: 1450000, knowledge: 3200000, arcana: 18000000 },
-        restRate: 0.74,
-        restAction: 20,
-        energyCap: 40,
-        foodCap: 3200,
-        manaCap: 38000,
-        focusCap: 150000,
-        goldCap: 1600000,
-        knowledgeCap: 3400000,
-        arcanaCap: 80000000
-      },
-      {
-        title: 'Archmage Estate',
-        desc: 'A legendary residence with wards, servants, gardens, and ritual wings.',
-        stage: 'archmage',
-        cost: { gold: 3000000, knowledge: 6200000, arcana: 75000000 },
-        restRate: 1.02,
-        restAction: 28,
-        energyCap: 55,
-        foodCap: 4800,
-        manaCap: 56000,
-        focusCap: 230000,
-        goldCap: 2600000,
-        knowledgeCap: 5600000,
-        arcanaCap: 150000000
-      }
+      { title: 'Peasant Hut', desc: 'A roof, a straw mat, and enough quiet to recover after farm work.', stage: 'farmer', cost: null, restRate: 0.06, restAction: 0, energyCap: 0, foodCap: 0, goldCap: 0 },
+      { title: 'Cozy Cottage', desc: 'A real bed and pantry space. This home supports apprentice magic and food storage.', stage: 'apprentice', cost: { gold: 8000, food: 600 }, restRate: 0.18, restAction: 5, energyCap: 10, foodCap: 800, goldCap: 18000 },
+      { title: 'Mage Loft', desc: 'A quiet upstairs room where mana settles naturally overnight.', stage: 'mage', cost: { gold: 24000, mana: 9000 }, restRate: 0.34, restAction: 9, energyCap: 18, foodCap: 1300, manaCap: 14000, goldCap: 42000 },
+      { title: 'Academy Townhouse', desc: 'Enough rooms for study, storage, and visiting apprentices.', stage: 'academy', cost: { gold: 650000, knowledge: 1100000 }, restRate: 0.52, restAction: 14, energyCap: 28, foodCap: 2100, manaCap: 23000, focusCap: 90000, goldCap: 900000, knowledgeCap: 1800000 },
+      { title: 'Wizard Tower', desc: 'A vertical home and laboratory where the whole building hums with magic.', stage: 'archmage', cost: { gold: 1450000, knowledge: 3200000, arcana: 18000000 }, restRate: 0.74, restAction: 20, energyCap: 40, foodCap: 3200, manaCap: 38000, focusCap: 150000, goldCap: 1600000, knowledgeCap: 3400000, arcanaCap: 80000000 },
+      { title: 'Archmage Estate', desc: 'A legendary residence with wards, servants, gardens, and ritual wings.', stage: 'archmage', cost: { gold: 3000000, knowledge: 6200000, arcana: 75000000 }, restRate: 1.02, restAction: 28, energyCap: 55, foodCap: 4800, manaCap: 56000, focusCap: 230000, goldCap: 2600000, knowledgeCap: 5600000, arcanaCap: 150000000 }
     ];
 
     const HOUSE_ITEMS = [
-      {
-        key: 'bed',
-        title: 'Better Bed',
-        minTier: 0,
-        max: 10,
-        desc: 'Improves passive rest and makes the Rest action stronger.',
-        cost: (n) => ({ gold: Math.floor(2200 * Math.pow(1.42, n)), food: Math.floor(180 * Math.pow(1.22, n)) }),
-        effect: (n) => '+' + (0.09 * n).toFixed(2) + ' energy/sec, +' + (5 * n) + ' energy when resting'
-      },
-      {
-        key: 'pantry',
-        title: 'Stocked Pantry',
-        minTier: 0,
-        max: 10,
-        desc: 'Stores food, reduces food drain, and slightly supports farming.',
-        cost: (n) => ({ gold: Math.floor(2600 * Math.pow(1.44, n)), food: Math.floor(300 * Math.pow(1.25, n)) }),
-        effect: (n) => '+' + fmt(800 * n) + ' food cap, -' + Math.floor(3 * n) + '% food drain'
-      },
-      {
-        key: 'garden',
-        title: 'Kitchen Garden',
-        minTier: 1,
-        max: 10,
-        desc: 'Adds passive food generation and boosts all food production.',
-        cost: (n) => ({ gold: Math.floor(5500 * Math.pow(1.46, n)), food: Math.floor(750 * Math.pow(1.24, n)) }),
-        effect: (n) => '+' + (0.8 * n).toFixed(1) + ' food/sec, +' + Math.floor(4 * n) + '% food output'
-      },
-      {
-        key: 'hearth',
-        title: 'Mana Hearth',
-        minTier: 1,
-        max: 10,
-        desc: 'A small enchanted fireplace that condenses spare mana.',
-        cost: (n) => ({ gold: Math.floor(7000 * Math.pow(1.48, n)), mana: Math.floor(5500 * Math.pow(1.30, n)) }),
-        effect: (n) => '+' + (7 * n).toFixed(0) + ' mana/sec, +' + Math.floor(4 * n) + '% mana output'
-      },
-      {
-        key: 'study',
-        title: 'Quiet Study',
-        minTier: 2,
-        max: 10,
-        desc: 'Improves focus generation, focus recovery, and meditation quality.',
-        cost: (n) => ({ gold: Math.floor(10500 * Math.pow(1.50, n)), mana: Math.floor(9000 * Math.pow(1.32, n)), focus: Math.floor(30000 * Math.pow(1.20, n)) }),
-        effect: (n) => '+' + fmt(50 * n) + ' focus/sec, +' + Math.floor(4 * n) + '% focus output'
-      },
-      {
-        key: 'desk',
-        title: 'Scholar Desk',
-        minTier: 3,
-        max: 10,
-        desc: 'Turns your home into a place where notes become knowledge.',
-        cost: (n) => ({ gold: Math.floor(170000 * Math.pow(1.50, n)), knowledge: Math.floor(800000 * Math.pow(1.30, n)), focus: Math.floor(45000 * Math.pow(1.22, n)) }),
-        effect: (n) => '+' + fmt(400 * n) + ' knowledge/sec, +' + Math.floor(5 * n) + '% knowledge output'
-      },
-      {
-        key: 'workshop',
-        title: 'Enchanted Workshop',
-        minTier: 3,
-        max: 10,
-        desc: 'Produces gold and boosts the academy economy through magical tools.',
-        cost: (n) => ({ gold: Math.floor(210000 * Math.pow(1.52, n)), knowledge: Math.floor(1100000 * Math.pow(1.31, n)), mana: Math.floor(12000 * Math.pow(1.25, n)) }),
-        effect: (n) => '+' + fmt(50 * n) + ' gold/sec, +' + Math.floor(5 * n) + '% gold output'
-      },
-      {
-        key: 'observatory',
-        title: 'Stargazing Observatory',
-        minTier: 4,
-        max: 10,
-        desc: 'Late-game home wing that produces arcana and strengthens final battle damage.',
-        cost: (n) => ({ gold: Math.floor(430000 * Math.pow(1.55, n)), knowledge: Math.floor(2100000 * Math.pow(1.34, n)), arcana: Math.floor(14000000 * Math.pow(1.23, n)) }),
-        effect: (n) => '+' + fmt(12000 * n) + ' arcana/sec, +' + fmt(6000000 * n) + ' boss damage'
-      }
+      { key: 'bed', title: 'Better Bed', minTier: 0, max: 10, desc: 'Improves passive rest and makes the Rest action stronger.', cost: function(n) { return { gold: Math.floor(2200 * Math.pow(1.42, n)), food: Math.floor(180 * Math.pow(1.22, n)) }; }, effect: function(n) { return '+' + (0.09 * n).toFixed(2) + ' energy/sec, +' + (5 * n) + ' energy when resting'; } },
+      { key: 'pantry', title: 'Stocked Pantry', minTier: 0, max: 10, desc: 'Stores food, reduces food drain, and slightly supports farming.', cost: function(n) { return { gold: Math.floor(2600 * Math.pow(1.44, n)), food: Math.floor(300 * Math.pow(1.25, n)) }; }, effect: function(n) { return '+' + fmt(800 * n) + ' food cap, -' + Math.floor(3 * n) + '% food drain'; } },
+      { key: 'garden', title: 'Kitchen Garden', minTier: 1, max: 10, desc: 'Adds passive food generation and boosts all food production.', cost: function(n) { return { gold: Math.floor(5500 * Math.pow(1.46, n)), food: Math.floor(750 * Math.pow(1.24, n)) }; }, effect: function(n) { return '+' + (0.8 * n).toFixed(1) + ' food/sec, +' + Math.floor(4 * n) + '% food output'; } },
+      { key: 'hearth', title: 'Mana Hearth', minTier: 1, max: 10, desc: 'A small enchanted fireplace that condenses spare mana.', cost: function(n) { return { gold: Math.floor(7000 * Math.pow(1.48, n)), mana: Math.floor(5500 * Math.pow(1.30, n)) }; }, effect: function(n) { return '+' + (7 * n).toFixed(0) + ' mana/sec, +' + Math.floor(4 * n) + '% mana output'; } },
+      { key: 'study', title: 'Quiet Study', minTier: 2, max: 10, desc: 'Improves focus generation, focus recovery, and meditation quality.', cost: function(n) { return { gold: Math.floor(10500 * Math.pow(1.50, n)), mana: Math.floor(9000 * Math.pow(1.32, n)), focus: Math.floor(30000 * Math.pow(1.20, n)) }; }, effect: function(n) { return '+' + fmt(50 * n) + ' focus/sec, +' + Math.floor(4 * n) + '% focus output'; } },
+      { key: 'desk', title: 'Scholar Desk', minTier: 3, max: 10, desc: 'Turns your home into a place where notes become knowledge.', cost: function(n) { return { gold: Math.floor(170000 * Math.pow(1.50, n)), knowledge: Math.floor(800000 * Math.pow(1.30, n)), focus: Math.floor(45000 * Math.pow(1.22, n)) }; }, effect: function(n) { return '+' + fmt(400 * n) + ' knowledge/sec, +' + Math.floor(5 * n) + '% knowledge output'; } },
+      { key: 'workshop', title: 'Enchanted Workshop', minTier: 3, max: 10, desc: 'Produces gold and boosts the academy economy through magical tools.', cost: function(n) { return { gold: Math.floor(210000 * Math.pow(1.52, n)), knowledge: Math.floor(1100000 * Math.pow(1.31, n)), mana: Math.floor(12000 * Math.pow(1.25, n)) }; }, effect: function(n) { return '+' + fmt(50 * n) + ' gold/sec, +' + Math.floor(5 * n) + '% gold output'; } },
+      { key: 'observatory', title: 'Stargazing Observatory', minTier: 4, max: 10, desc: 'Late-game home wing that produces arcana and strengthens final battle damage.', cost: function(n) { return { gold: Math.floor(430000 * Math.pow(1.55, n)), knowledge: Math.floor(2100000 * Math.pow(1.34, n)), arcana: Math.floor(14000000 * Math.pow(1.23, n)) }; }, effect: function(n) { return '+' + fmt(12000 * n) + ' arcana/sec, +' + fmt(6000000 * n) + ' boss damage'; } }
     ];
 
     const UPGRADES = [
-      {
-        key: 'tools',
-        title: 'Better Farming Tools',
-        desc: 'Increases manual food gain and animated scarecrow output.',
-        max: 10,
-        cost: (n) => ({ food: Math.floor(280 * Math.pow(1.42, n)), gold: Math.floor(800 * Math.pow(1.35, n)) })
-      },
-      {
-        key: 'spellbook',
-        title: 'Clean Spellbook',
-        desc: 'Increases mana gains from study and mana familiar output.',
-        max: 10,
-        cost: (n) => ({ mana: Math.floor(4500 * Math.pow(1.44, n)), food: Math.floor(240 * Math.pow(1.28, n)) })
-      },
-      {
-        key: 'robes',
-        title: 'Quiet Robes',
-        desc: 'Increases focus gain and makes meditation more efficient.',
-        max: 10,
-        cost: (n) => ({ focus: Math.floor(38000 * Math.pow(1.47, n)), mana: Math.floor(5200 * Math.pow(1.34, n)) })
-      },
-      {
-        key: 'market',
-        title: 'Village Market',
-        desc: 'Improves gold earned from selling food and academy tuition.',
-        max: 10,
-        cost: (n) => ({ gold: Math.floor(7500 * Math.pow(1.48, n)), food: Math.floor(700 * Math.pow(1.28, n)) })
-      },
-      {
-        key: 'academyHall',
-        title: 'Academy Hall',
-        desc: 'Raises reputation and unlocks the archmage path at level 2.',
-        max: 5,
-        cost: (n) => ({ gold: Math.floor(180000 * Math.pow(1.62, n)), knowledge: Math.floor(650000 * Math.pow(1.48, n)), focus: Math.floor(45000 * Math.pow(1.28, n)) })
-      },
-      {
-        key: 'ritualTower',
-        title: 'Ritual Tower',
-        desc: 'Increases arcana creation and final boss damage.',
-        max: 8,
-        cost: (n) => ({ arcana: Math.floor(14000000 * Math.pow(1.58, n)), knowledge: Math.floor(1900000 * Math.pow(1.42, n)), gold: Math.floor(250000 * Math.pow(1.36, n)) })
-      }
+      { key: 'tools', stage: 'farmer', title: 'Better Farming Tools', desc: 'Increases manual food gain and animated scarecrow output.', max: 10, cost: function(n) { return { food: Math.floor(280 * Math.pow(1.42, n)), gold: Math.floor(800 * Math.pow(1.35, n)) }; } },
+      { key: 'spellbook', stage: 'apprentice', title: 'Clean Spellbook', desc: 'Increases mana gains from study and mana familiar output.', max: 10, cost: function(n) { return { mana: Math.floor(4500 * Math.pow(1.44, n)), food: Math.floor(240 * Math.pow(1.28, n)) }; } },
+      { key: 'robes', stage: 'mage', title: 'Quiet Robes', desc: 'Increases focus gain and makes meditation more efficient.', max: 10, cost: function(n) { return { focus: Math.floor(38000 * Math.pow(1.47, n)), mana: Math.floor(5200 * Math.pow(1.34, n)) }; } },
+      { key: 'market', stage: 'mage', title: 'Village Market', desc: 'Improves gold earned from selling food and academy tuition.', max: 10, cost: function(n) { return { gold: Math.floor(7500 * Math.pow(1.48, n)), food: Math.floor(700 * Math.pow(1.28, n)) }; } },
+      { key: 'academyHall', stage: 'academy', title: 'Academy Hall', desc: 'Expands academy capacity and unlocks the archmage path at level 2.', max: 5, cost: function(n) { return { gold: Math.floor(180000 * Math.pow(1.62, n)), knowledge: Math.floor(650000 * Math.pow(1.48, n)), focus: Math.floor(45000 * Math.pow(1.28, n)) }; } },
+      { key: 'ritualTower', stage: 'archmage', title: 'Ritual Tower', desc: 'Increases arcana creation and final boss damage.', max: 8, cost: function(n) { return { arcana: Math.floor(14000000 * Math.pow(1.58, n)), knowledge: Math.floor(1900000 * Math.pow(1.42, n)), gold: Math.floor(250000 * Math.pow(1.36, n)) }; } }
     ];
 
     const RESOURCE_MIGRATION_SCALE = {
@@ -812,23 +747,13 @@
       gold: 100,
       knowledge: 10000,
       arcana: 1000000,
-      energy: 1,
-      reputation: 1
+      energy: 1
     };
 
     function initialState() {
       return {
         version: GAME_VERSION,
-        resources: {
-          food: 160,
-          mana: 0,
-          focus: 240,
-          gold: 0,
-          knowledge: 0,
-          arcana: 0,
-          energy: 85,
-          reputation: 0
-        },
+        resources: { food: 160, energy: 85, mana: 0, focus: 0, gold: 0, knowledge: 0, arcana: 0 },
         automation: { scarecrow: 0, familiar: 0, circle: 0, faculty: 0 },
         upgrades: { tools: 0, spellbook: 0, robes: 0, market: 0, academyHall: 0, ritualTower: 0 },
         housing: { tier: 0, items: { bed: 0, pantry: 0, garden: 0, hearth: 0, study: 0, desk: 0, workshop: 0, observatory: 0 } },
@@ -841,11 +766,13 @@
         },
         buffs: { prepareFields: 0, enchantField: 0, bindFamiliar: 0, assignStudents: 0, archmageEdict: 0 },
         unlocked: { farmer: true, apprentice: false, mage: false, academy: false, archmage: false },
+        revealed: { farmer: true, apprentice: false, mage: false, academy: false, archmage: false },
         currentStage: 'farmer',
         stats: { level: 1, xp: 0, days: 1, bossHp: BOSS_MAX, bossDefeated: false, totalClicks: 0 },
+        dev: { timeMult: 1 },
         log: [
-          'Version 2.2 begins: jobs now act like powerful modes with mastery and signature abilities.',
-          'Start by harvesting food. Apprentice magic will soon automate farming.'
+          'Version 2.3 begins: resources and jobs now reveal through progression.',
+          'Reputation has been removed. Use the development commands at the bottom for testing.'
         ],
         savedAt: Date.now()
       };
@@ -854,6 +781,7 @@
     let state = loadGame() || initialState();
     let lastTick = Date.now();
     let toastTimer = null;
+    let lastRates = {};
 
     function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
 
@@ -864,63 +792,185 @@
       if (v < 1000) return sign + Math.floor(v).toString();
       const units = ['K', 'M', 'B', 'T', 'Qa'];
       let u = -1;
-      while (v >= 1000 && u < units.length - 1) { v /= 1000; u++; }
+      while (v >= 1000 && u < units.length - 1) { v /= 1000; u += 1; }
       return sign + (v >= 100 ? v.toFixed(0) : v >= 10 ? v.toFixed(1) : v.toFixed(2)) + units[u];
     }
 
     function fmtRate(n) {
-      const v = Math.abs(Number(n) || 0);
-      if (v < 10) return (Number(n) || 0).toFixed(2);
-      if (v < 1000) return (Number(n) || 0).toFixed(0);
-      return fmt(n);
+      const value = Number(n) || 0;
+      const abs = Math.abs(value);
+      if (abs < 0.01) return '0';
+      if (abs < 10) return value.toFixed(2);
+      if (abs < 1000) return value.toFixed(0);
+      return fmt(value);
     }
 
-    function pct(value, cap) { return clamp((value / cap) * 100, 0, 100); }
-    function labelFor(key) { return (RESOURCES.find(r => r.key === key) || { label: key }).label; }
-    function currentStage() { return STAGES.find(s => s.key === state.currentStage) || STAGES[0]; }
-    function stageIndex(key) { return STAGES.findIndex(s => s.key === key); }
-    function isUnlocked(stageKey) { return !!state.unlocked[stageKey] || (STAGES.find(s => s.key === stageKey)?.unlocked(state) || false); }
-    function activeBuff(key, s = state) { return ((s.buffs && s.buffs[key]) || 0) > 0; }
-    function buffTime(key, s = state) { return Math.ceil((s.buffs && s.buffs[key]) || 0); }
+    function pct(value, cap) { return clamp((value / Math.max(1, cap)) * 100, 0, 100); }
+    function labelFor(key) { return (RESOURCES.find(function(r) { return r.key === key; }) || { label: key }).label; }
+    function currentStage() { return STAGES.find(function(s) { return s.key === state.currentStage; }) || STAGES[0]; }
+    function stageIndex(key) { return STAGES.findIndex(function(s) { return s.key === key; }); }
+    function stageData(key) { return STAGES.find(function(s) { return s.key === key; }); }
+    function activeBuff(key, s) { const target = s || state; return ((target.buffs && target.buffs[key]) || 0) > 0; }
+    function buffTime(key, s) { const target = s || state; return Math.ceil((target.buffs && target.buffs[key]) || 0); }
 
     function escapeHtml(s) {
       return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
     }
 
+    function cleanCost(cost) {
+      const out = {};
+      Object.entries(cost || {}).forEach(function(entry) {
+        const k = entry[0];
+        const v = entry[1];
+        if (k !== 'reputation' && v > 0) out[k] = v;
+      });
+      return out;
+    }
+
     function chips(cost) {
-      return Object.entries(cost).map(([k, v]) => `<span class="chip">${labelFor(k)}: ${fmt(v)}</span>`).join('');
+      const entries = Object.entries(cleanCost(cost));
+      if (!entries.length) return '<span class="chip good">Free</span>';
+      return entries.map(function(entry) {
+        return '<span class="chip">' + labelFor(entry[0]) + ': ' + fmt(entry[1]) + '</span>';
+      }).join('');
+    }
+
+    function sanitizeState(s) {
+      const base = initialState();
+      const merged = Object.assign({}, base, s || {});
+      merged.resources = Object.assign({}, base.resources, (s && s.resources) || {});
+      delete merged.resources.reputation;
+      RESOURCES.forEach(function(r) {
+        if (!Number.isFinite(merged.resources[r.key])) merged.resources[r.key] = base.resources[r.key] || 0;
+      });
+      merged.automation = Object.assign({}, base.automation, (s && s.automation) || {});
+      merged.upgrades = Object.assign({}, base.upgrades, (s && s.upgrades) || {});
+      merged.housing = Object.assign({}, base.housing, (s && s.housing) || {});
+      merged.housing.items = Object.assign({}, base.housing.items, (s && s.housing && s.housing.items) || {});
+      merged.jobMastery = Object.assign({}, base.jobMastery, (s && s.jobMastery) || {});
+      Object.keys(base.jobMastery).forEach(function(k) {
+        merged.jobMastery[k] = Object.assign({}, base.jobMastery[k], merged.jobMastery[k] || {});
+      });
+      merged.buffs = Object.assign({}, base.buffs, (s && s.buffs) || {});
+      merged.unlocked = Object.assign({}, base.unlocked, (s && s.unlocked) || {});
+      merged.revealed = Object.assign({}, base.revealed, (s && s.revealed) || {});
+      Object.keys(merged.unlocked).forEach(function(k) { if (merged.unlocked[k]) merged.revealed[k] = true; });
+      merged.stats = Object.assign({}, base.stats, (s && s.stats) || {});
+      if (!Number.isFinite(merged.stats.bossHp)) merged.stats.bossHp = BOSS_MAX;
+      merged.dev = Object.assign({}, base.dev, (s && s.dev) || {});
+      if (![1, 10, 100].includes(Number(merged.dev.timeMult))) merged.dev.timeMult = 1;
+      if (!Array.isArray(merged.log)) merged.log = base.log.slice();
+      merged.log = merged.log.slice(0, 8);
+      if (!stageData(merged.currentStage)) merged.currentStage = 'farmer';
+      merged.version = GAME_VERSION;
+      return merged;
+    }
+
+    function loadGame() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return null;
+        return sanitizeState(JSON.parse(raw));
+      } catch (err) {
+        console.warn('Could not load save:', err);
+        return null;
+      }
+    }
+
+    function saveGame(showToast) {
+      try {
+        state.savedAt = Date.now();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        if (showToast) showToastMessage('Saved');
+      } catch (err) {
+        console.warn('Could not save game:', err);
+      }
+    }
+
+    function showToastMessage(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function() { toast.classList.remove('show'); }, 1500);
     }
 
     function pushLog(message, skipRender) {
       state.log.unshift(message);
       state.log = state.log.slice(0, 8);
-      if (!skipRender) { render(); saveGame(false); }
+      if (!skipRender) {
+        render();
+        saveGame(false);
+      }
     }
 
-    function houseTierData(s = state) {
-      return HOUSE_TIERS[(s.housing && Number.isFinite(s.housing.tier)) ? s.housing.tier : 0] || HOUSE_TIERS[0];
+    function isStageKnown(stageKey, s) {
+      const target = s || state;
+      if (stageKey === 'farmer') return true;
+      if (target.unlocked && target.unlocked[stageKey]) return true;
+      if (target.revealed && target.revealed[stageKey]) return true;
+      const data = stageData(stageKey);
+      return !!(data && data.unlocked(target));
     }
 
-    function houseItemLevel(key, s = state) {
-      return (s.housing && s.housing.items && s.housing.items[key]) || 0;
+    function isUnlocked(stageKey, s) {
+      const target = s || state;
+      return !!(target.unlocked && target.unlocked[stageKey]);
     }
 
-    function houseItemCap(item, s = state) {
-      const tier = (s.housing && Number.isFinite(s.housing.tier)) ? s.housing.tier : 0;
+    function resourceVisible(key, s) {
+      const target = s || state;
+      if (key === 'food' || key === 'energy') return true;
+      if ((target.resources[key] || 0) > 0) return true;
+      if (key === 'mana' || key === 'focus') return isStageKnown('apprentice', target);
+      if (key === 'gold') return isStageKnown('mage', target);
+      if (key === 'knowledge') return isStageKnown('academy', target);
+      if (key === 'arcana') return isStageKnown('archmage', target);
+      return true;
+    }
+
+    function firstUnknownStage() {
+      return STAGES.find(function(stage) { return !isStageKnown(stage.key); }) || null;
+    }
+
+    function nextHint() {
+      if (state.stats.bossDefeated) return 'The Void King is defeated. You are the Archmage of the realm.';
+      const unknown = firstUnknownStage();
+      if (!unknown) return currentStage().nextHint;
+      if (unknown.key === 'apprentice') return STAGES[0].nextHint;
+      const previous = STAGES[Math.max(0, stageIndex(unknown.key) - 1)];
+      return previous.nextHint;
+    }
+
+    function houseTierData(s) {
+      const target = s || state;
+      const tier = target.housing && Number.isFinite(target.housing.tier) ? target.housing.tier : 0;
+      return HOUSE_TIERS[tier] || HOUSE_TIERS[0];
+    }
+
+    function houseItemLevel(key, s) {
+      const target = s || state;
+      return (target.housing && target.housing.items && target.housing.items[key]) || 0;
+    }
+
+    function houseItemCap(item, s) {
+      const target = s || state;
+      const tier = target.housing && Number.isFinite(target.housing.tier) ? target.housing.tier : 0;
       if (tier < item.minTier) return 0;
       return Math.min(item.max, 2 + (tier - item.minTier) * 2);
     }
 
-    function housingBonuses(s = state) {
-      const tier = houseTierData(s);
-      const bed = houseItemLevel('bed', s);
-      const pantry = houseItemLevel('pantry', s);
-      const garden = houseItemLevel('garden', s);
-      const hearth = houseItemLevel('hearth', s);
-      const study = houseItemLevel('study', s);
-      const desk = houseItemLevel('desk', s);
-      const workshop = houseItemLevel('workshop', s);
-      const observatory = houseItemLevel('observatory', s);
+    function housingBonuses(s) {
+      const target = s || state;
+      const tier = houseTierData(target);
+      const bed = houseItemLevel('bed', target);
+      const pantry = houseItemLevel('pantry', target);
+      const garden = houseItemLevel('garden', target);
+      const hearth = houseItemLevel('hearth', target);
+      const study = houseItemLevel('study', target);
+      const desk = houseItemLevel('desk', target);
+      const workshop = houseItemLevel('workshop', target);
+      const observatory = houseItemLevel('observatory', target);
       return {
         energyRegen: tier.restRate + bed * 0.09,
         restEnergy: tier.restAction + bed * 5,
@@ -942,53 +992,62 @@
       };
     }
 
-    function houseStageBonus(stageKey, s = state) {
-      const tier = houseTierData(s);
+    function houseStageBonus(stageKey, s) {
+      const target = s || state;
+      const tier = houseTierData(target);
       if (tier.stage === stageKey) return 0.25;
-      if ((s.housing?.tier || 0) >= 5 && stageKey === 'archmage') return 0.35;
+      if ((target.housing && target.housing.tier || 0) >= 5 && stageKey === 'archmage') return 0.35;
       return 0;
     }
 
-    function capFor(key) {
-      const base = (RESOURCES.find(r => r.key === key) || { cap: 1000 }).cap;
-      const house = houseTierData(state);
-      const pantry = houseItemLevel('pantry');
+    function capFor(key, s) {
+      const target = s || state;
+      const base = (RESOURCES.find(function(r) { return r.key === key; }) || { cap: 1000 }).cap;
+      const house = houseTierData(target);
+      const pantry = houseItemLevel('pantry', target);
       let cap = base;
-      if (key === 'food') cap += state.upgrades.tools * 900 + pantry * 800 + (house.foodCap || 0);
-      if (key === 'mana') cap += state.upgrades.spellbook * 9000 + (house.manaCap || 0);
-      if (key === 'focus') cap += state.upgrades.robes * 60000 + state.upgrades.academyHall * 35000 + (house.focusCap || 0);
-      if (key === 'gold') cap += state.upgrades.market * 250000 + (house.goldCap || 0);
-      if (key === 'knowledge') cap += state.upgrades.academyHall * 1600000 + (house.knowledgeCap || 0);
-      if (key === 'arcana') cap += state.upgrades.ritualTower * 60000000 + (house.arcanaCap || 0);
-      if (key === 'energy') cap += (house.energyCap || 0) + houseItemLevel('bed') * 2;
-      if (key === 'reputation') cap += state.upgrades.academyHall * 40;
-
-      if (state.currentStage === 'mage' && (key === 'mana' || key === 'focus')) cap *= 1.10;
+      if (key === 'food') cap += (target.upgrades.tools || 0) * 900 + pantry * 800 + (house.foodCap || 0);
+      if (key === 'mana') cap += (target.upgrades.spellbook || 0) * 9000 + (house.manaCap || 0);
+      if (key === 'focus') cap += (target.upgrades.robes || 0) * 60000 + (target.upgrades.academyHall || 0) * 35000 + (house.focusCap || 0);
+      if (key === 'gold') cap += (target.upgrades.market || 0) * 250000 + (house.goldCap || 0);
+      if (key === 'knowledge') cap += (target.upgrades.academyHall || 0) * 1600000 + (house.knowledgeCap || 0);
+      if (key === 'arcana') cap += (target.upgrades.ritualTower || 0) * 60000000 + (house.arcanaCap || 0);
+      if (key === 'energy') cap += (house.energyCap || 0) + houseItemLevel('bed', target) * 2;
+      if (target.currentStage === 'mage' && (key === 'mana' || key === 'focus')) cap *= 1.10;
       return cap;
     }
 
-    function addResource(key, amount) {
-      state.resources[key] = clamp((state.resources[key] || 0) + amount, 0, capFor(key));
+    function addResource(key, amount, s) {
+      if (key === 'reputation') return;
+      const target = s || state;
+      if (!(key in target.resources)) target.resources[key] = 0;
+      target.resources[key] = clamp((target.resources[key] || 0) + amount, 0, capFor(key, target));
     }
 
-    function canAfford(cost) { return Object.entries(cost).every(([k, v]) => (state.resources[k] || 0) >= v); }
+    function canAfford(cost, s) {
+      const target = s || state;
+      return Object.entries(cleanCost(cost)).every(function(entry) { return (target.resources[entry[0]] || 0) >= entry[1]; });
+    }
 
     function spend(cost) {
-      if (!canAfford(cost)) return false;
-      for (const [k, v] of Object.entries(cost)) addResource(k, -v);
+      const cleaned = cleanCost(cost);
+      if (!canAfford(cleaned)) return false;
+      Object.entries(cleaned).forEach(function(entry) { addResource(entry[0], -entry[1]); });
       return true;
     }
 
-    function masteryLevel(stageKey, s = state) {
-      return (s.jobMastery && s.jobMastery[stageKey] && s.jobMastery[stageKey].level) || 1;
+    function masteryLevel(stageKey, s) {
+      const target = s || state;
+      return (target.jobMastery && target.jobMastery[stageKey] && target.jobMastery[stageKey].level) || 1;
     }
 
-    function masteryXp(stageKey, s = state) {
-      return (s.jobMastery && s.jobMastery[stageKey] && s.jobMastery[stageKey].xp) || 0;
+    function masteryXp(stageKey, s) {
+      const target = s || state;
+      return (target.jobMastery && target.jobMastery[stageKey] && target.jobMastery[stageKey].xp) || 0;
     }
 
-    function masteryNeed(stageKey, s = state) {
-      const lvl = masteryLevel(stageKey, s);
+    function masteryNeed(stageKey, s) {
+      const lvl = masteryLevel(stageKey, s || state);
       return 150 + (lvl - 1) * 90;
     }
 
@@ -997,732 +1056,561 @@
       const m = state.jobMastery[stageKey];
       m.xp += amount;
       let need = masteryNeed(stageKey);
+      let gained = false;
       while (m.xp >= need) {
         m.xp -= need;
         m.level += 1;
-        addResource('reputation', 1);
-        if (!skipLog) pushLog(JOB_META[stageKey].title + ' mastery reached level ' + m.level + '.', true);
+        gained = true;
         need = masteryNeed(stageKey);
       }
+      if (gained && !skipLog) pushLog(JOB_META[stageKey].title + ' mastery reached level ' + m.level + '.');
     }
 
-    function masteryStageForResource(key) {
-      if (key === 'food') return 'farmer';
-      if (key === 'mana') return 'apprentice';
-      if (key === 'focus') return 'mage';
-      if (key === 'knowledge' || key === 'gold') return 'academy';
-      if (key === 'arcana') return 'archmage';
-      return null;
-    }
-
-    function masteryProductionBonus(s, key) {
-      const stage = masteryStageForResource(key);
-      if (!stage) return 0;
-      return Math.max(0, masteryLevel(stage, s) - 1) * 0.05;
-    }
-
-    function productionMultiplier(s, key) {
-      let mult = 1;
-      if (key === 'food') mult += s.upgrades.tools * 0.16;
-      if (key === 'mana') mult += s.upgrades.spellbook * 0.16;
-      if (key === 'focus') mult += s.upgrades.robes * 0.15;
-      if (key === 'gold') mult += s.upgrades.market * 0.18;
-      if (key === 'knowledge') mult += s.upgrades.academyHall * 0.18;
-      if (key === 'arcana') mult += s.upgrades.ritualTower * 0.22;
-
-      const hb = housingBonuses(s);
-      if (key === 'food') mult += hb.foodMult - 1;
-      if (key === 'mana') mult += hb.manaMult - 1;
-      if (key === 'focus') mult += hb.focusMult - 1;
-      if (key === 'gold') mult += hb.goldMult - 1;
-      if (key === 'knowledge') mult += hb.knowledgeMult - 1;
-      if (key === 'arcana') mult += hb.arcanaMult - 1;
-
-      mult += masteryProductionBonus(s, key);
-
-      for (const st of STAGES) {
-        if (st.resourceKeys.includes(key)) mult += houseStageBonus(st.key, s);
-      }
-
-      if (activeBuff('prepareFields', s) && key === 'food') mult += 1.0;
-      if (activeBuff('archmageEdict', s)) mult += 0.25;
-      if (s.stats.bossDefeated) mult += 0.25;
-      return mult;
-    }
-
-    function selectedActionMultiplier(actionId) {
-      const st = currentStage();
-      if (st.actionId === actionId) return 2 + houseStageBonus(st.key);
-      if (state.currentStage === 'farmer' && actionId === 'sell') return 1.25;
-      return 1;
-    }
-
-    function automationOutputMultiplier(s, autoKey) {
-      let mult = 1;
-      if (s.currentStage === 'apprentice' && autoKey === 'scarecrow') mult += 0.25;
-      if (s.currentStage === 'mage' && autoKey === 'familiar') mult += 0.30;
-      if (s.currentStage === 'academy' && autoKey === 'circle') mult += 0.25;
-      if (s.currentStage === 'archmage') mult += 0.25;
-
-      if (activeBuff('prepareFields', s) && autoKey === 'scarecrow') mult += 1.0;
-      if (activeBuff('enchantField', s) && autoKey === 'scarecrow') mult += 1.5;
-      if (activeBuff('bindFamiliar', s) && autoKey === 'familiar') mult += 1.5;
-      if (activeBuff('assignStudents', s) && ['scarecrow', 'familiar', 'circle'].includes(autoKey)) mult += 0.75;
-      if (activeBuff('archmageEdict', s)) mult += 1.0;
-      return mult;
-    }
-
-    function gainXp(amount) {
+    function gainPlayerXp(amount) {
       state.stats.xp += amount;
-      let needed = levelNeed();
-      while (state.stats.xp >= needed) {
-        state.stats.xp -= needed;
+      const need = 100 + (state.stats.level - 1) * 60;
+      if (state.stats.xp >= need) {
+        state.stats.xp -= need;
         state.stats.level += 1;
-        addResource('reputation', 2);
-        pushLog('Level up: you reached level ' + state.stats.level + ' and gained reputation.', true);
-        needed = levelNeed();
+        pushLog('Level up! You reached level ' + state.stats.level + '.', true);
       }
     }
 
-    function levelNeed() { return 240 + (state.stats.level - 1) * 160; }
+    function productionMultiplier(resource, s) {
+      const target = s || state;
+      const h = housingBonuses(target);
+      let mult = 1;
+      if (resource === 'food') mult += (target.upgrades.tools || 0) * 0.12 + h.foodMult - 1;
+      if (resource === 'mana') mult += (target.upgrades.spellbook || 0) * 0.13 + h.manaMult - 1;
+      if (resource === 'focus') mult += (target.upgrades.robes || 0) * 0.14 + h.focusMult - 1;
+      if (resource === 'gold') mult += (target.upgrades.market || 0) * 0.15 + h.goldMult - 1;
+      if (resource === 'knowledge') mult += (target.upgrades.academyHall || 0) * 0.16 + h.knowledgeMult - 1;
+      if (resource === 'arcana') mult += (target.upgrades.ritualTower || 0) * 0.18 + h.arcanaMult - 1;
+      if (activeBuff('archmageEdict', target)) mult *= 1.75;
+      if (activeBuff('prepareFields', target) && resource === 'food') mult *= 1.75;
+      if (activeBuff('enchantField', target) && resource === 'food') mult *= 1.55;
+      if (activeBuff('bindFamiliar', target) && resource === 'mana') mult *= 1.55;
+      if (activeBuff('assignStudents', target) && ['food', 'mana', 'focus'].includes(resource)) mult *= 1.45;
+      return mult;
+    }
 
-    function revealUnlocks() {
-      let changed = false;
-      for (const st of STAGES) {
-        if (!state.unlocked[st.key] && st.unlocked(state)) {
-          state.unlocked[st.key] = true;
-          changed = true;
-          pushLog('Unlocked job: ' + st.title + '.', true);
+    function actionMultiplier(stageKey) {
+      let mult = 1 + (masteryLevel(stageKey) - 1) * 0.03 + houseStageBonus(stageKey);
+      if (state.currentStage === stageKey) mult *= 2;
+      if (activeBuff('archmageEdict')) mult *= 1.7;
+      if (stageKey === 'farmer' && activeBuff('prepareFields')) mult *= 1.75;
+      if (stageKey === 'apprentice' && activeBuff('enchantField')) mult *= 1.35;
+      if (stageKey === 'mage' && activeBuff('bindFamiliar')) mult *= 1.35;
+      if (stageKey === 'academy' && activeBuff('assignStudents')) mult *= 1.35;
+      return mult;
+    }
+
+    function automationOutputMultiplier(autoKey, s) {
+      const target = s || state;
+      let mult = 1;
+      if (autoKey === 'scarecrow') {
+        if (target.currentStage === 'farmer' || target.currentStage === 'apprentice') mult *= 1.25;
+        if (activeBuff('prepareFields', target) || activeBuff('enchantField', target)) mult *= 1.75;
+      }
+      if (autoKey === 'familiar') {
+        if (target.currentStage === 'mage') mult *= 1.30;
+        if (activeBuff('bindFamiliar', target)) mult *= 1.80;
+      }
+      if (autoKey === 'circle') {
+        if (target.currentStage === 'academy') mult *= 1.25;
+        if (activeBuff('assignStudents', target)) mult *= 1.55;
+      }
+      if (target.currentStage === 'archmage') mult *= 1.25;
+      if (activeBuff('archmageEdict', target)) mult *= 1.85;
+      const stageKey = (AUTOMATION.find(function(a) { return a.key === autoKey; }) || {}).stage;
+      if (stageKey) mult *= 1 + (masteryLevel(stageKey, target) - 1) * 0.02;
+      return mult;
+    }
+
+    function estimateRates() {
+      const rates = { food: 0, mana: 0, focus: 0, gold: 0, knowledge: 0, arcana: 0, energy: 0 };
+      const h = housingBonuses();
+      rates.energy += h.energyRegen;
+      if (state.currentStage === 'farmer') rates.energy += 0.12;
+      rates.food += h.foodGen * productionMultiplier('food');
+      rates.mana += h.manaGen * productionMultiplier('mana');
+      rates.focus += h.focusGen * productionMultiplier('focus');
+      rates.knowledge += h.knowledgeGen * productionMultiplier('knowledge');
+      rates.gold += h.goldGen * productionMultiplier('gold');
+      rates.arcana += h.arcanaGen * productionMultiplier('arcana');
+      AUTOMATION.forEach(function(auto) {
+        if (!isStageKnown(auto.stage)) return;
+        rates[auto.automates] += auto.rate(state);
+        if (auto.goldRate) rates.gold += auto.goldRate(state);
+      });
+      const drain = 0.035 * h.foodDrainMult * (state.currentStage === 'farmer' ? 0.80 : 1);
+      if ((state.resources.food || 0) > 0) rates.food -= drain;
+      return rates;
+    }
+
+    function applyPassive(dt) {
+      const rates = estimateRates();
+      Object.entries(rates).forEach(function(entry) {
+        addResource(entry[0], entry[1] * dt);
+      });
+      lastRates = rates;
+      if (!state.stats.bossDefeated && isUnlocked('archmage') && state.currentStage === 'archmage') {
+        const h = housingBonuses();
+        const autoPower = (state.automation.faculty || 0) * 700000 + (state.upgrades.ritualTower || 0) * 1600000 + h.bossDamageBonus;
+        const buff = activeBuff('archmageEdict') ? 2.5 : 1;
+        const damage = Math.max(0, autoPower * buff * dt);
+        state.stats.bossHp = clamp(state.stats.bossHp - damage, 0, BOSS_MAX);
+        if (state.stats.bossHp <= 0) defeatBoss();
+      }
+      Object.keys(state.buffs).forEach(function(key) {
+        state.buffs[key] = Math.max(0, (state.buffs[key] || 0) - dt);
+      });
+      state.stats.days += dt / 120;
+      checkMilestones();
+      Object.keys(state.unlocked).forEach(function(stageKey) {
+        if (state.unlocked[stageKey]) gainMastery(stageKey, dt * 0.10, true);
+      });
+    }
+
+    function gameTick() {
+      const now = Date.now();
+      const realDt = Math.max(0, Math.min(10, (now - lastTick) / 1000));
+      lastTick = now;
+      const mult = Number(state.dev.timeMult) || 1;
+      applyPassive(realDt * mult);
+      render();
+    }
+
+    function handleAction(key) {
+      const action = ACTIONS.find(function(a) { return a.key === key; });
+      if (!action) return;
+      if (action.stage && !isUnlocked(action.stage)) {
+        showToastMessage('Unlock that job first.');
+        return;
+      }
+      const cost = cleanCost(action.cost());
+      if (!spend(cost)) {
+        showToastMessage('Need more resources.');
+        return;
+      }
+      const effects = action.effect();
+      Object.entries(effects).forEach(function(entry) {
+        if (entry[1] > 0) addResource(entry[0], entry[1]);
+      });
+      if (action.stage) gainMastery(action.stage, action.xp || 8);
+      gainPlayerXp(action.xp || 5);
+      state.stats.totalClicks += 1;
+      checkMilestones();
+      render();
+      saveGame(false);
+    }
+
+    function checkMilestones() {
+      if (!state.revealed) state.revealed = { farmer: true, apprentice: false, mage: false, academy: false, archmage: false };
+      STAGES.forEach(function(stage) {
+        if (!state.revealed[stage.key] && stage.unlocked(state) && stage.key !== 'farmer') {
+          state.revealed[stage.key] = true;
+          pushLog(stage.title + ' path revealed. Open Career Jobs to begin it.', true);
         }
+      });
+    }
+
+    function unlockOrSelectStage(stageKey) {
+      const stage = stageData(stageKey);
+      if (!stage || !isStageKnown(stageKey)) return;
+      if (!state.unlocked[stageKey]) {
+        state.unlocked[stageKey] = true;
+        pushLog('New job unlocked: ' + stage.title + '.', true);
       }
-      return changed;
-    }
-
-    function actionPreview(actionId) {
-      if (actionId === 'harvest') return '+' + fmt(90 * productionMultiplier(state, 'food') * selectedActionMultiplier('harvest')) + ' food';
-      if (actionId === 'study') return '+' + fmt(800 * productionMultiplier(state, 'mana') * selectedActionMultiplier('study')) + ' mana';
-      if (actionId === 'meditate') return '+' + fmt(9000 * productionMultiplier(state, 'focus') * selectedActionMultiplier('meditate')) + ' focus';
-      if (actionId === 'teach') return '+' + fmt(130000 * productionMultiplier(state, 'knowledge') * selectedActionMultiplier('teach')) + ' knowledge';
-      if (actionId === 'ritual') return '+' + fmt(7000000 * productionMultiplier(state, 'arcana') * selectedActionMultiplier('ritual')) + ' arcana';
-      return '';
-    }
-
-    function doHarvest() {
-      if (state.resources.energy < 6) return pushLog('You are too tired to harvest. Rest or eat first.');
-      addResource('energy', -6);
-      addResource('food', 90 * productionMultiplier(state, 'food') * selectedActionMultiplier('harvest'));
-      gainXp(30);
-      gainMastery('farmer', 30);
-      state.stats.totalClicks++;
-      addResource('reputation', 0.25);
-      pushLog('You harvested food from the fields.');
-    }
-
-    function doStudy() {
-      if (!isUnlocked('apprentice')) return pushLog('You need more food before magical study begins.');
-      const foodCost = state.currentStage === 'apprentice' ? 40 : 50;
-      if (!spend({ food: foodCost, energy: 7 })) return pushLog('Studying needs ' + foodCost + ' food and 7 energy.');
-      addResource('mana', 800 * productionMultiplier(state, 'mana') * selectedActionMultiplier('study'));
-      addResource('focus', -20);
-      addResource('reputation', 0.35);
-      gainXp(40);
-      gainMastery('apprentice', 40);
-      state.stats.totalClicks++;
-      pushLog('You studied cantrips and generated mana.');
-    }
-
-    function doMeditate() {
-      if (!isUnlocked('mage')) return pushLog('You need the mage job before deep focus training.');
-      if (!spend({ mana: 700, energy: 7 })) return pushLog('Meditation needs 700 mana and 7 energy.');
-      addResource('focus', 9000 * productionMultiplier(state, 'focus') * selectedActionMultiplier('meditate'));
-      addResource('reputation', 0.5);
-      gainXp(50);
-      gainMastery('mage', 50);
-      state.stats.totalClicks++;
-      pushLog('You converted mana into focus through meditation.');
-    }
-
-    function doTeach() {
-      if (!isUnlocked('academy')) return pushLog('You need to found the academy before teaching.');
-      if (!spend({ focus: 10000, mana: 10000, energy: 8 })) return pushLog('Teaching needs 10K focus, 10K mana, and 8 energy.');
-      const mult = selectedActionMultiplier('teach');
-      addResource('knowledge', 130000 * productionMultiplier(state, 'knowledge') * mult);
-      addResource('gold', 160000 * productionMultiplier(state, 'gold') * mult);
-      addResource('reputation', state.currentStage === 'academy' ? 2.25 : 1.5);
-      gainXp(70);
-      gainMastery('academy', 70);
-      state.stats.totalClicks++;
-      pushLog('You taught a class and gained knowledge, gold, and reputation.');
-    }
-
-    function doRitual() {
-      if (!isUnlocked('archmage')) return pushLog('Only an archmage can weave grand rituals.');
-      if (!spend({ knowledge: 220000, mana: 28000, focus: 120000, energy: 10 })) return pushLog('Grand ritual needs 220K knowledge, 28K mana, 120K focus, and 10 energy.');
-      addResource('arcana', 7000000 * productionMultiplier(state, 'arcana') * selectedActionMultiplier('ritual'));
-      addResource('reputation', 2.25);
-      gainXp(90);
-      gainMastery('archmage', 90);
-      state.stats.totalClicks++;
-      pushLog('You compressed knowledge, mana, and focus into arcana.');
-    }
-
-    function doSellFood() {
-      if (!spend({ food: 250 })) return pushLog('You need 250 food to sell a cart at market.');
-      addResource('gold', 1600 * productionMultiplier(state, 'gold') * selectedActionMultiplier('sell'));
-      addResource('reputation', 0.4);
-      gainXp(20);
-      gainMastery('farmer', 15);
-      state.stats.totalClicks++;
-      pushLog('You sold surplus food for gold.');
-    }
-
-    function doRest() {
-      const hb = housingBonuses(state);
-      const farmerRest = state.currentStage === 'farmer' ? 8 : 0;
-      const mageFocus = state.currentStage === 'mage' ? 5000 : 0;
-      addResource('energy', 28 + hb.restEnergy + farmerRest);
-      addResource('focus', hb.restFocus + mageFocus);
-      const foodCost = Math.max(0, 2 - Math.floor(houseItemLevel('pantry') / 4));
-      if (state.resources.food > 0 && foodCost > 0) addResource('food', -foodCost * 10);
-      gainXp(10);
-      gainMastery(state.currentStage, 8, true);
-      state.stats.totalClicks++;
-      pushLog('You rested at home and recovered energy and focus.');
-    }
-
-    function useSignature() {
-      const st = currentStage();
-      const sig = JOB_META[st.key].signature;
-      if (!sig) return;
-      if (activeBuff(sig.key)) return pushLog(sig.title + ' is already active for ' + buffTime(sig.key) + 's.');
-      const cost = sig.cost();
-      if (!spend(cost)) return pushLog('Not enough resources for ' + sig.title + '.');
-      state.buffs[sig.key] = sig.duration;
-      gainXp(35 + stageIndex(st.key) * 15);
-      gainMastery(st.key, 45 + stageIndex(st.key) * 15);
-      pushLog('Signature ability active: ' + sig.title + ' for ' + sig.duration + ' seconds.');
+      state.currentStage = stageKey;
+      render();
+      saveGame(false);
     }
 
     function buyAutomation(key) {
-      const item = AUTOMATION.find(a => a.key === key);
-      if (!item) return;
-      if (!isUnlocked(item.stage)) return pushLog('Unlock ' + STAGES.find(s => s.key === item.stage).title + ' before buying this automation.');
+      const auto = AUTOMATION.find(function(a) { return a.key === key; });
+      if (!auto || !isStageKnown(auto.stage)) return;
       const n = state.automation[key] || 0;
-      const cost = item.cost(n);
-      if (!spend(cost)) return pushLog('Not enough resources for ' + item.title + '.');
+      const cost = cleanCost(auto.cost(n));
+      if (!spend(cost)) {
+        showToastMessage('Need more resources.');
+        return;
+      }
       state.automation[key] = n + 1;
-      addResource('reputation', 1 + stageIndex(item.stage));
-      gainXp(40 + stageIndex(item.stage) * 10);
-      if (key === 'scarecrow') gainMastery('farmer', 30);
-      if (key === 'familiar') gainMastery('apprentice', 35);
-      if (key === 'circle') gainMastery('mage', 40);
-      if (key === 'faculty') gainMastery('academy', 45);
-      pushLog('Automation added: ' + item.title + ' now has ' + state.automation[key] + '.');
-    }
-
-    function buyHouseTier() {
-      const nextIndex = ((state.housing && state.housing.tier) || 0) + 1;
-      const next = HOUSE_TIERS[nextIndex];
-      if (!next) return pushLog('You already own the largest home available in this version.');
-      if (!isUnlocked(next.stage)) return pushLog('Unlock ' + STAGES.find(s => s.key === next.stage).title + ' before moving into ' + next.title + '.');
-      if (!spend(next.cost)) return pushLog('Not enough resources to buy ' + next.title + '.');
-      state.housing.tier = nextIndex;
-      addResource('reputation', 4 + nextIndex * 3);
-      gainXp(80 + nextIndex * 40);
-      gainMastery(next.stage, 55 + nextIndex * 10);
-      pushLog('You moved into ' + next.title + '. Passive rest, caps, and job support improved.');
-    }
-
-    function buyHouseItem(key) {
-      const item = HOUSE_ITEMS.find(x => x.key === key);
-      if (!item) return;
-      const current = houseItemLevel(key);
-      const cap = houseItemCap(item);
-      if (cap <= 0) return pushLog('You need a larger home before buying ' + item.title + '.');
-      if (current >= cap) return pushLog(item.title + ' is capped for your current home size. Upgrade your home to improve it further.');
-      const cost = item.cost(current);
-      if (!spend(cost)) return pushLog('Not enough resources for ' + item.title + '.');
-      state.housing.items[key] = current + 1;
-      addResource('reputation', 1);
-      gainXp(40);
-      pushLog('Home improved: ' + item.title + ' level ' + state.housing.items[key] + '.');
+      pushLog('Purchased ' + auto.title + ' level ' + state.automation[key] + '.', true);
+      gainPlayerXp(18);
+      checkMilestones();
+      render();
+      saveGame(false);
     }
 
     function buyUpgrade(key) {
-      const u = UPGRADES.find(x => x.key === key);
-      if (!u) return;
+      const up = UPGRADES.find(function(u) { return u.key === key; });
+      if (!up || !isStageKnown(up.stage)) return;
       const n = state.upgrades[key] || 0;
-      if (n >= u.max) return pushLog(u.title + ' is already maxed.');
-      const cost = u.cost(n);
-      if (!spend(cost)) return pushLog('Not enough resources for ' + u.title + '.');
+      if (n >= up.max) return;
+      const cost = cleanCost(up.cost(n));
+      if (!spend(cost)) {
+        showToastMessage('Need more resources.');
+        return;
+      }
       state.upgrades[key] = n + 1;
-      addResource('reputation', key === 'academyHall' ? 7 : 2);
-      gainXp(60);
-      pushLog('Upgrade purchased: ' + u.title + ' level ' + state.upgrades[key] + '.');
+      pushLog(up.title + ' upgraded to level ' + state.upgrades[key] + '.', true);
+      gainPlayerXp(16);
+      checkMilestones();
+      render();
+      saveGame(false);
     }
 
-    function selectStage(key) {
-      if (!isUnlocked(key)) return pushLog('That job is still locked.');
-      state.currentStage = key;
-      pushLog('Current job set to ' + STAGES.find(s => s.key === key).title + '.');
+    function buyHouse() {
+      const nextIndex = (state.housing.tier || 0) + 1;
+      const next = HOUSE_TIERS[nextIndex];
+      if (!next) return;
+      if (!isStageKnown(next.stage)) {
+        showToastMessage('A larger home has not been revealed yet.');
+        return;
+      }
+      if (!spend(next.cost || {})) {
+        showToastMessage('Need more resources.');
+        return;
+      }
+      state.housing.tier = nextIndex;
+      pushLog('Moved into ' + next.title + '.', true);
+      render();
+      saveGame(false);
     }
 
-    function bossFight() {
-      if (!isUnlocked('archmage') || state.currentStage !== 'archmage') return pushLog('Become the archmage and select that job before challenging the Void King.');
-      if (state.stats.bossDefeated) return pushLog('The Void King is already defeated.');
-      if (!spend({ arcana: 25000000, mana: 120000, focus: 40000, energy: 25 })) return pushLog('Final strike needs 25M arcana, 120K mana, 40K focus, and 25 energy.');
-      let damage = 115000000 + state.upgrades.ritualTower * 24000000 + state.automation.faculty * 12000000 + state.automation.circle * 6000000 + state.automation.familiar * 3000000 + housingBonuses(state).bossDamageBonus;
-      damage *= 1 + Math.max(0, masteryLevel('archmage') - 1) * 0.05;
-      if (activeBuff('archmageEdict')) damage *= 1.75;
+    function buyHouseItem(key) {
+      const item = HOUSE_ITEMS.find(function(i) { return i.key === key; });
+      if (!item) return;
+      const n = houseItemLevel(key);
+      const cap = houseItemCap(item);
+      if (n >= cap) return;
+      const cost = cleanCost(item.cost(n));
+      if (!spend(cost)) {
+        showToastMessage('Need more resources.');
+        return;
+      }
+      state.housing.items[key] = n + 1;
+      pushLog(item.title + ' improved to level ' + state.housing.items[key] + '.', true);
+      render();
+      saveGame(false);
+    }
+
+    function useSignature(stageKey) {
+      const meta = JOB_META[stageKey];
+      if (!meta || !isUnlocked(stageKey)) return;
+      const sig = meta.signature;
+      if (activeBuff(sig.key)) {
+        showToastMessage('That command is already active.');
+        return;
+      }
+      const cost = cleanCost(sig.cost());
+      if (!spend(cost)) {
+        showToastMessage('Need more resources.');
+        return;
+      }
+      state.buffs[sig.key] = sig.duration;
+      pushLog(sig.title + ' active for ' + sig.duration + ' seconds.', true);
+      render();
+      saveGame(false);
+    }
+
+    function challengeBoss() {
+      if (!isUnlocked('archmage')) {
+        showToastMessage('Become an archmage first.');
+        return;
+      }
+      if (state.stats.bossDefeated) {
+        showToastMessage('The Void King is already defeated.');
+        return;
+      }
+      const cost = { arcana: 25000000, mana: 120000, focus: 40000, energy: 25 };
+      if (!spend(cost)) {
+        showToastMessage('Need more battle resources.');
+        return;
+      }
+      const h = housingBonuses();
+      const damage = 90000000 + (state.resources.arcana || 0) * 0.08 + (state.resources.knowledge || 0) * 0.7 + (state.upgrades.ritualTower || 0) * 35000000 + h.bossDamageBonus;
       state.stats.bossHp = clamp(state.stats.bossHp - damage, 0, BOSS_MAX);
-      gainXp(120);
-      gainMastery('archmage', 100);
-      if (state.stats.bossHp <= 0) {
-        state.stats.bossDefeated = true;
-        addResource('reputation', 75);
-        pushLog('Victory: the Void King falls and the realm is saved.');
-      } else {
-        pushLog('You hit the Void King for ' + fmt(damage) + ' damage. The battle continues.');
-      }
+      if (state.stats.bossHp <= 0) defeatBoss();
+      else pushLog('You struck the Void King for ' + fmt(damage) + ' damage.', true);
+      render();
+      saveGame(false);
     }
 
-    function rates() {
-      const hb = housingBonuses(state);
-      return {
-        food: AUTOMATION.find(a => a.key === 'scarecrow').rate(state) + hb.foodGen * productionMultiplier(state, 'food'),
-        mana: AUTOMATION.find(a => a.key === 'familiar').rate(state) + hb.manaGen * productionMultiplier(state, 'mana'),
-        focus: AUTOMATION.find(a => a.key === 'circle').rate(state) + hb.focusGen * productionMultiplier(state, 'focus'),
-        gold: AUTOMATION.find(a => a.key === 'faculty').goldRate(state) + hb.goldGen * productionMultiplier(state, 'gold'),
-        knowledge: AUTOMATION.find(a => a.key === 'faculty').rate(state) + hb.knowledgeGen * productionMultiplier(state, 'knowledge'),
-        arcana: hb.arcanaGen * productionMultiplier(state, 'arcana'),
-        energy: energyRegenRate(),
-        reputation: 0
-      };
+    function defeatBoss() {
+      if (state.stats.bossDefeated) return;
+      state.stats.bossHp = 0;
+      state.stats.bossDefeated = true;
+      pushLog('Victory! The Void King falls, and the peasant becomes an archmage legend.', true);
     }
 
-    function energyRegenRate() {
-      const foodSupport = state.resources.food > 0 ? 0.25 : -0.55;
-      const farmerRest = state.currentStage === 'farmer' ? 0.12 : 0;
-      return 0.36 + foodSupport + housingBonuses(state).energyRegen + farmerRest;
+    function setDevSpeed(mult) {
+      state.dev.timeMult = mult;
+      document.getElementById('devSpeedBadge').textContent = 'Time: ' + mult + 'x';
+      pushLog('Dev command: time acceleration set to ' + mult + 'x.', true);
+      render();
+      saveGame(false);
+      showToastMessage('Time set to ' + mult + 'x');
     }
 
-    function tick(seconds) {
-      for (const key of Object.keys(state.buffs || {})) {
-        state.buffs[key] = Math.max(0, (state.buffs[key] || 0) - seconds);
-      }
-
-      const r = rates();
-      addResource('food', r.food * seconds);
-      addResource('mana', r.mana * seconds);
-      addResource('focus', r.focus * seconds);
-      addResource('gold', r.gold * seconds);
-      addResource('knowledge', r.knowledge * seconds);
-      addResource('arcana', r.arcana * seconds);
-      addResource('energy', r.energy * seconds);
-
-      const farmerDrain = state.currentStage === 'farmer' ? 0.8 : 1;
-      const foodDrain = (0.26 + state.stats.level * 0.02) * housingBonuses(state).foodDrainMult * farmerDrain * seconds;
-      if (state.resources.food > 0) addResource('food', -foodDrain);
-
-      state.stats.days += seconds / 60;
-
-      if (state.automation.scarecrow > 0) gainMastery('farmer', 0.04 * state.automation.scarecrow * seconds, true);
-      if (state.automation.familiar > 0) gainMastery('apprentice', 0.04 * state.automation.familiar * seconds, true);
-      if (state.automation.circle > 0) gainMastery('mage', 0.04 * state.automation.circle * seconds, true);
-      if (state.automation.faculty > 0) gainMastery('academy', 0.04 * state.automation.faculty * seconds, true);
-
-      if (state.currentStage === 'archmage' && !state.stats.bossDefeated && state.automation.faculty > 0) {
-        let passiveDamage = (200000 + state.upgrades.ritualTower * 40000 + houseItemLevel('observatory') * 40000) * seconds;
-        if (activeBuff('archmageEdict')) passiveDamage *= 2;
-        state.stats.bossHp = clamp(state.stats.bossHp - passiveDamage, 0, BOSS_MAX);
-        if (state.stats.bossHp === 0) {
-          state.stats.bossDefeated = true;
-          pushLog('Your enchanted academy overwhelms the Void King over time.', true);
-        }
-      }
-
-      revealUnlocks();
+    function devAddResources() {
+      RESOURCES.forEach(function(r) {
+        if (r.key === 'energy') state.resources.energy = capFor('energy');
+        else state.resources[r.key] = capFor(r.key);
+      });
+      pushLog('Dev command: resources filled to current caps.', true);
+      checkMilestones();
+      render();
+      saveGame(false);
+      showToastMessage('Resources added');
     }
 
-    function offlineProgress() {
-      const savedAt = Number(state.savedAt || Date.now());
-      const elapsed = Math.max(0, Math.min(6 * 60 * 60, (Date.now() - savedAt) / 1000));
-      if (elapsed > 10) {
-        tick(elapsed * 0.45);
-        pushLog('Offline progress applied for ' + Math.floor(elapsed / 60) + ' minutes at 45% efficiency.', true);
-      }
+    function resetProgress() {
+      if (!confirm('Reset all saved progress?')) return;
+      localStorage.removeItem(STORAGE_KEY);
+      state = initialState();
+      lastTick = Date.now();
+      lastRates = {};
+      render();
+      saveGame(false);
+      showToastMessage('Progress reset');
     }
 
     function renderResources() {
-      const box = document.getElementById('resources');
-      const r = rates();
-      box.innerHTML = RESOURCES.map(res => {
-        const val = state.resources[res.key] || 0;
-        const cap = capFor(res.key);
-        const rate = r[res.key] || 0;
-        let fillClass = '';
-        if (res.key === 'food' || res.key === 'gold' || res.key === 'reputation') fillClass = 'green';
-        if (res.key === 'focus' || res.key === 'energy') fillClass = 'amber';
-        if (res.key === 'arcana') fillClass = 'red';
-        return `
-          <div class="res-card res-${res.key}" title="${res.label}: ${fmt(val)} / ${fmt(cap)}">
-            <div class="label">${res.label}</div>
-            <div class="value">${fmt(val)}</div>
-            <div class="rate">${rate >= 0 ? '+' : ''}${fmtRate(rate)}/s</div>
-            <div class="bar"><div class="fill ${fillClass}" style="width:${pct(val, cap)}%"></div></div>
-          </div>
-        `;
+      const host = document.getElementById('resources');
+      host.innerHTML = RESOURCES.filter(function(r) { return resourceVisible(r.key); }).map(function(r) {
+        const value = state.resources[r.key] || 0;
+        const cap = capFor(r.key);
+        const rate = lastRates[r.key] || 0;
+        const rateText = rate ? (rate > 0 ? '+' : '') + fmtRate(rate) + '/sec' : r.note;
+        const colorClass = r.key === 'energy' || r.key === 'food' ? ' green' : r.key === 'gold' ? ' gold' : '';
+        return '<div class="res-card">' +
+          '<div class="label">' + escapeHtml(r.label) + '</div>' +
+          '<div class="value">' + fmt(value) + '</div>' +
+          '<div class="bar"><div class="fill' + colorClass + '" style="width:' + pct(value, cap).toFixed(2) + '%"></div></div>' +
+          '<div class="rate">' + escapeHtml(rateText) + ' / cap ' + fmt(cap) + '</div>' +
+        '</div>';
       }).join('');
     }
 
     function renderHero() {
-      revealUnlocks();
-      const st = currentStage();
+      const stage = currentStage();
+      document.getElementById('hudStage').textContent = stage.title + ' | ' + stage.resource;
       document.getElementById('versionPill').textContent = 'Day ' + Math.floor(state.stats.days) + ' | Level ' + state.stats.level;
-      document.getElementById('hudStage').textContent = st.title + ' | ' + st.resource + ' | M' + masteryLevel(st.key);
-      document.getElementById('stageTitle').textContent = st.title;
-      document.getElementById('stageDesc').textContent = st.desc;
-      const boss = Math.ceil(state.stats.bossHp);
-      document.getElementById('bossSummary').textContent = state.stats.bossDefeated
-        ? 'Victory. The Void King is defeated and the realm is safe.'
-        : 'Boss HP: ' + fmt(boss) + ' / ' + fmt(BOSS_MAX) + '. Become an archmage and convert your academy into final battle power.';
-      document.getElementById('bossFill').style.width = pct(state.stats.bossHp, BOSS_MAX) + '%';
+      document.getElementById('stageTitle').textContent = stage.title;
+      document.getElementById('stageDesc').textContent = stage.desc;
+      document.getElementById('nextHint').textContent = nextHint();
+      const hp = Math.max(0, state.stats.bossHp || 0);
+      document.getElementById('bossSummary').textContent = state.stats.bossDefeated ? 'The Void King has been defeated.' : 'Boss HP: ' + fmt(hp) + ' / ' + fmt(BOSS_MAX) + '.';
+      document.getElementById('bossFill').style.width = pct(hp, BOSS_MAX).toFixed(2) + '%';
     }
 
     function renderJobCard() {
-      const st = currentStage();
-      const meta = JOB_META[st.key];
-      const lvl = masteryLevel(st.key);
-      const xp = masteryXp(st.key);
-      const need = masteryNeed(st.key);
+      const stage = currentStage();
+      const meta = JOB_META[stage.key];
+      const xp = masteryXp(stage.key);
+      const need = masteryNeed(stage.key);
       const sig = meta.signature;
-      const sigCost = sig.cost();
-      const activeBuffs = Object.entries(state.buffs || {}).filter(([, v]) => v > 0);
-      document.getElementById('jobCard').innerHTML = `
-        <div class="job-top">
-          <div>
-            <div class="job-label">Selected job mode</div>
-            <div class="job-title">${st.title}</div>
-            <div class="job-desc">${st.desc}</div>
-          </div>
-          <div class="chips"><span class="chip blue">Mastery ${lvl}</span><span class="chip good">+${Math.floor((lvl - 1) * 5)}% ${labelFor(meta.masteryResource)}</span></div>
-        </div>
-        <div class="mastery-grid">
-          <div class="mini-stat">
-            <div class="mini-label">Mastery progress</div>
-            <div class="mini-value">${fmt(xp)} / ${fmt(need)} XP</div>
-            <div class="bar"><div class="fill green" style="width:${pct(xp, need)}%"></div></div>
-          </div>
-          <div class="mini-stat">
-            <div class="mini-label">Signature ability</div>
-            <div class="mini-value">${sig.title}${activeBuff(sig.key) ? ' (' + buffTime(sig.key) + 's)' : ''}</div>
-            <div class="job-desc">${sig.desc}</div>
-          </div>
-        </div>
-        <div class="chips">${meta.bonuses.map(b => '<span class="chip blue">' + b + '</span>').join('')}</div>
-        <div class="buff-list">${activeBuffs.length ? activeBuffs.map(([k, v]) => '<span class="chip amber">' + buffName(k) + ': ' + Math.ceil(v) + 's</span>').join('') : '<span class="chip">No timed buffs active</span>'}</div>
-        <div class="chips"><span class="chip">Signature cost</span>${chips(sigCost)}</div>
-      `;
-    }
-
-    function buffName(key) {
-      for (const meta of Object.values(JOB_META)) {
-        if (meta.signature.key === key) return meta.signature.title;
-      }
-      return key;
+      const active = activeBuff(sig.key);
+      const disabled = active || !canAfford(sig.cost());
+      const bonusList = meta.bonuses.map(function(b) { return '<span class="chip good">' + escapeHtml(b) + '</span>'; }).join('');
+      document.getElementById('jobCard').innerHTML =
+        '<div class="job-row">' +
+          '<div><div class="small-label">Selected job</div><div class="job-name">' + escapeHtml(meta.title) + '</div></div>' +
+          '<span class="chip gold">Mastery ' + masteryLevel(stage.key) + '</span>' +
+        '</div>' +
+        '<div class="mastery-bar"><div style="width:' + pct(xp, need).toFixed(2) + '%"></div></div>' +
+        '<div class="status">' + bonusList + '</div>' +
+        '<button class="btn section-gap" type="button" id="signatureBtn" ' + (disabled ? 'disabled' : '') + '>' +
+          '<div class="btn-title"><span>' + escapeHtml(sig.title) + '</span>' + (active ? '<span class="chip gold">' + buffTime(sig.key) + 's</span>' : '<span class="chip">Command</span>') + '</div>' +
+          '<div class="btn-desc">' + escapeHtml(sig.desc) + '</div>' +
+          '<div class="cost-row">' + chips(sig.cost()) + '</div>' +
+        '</button>';
+      document.getElementById('signatureBtn').addEventListener('click', function() { useSignature(stage.key); });
     }
 
     function renderActions() {
-      const st = currentStage();
-      const sig = JOB_META[st.key].signature;
-      const sigCost = sig.cost();
-      const signatureReady = canAfford(sigCost) && !activeBuff(sig.key);
-      const actions = [
-        { id: 'signature', title: sig.title, desc: sig.desc, fn: useSignature, active: true, preview: activeBuff(sig.key) ? buffTime(sig.key) + 's active' : (signatureReady ? 'Ready' : 'Need resources'), cost: sigCost },
-        { id: 'harvest', title: 'Harvest Food', desc: 'Farmer action. +food, -energy. This is the base of the whole chain.', fn: doHarvest, active: true, preview: actionPreview('harvest'), cost: { energy: 6 } },
-        { id: 'study', title: 'Study Cantrips', desc: 'Apprentice action. Converts food and energy into mana.', fn: doStudy, active: isUnlocked('apprentice'), preview: actionPreview('study'), cost: { food: state.currentStage === 'apprentice' ? 40 : 50, energy: 7 } },
-        { id: 'meditate', title: 'Deep Meditation', desc: 'Mage action. Converts mana and energy into focus.', fn: doMeditate, active: isUnlocked('mage'), preview: actionPreview('meditate'), cost: { mana: 700, energy: 7 } },
-        { id: 'teach', title: 'Teach Class', desc: 'Academy action. Converts mana, focus, and energy into knowledge and gold.', fn: doTeach, active: isUnlocked('academy'), preview: actionPreview('teach') + ', +' + fmt(160000 * productionMultiplier(state, 'gold') * selectedActionMultiplier('teach')) + ' gold', cost: { focus: 10000, mana: 10000, energy: 8 } },
-        { id: 'ritual', title: 'Grand Ritual', desc: 'Archmage action. Converts knowledge, mana, focus, and energy into arcana.', fn: doRitual, active: isUnlocked('archmage'), preview: actionPreview('ritual'), cost: { knowledge: 220000, mana: 28000, focus: 120000, energy: 10 } },
-        { id: 'sell', title: 'Sell Food', desc: 'Trade food for gold. Farmer mode gives a small bonus.', fn: doSellFood, active: true, preview: '+' + fmt(1600 * productionMultiplier(state, 'gold') * selectedActionMultiplier('sell')) + ' gold', cost: { food: 250 } },
-        { id: 'rest', title: 'Rest', desc: 'Recover energy and focus. Housing makes rest much stronger.', fn: doRest, active: true, preview: '+' + fmt(28 + housingBonuses(state).restEnergy + (state.currentStage === 'farmer' ? 8 : 0)) + ' energy', cost: {} }
-      ];
-      const box = document.getElementById('actions');
-      box.innerHTML = actions.map(a => {
-        const ok = a.active && (Object.keys(a.cost || {}).length === 0 || canAfford(a.cost));
-        return `
-          <button class="btn ${a.id === 'signature' ? 'good' : ok ? 'primary' : a.active ? '' : 'locked'}" data-action="${a.id}" ${a.active ? '' : 'disabled'}>
-            <div class="btn-title"><span>${a.title}</span><span class="chip ${ok ? 'blue' : a.active ? 'amber' : 'red'}">${a.active ? a.preview : 'Locked'}</span></div>
-            <div class="btn-desc">${a.desc}</div>
-            <div class="chips">${chips(a.cost || {})}</div>
-          </button>
-        `;
+      const host = document.getElementById('actions');
+      const visible = ACTIONS.filter(function(action) {
+        if (!action.stage) return true;
+        return isUnlocked(action.stage);
+      });
+      host.innerHTML = visible.map(function(action) {
+        const cost = cleanCost(action.cost());
+        const disabled = !canAfford(cost);
+        const effect = action.effect();
+        const gainText = Object.entries(effect).filter(function(entry) { return entry[1] > 0 && resourceVisible(entry[0]); }).map(function(entry) {
+          return '+' + fmt(entry[1]) + ' ' + labelFor(entry[0]);
+        }).join(', ');
+        return '<button class="btn" type="button" data-action="' + action.key + '" ' + (disabled ? 'disabled' : '') + '>' +
+          '<div class="btn-title"><span>' + escapeHtml(action.title) + '</span>' + (gainText ? '<span class="chip good">' + escapeHtml(gainText) + '</span>' : '') + '</div>' +
+          '<div class="btn-desc">' + escapeHtml(action.desc) + '</div>' +
+          '<div class="cost-row">' + chips(cost) + '</div>' +
+        '</button>';
       }).join('');
-      for (const a of actions) {
-        const el = box.querySelector('[data-action="' + a.id + '"]');
-        if (el) el.onclick = a.fn;
-      }
+      host.querySelectorAll('[data-action]').forEach(function(btn) { btn.addEventListener('click', function() { handleAction(btn.dataset.action); }); });
     }
 
     function renderStages() {
-      const box = document.getElementById('stages');
-      box.innerHTML = STAGES.map((s, i) => {
-        const unlocked = isUnlocked(s.key);
-        const active = state.currentStage === s.key;
-        const meta = JOB_META[s.key];
-        const lvl = masteryLevel(s.key);
-        const bonus = Math.floor((lvl - 1) * 5);
-        return `
-          <button class="btn ${active ? 'active' : ''} ${unlocked ? '' : 'locked'}" data-stage="${s.key}" ${unlocked ? '' : 'disabled'}>
-            <div class="btn-title"><span>${i + 1}. ${s.title}</span><span class="chip ${unlocked ? 'good' : 'red'}">${unlocked ? s.resource : 'Locked'}</span></div>
-            <div class="btn-desc">${unlocked ? s.desc : s.unlockDesc}</div>
-            <div class="chips"><span class="chip blue">Mastery ${lvl}</span><span class="chip good">+${bonus}% ${labelFor(meta.masteryResource)}</span><span class="chip">Signature: ${meta.signature.title}</span></div>
-          </button>
-        `;
+      const host = document.getElementById('stages');
+      const visible = STAGES.filter(function(stage) { return isStageKnown(stage.key); });
+      host.innerHTML = visible.map(function(stage) {
+        const unlocked = isUnlocked(stage.key);
+        const selected = state.currentStage === stage.key;
+        const meta = JOB_META[stage.key];
+        const action = unlocked ? (selected ? 'Selected' : 'Select job') : 'Begin path';
+        return '<button class="card-button" type="button" data-stage="' + stage.key + '">' +
+          '<div class="btn-title"><span>' + escapeHtml(stage.title) + '</span><span class="chip ' + (unlocked ? 'good' : 'gold') + '">' + escapeHtml(action) + '</span></div>' +
+          '<div class="btn-desc">' + escapeHtml(stage.desc) + '</div>' +
+          '<div class="status"><span class="chip">Focus: ' + escapeHtml(stage.resource) + '</span><span class="chip">Mastery ' + masteryLevel(stage.key) + '</span><span class="chip">Boosts ' + escapeHtml(meta.passiveTarget) + '</span></div>' +
+        '</button>';
       }).join('');
-      [...box.querySelectorAll('[data-stage]')].forEach(btn => btn.onclick = () => selectStage(btn.dataset.stage));
+      host.querySelectorAll('[data-stage]').forEach(function(btn) { btn.addEventListener('click', function() { unlockOrSelectStage(btn.dataset.stage); }); });
     }
 
     function renderAutomation() {
-      const box = document.getElementById('automation');
-      box.innerHTML = AUTOMATION.map((a, idx) => {
-        const n = state.automation[a.key] || 0;
-        const cost = a.cost(n);
-        const unlocked = isUnlocked(a.stage);
-        const ok = unlocked && canAfford(cost);
-        const rate = a.rate(state);
-        const extra = a.goldRate ? ' and +' + fmtRate(a.goldRate(state)) + ' gold/s' : '';
-        return `
-          <button class="btn ${ok ? 'good' : unlocked ? '' : 'locked'}" data-auto="${a.key}" ${unlocked ? '' : 'disabled'}>
-            <div class="btn-title"><span>${a.title} x${n}</span><span class="chip ${ok ? 'good' : unlocked ? 'amber' : 'red'}">Stage ${idx + 2}</span></div>
-            <div class="btn-desc">${a.desc}</div>
-            <div class="chips"><span class="chip blue">Automates ${labelFor(a.automates)}</span><span class="chip good">+${fmtRate(rate)} ${a.automates}/s${extra}</span></div>
-            <div class="chips">${chips(cost)}</div>
-          </button>
-        `;
+      const host = document.getElementById('automation');
+      const visible = AUTOMATION.filter(function(auto) { return isStageKnown(auto.stage); });
+      if (!visible.length) {
+        host.innerHTML = '<div class="btn-desc">No spells revealed yet. Reach the apprentice path to discover your first automation.</div>';
+        return;
+      }
+      host.innerHTML = visible.map(function(auto) {
+        const n = state.automation[auto.key] || 0;
+        const cost = cleanCost(auto.cost(n));
+        const disabled = !canAfford(cost);
+        const rate = auto.rate(state) + (auto.goldRate ? auto.goldRate(state) : 0);
+        return '<button class="card-button" type="button" data-auto="' + auto.key + '" ' + (disabled ? 'disabled' : '') + '>' +
+          '<div class="btn-title"><span>' + escapeHtml(auto.title) + '</span><span class="chip good">Level ' + n + '</span></div>' +
+          '<div class="btn-desc">' + escapeHtml(auto.desc) + '</div>' +
+          '<div class="status"><span class="chip">Automates ' + labelFor(auto.automates) + '</span><span class="chip">+' + fmtRate(rate) + '/sec</span></div>' +
+          '<div class="cost-row">' + chips(cost) + '</div>' +
+        '</button>';
       }).join('');
-      [...box.querySelectorAll('[data-auto]')].forEach(btn => btn.onclick = () => buyAutomation(btn.dataset.auto));
+      host.querySelectorAll('[data-auto]').forEach(function(btn) { btn.addEventListener('click', function() { buyAutomation(btn.dataset.auto); }); });
     }
 
     function renderHousing() {
-      const summary = document.getElementById('housingSummary');
-      const house = houseTierData(state);
-      const hb = housingBonuses(state);
-      const itemLevels = Object.values(state.housing.items || {}).reduce((a, b) => a + (Number(b) || 0), 0);
-      summary.innerHTML = `
-        <div class="home-card">
-          <div class="home-label">Current home</div>
-          <div class="home-title">${house.title}</div>
-          <div class="home-desc">${house.desc}</div>
-          <div class="chips"><span class="chip good">Furniture levels: ${itemLevels}</span><span class="chip blue">Supports ${JOB_META[house.stage].title}</span></div>
-        </div>
-        <div class="home-card">
-          <div class="home-label">Rest quality</div>
-          <div class="home-title">+${hb.energyRegen.toFixed(2)} energy/sec</div>
-          <div class="home-desc">Rest action: +${fmt(28 + hb.restEnergy)} energy and +${fmt(hb.restFocus)} focus. Matching homes give +25% to their supported job's resource.</div>
-          <div class="chips"><span class="chip amber">Passive rest</span><span class="chip blue">Energy cap ${fmt(capFor('energy'))}</span></div>
-        </div>
-      `;
+      const tier = houseTierData();
+      const h = housingBonuses();
+      document.getElementById('housingSummary').innerHTML =
+        '<div class="split-row"><strong>' + escapeHtml(tier.title) + '</strong><span class="chip">Tier ' + (state.housing.tier || 0) + '</span></div>' +
+        '<div style="margin-top:6px">' + escapeHtml(tier.desc) + '</div>' +
+        '<div class="status"><span class="chip">+' + fmtRate(h.energyRegen) + ' energy/sec</span><span class="chip">+' + fmtRate(h.foodGen) + ' food/sec</span><span class="chip">+' + fmtRate(h.manaGen) + ' mana/sec</span><span class="chip">+' + fmtRate(h.focusGen) + ' focus/sec</span></div>';
 
-      const nextIndex = ((state.housing && state.housing.tier) || 0) + 1;
-      const next = HOUSE_TIERS[nextIndex];
-      const houseBtn = document.getElementById('houseButton');
+      const houseButton = document.getElementById('houseButton');
+      const next = HOUSE_TIERS[(state.housing.tier || 0) + 1];
       if (!next) {
-        houseBtn.disabled = true;
-        houseBtn.className = 'btn active';
-        houseBtn.innerHTML = '<div class="btn-title"><span>Largest Home Owned</span><span class="chip good">Max</span></div><div class="btn-desc">You own the best residence available in this generation.</div>';
+        houseButton.disabled = true;
+        houseButton.innerHTML = '<div class="btn-title"><span>Best home owned</span><span class="chip good">Max</span></div><div class="btn-desc">No larger home exists yet.</div>';
+      } else if (!isStageKnown(next.stage)) {
+        houseButton.disabled = true;
+        houseButton.innerHTML = '<div class="btn-title"><span>Next home not revealed</span><span class="chip">Progress further</span></div><div class="btn-desc">A larger home will appear when your career reaches it.</div>';
       } else {
-        const unlocked = isUnlocked(next.stage);
-        const ok = unlocked && canAfford(next.cost);
-        houseBtn.disabled = !unlocked;
-        houseBtn.className = 'btn ' + (ok ? 'good' : unlocked ? '' : 'locked');
-        houseBtn.innerHTML = `
-          <div class="btn-title"><span>Move into ${next.title}</span><span class="chip ${ok ? 'good' : unlocked ? 'amber' : 'red'}">${ok ? 'Buy' : unlocked ? 'Need' : 'Locked'}</span></div>
-          <div class="btn-desc">${next.desc}</div>
-          <div class="chips">${chips(next.cost)}<span class="chip blue">Requires ${STAGES.find(s => s.key === next.stage).title}</span></div>
-        `;
-        houseBtn.onclick = buyHouseTier;
+        const cost = cleanCost(next.cost || {});
+        houseButton.disabled = !canAfford(cost);
+        houseButton.innerHTML = '<div class="btn-title"><span>Move to ' + escapeHtml(next.title) + '</span><span class="chip gold">Home</span></div><div class="btn-desc">' + escapeHtml(next.desc) + '</div><div class="cost-row">' + chips(cost) + '</div>';
       }
 
-      const items = document.getElementById('houseItems');
-      items.innerHTML = HOUSE_ITEMS.map(item => {
+      const itemHost = document.getElementById('houseItems');
+      const visibleItems = HOUSE_ITEMS.filter(function(item) { return houseItemCap(item) > 0; });
+      itemHost.innerHTML = visibleItems.map(function(item) {
         const n = houseItemLevel(item.key);
         const cap = houseItemCap(item);
-        const locked = cap <= 0;
-        const capped = !locked && n >= cap;
-        const cost = capped || locked ? {} : item.cost(n);
-        const ok = !locked && !capped && canAfford(cost);
-        return `
-          <button class="btn ${ok ? 'good' : locked ? 'locked' : capped ? 'active' : ''}" data-house-item="${item.key}" ${locked ? 'disabled' : ''}>
-            <div class="btn-title"><span>${item.title} Lv. ${n}/${cap || item.max}</span><span class="chip ${ok ? 'good' : locked ? 'red' : capped ? 'good' : 'amber'}">${locked ? 'Bigger home' : capped ? 'Home cap' : ok ? 'Buy' : 'Need'}</span></div>
-            <div class="btn-desc">${item.desc}</div>
-            <div class="chips"><span class="chip blue">${item.effect(n + (capped ? 0 : 1))}</span>${locked || capped ? '' : chips(cost)}</div>
-          </button>
-        `;
+        const cost = cleanCost(item.cost(n));
+        const disabled = n >= cap || !canAfford(cost);
+        return '<button class="card-button" type="button" data-house-item="' + item.key + '" ' + (disabled ? 'disabled' : '') + '>' +
+          '<div class="btn-title"><span>' + escapeHtml(item.title) + '</span><span class="chip">' + n + ' / ' + cap + '</span></div>' +
+          '<div class="btn-desc">' + escapeHtml(item.desc) + '</div>' +
+          '<div class="status"><span class="chip good">' + escapeHtml(item.effect(n)) + '</span></div>' +
+          '<div class="cost-row">' + (n >= cap ? '<span class="chip good">Maxed</span>' : chips(cost)) + '</div>' +
+        '</button>';
       }).join('');
-      [...items.querySelectorAll('[data-house-item]')].forEach(btn => btn.onclick = () => buyHouseItem(btn.dataset.houseItem));
+      itemHost.querySelectorAll('[data-house-item]').forEach(function(btn) { btn.addEventListener('click', function() { buyHouseItem(btn.dataset.houseItem); }); });
     }
 
     function renderUpgrades() {
-      const box = document.getElementById('upgrades');
-      box.innerHTML = UPGRADES.map(u => {
-        const n = state.upgrades[u.key] || 0;
-        const maxed = n >= u.max;
-        const cost = maxed ? {} : u.cost(n);
-        const ok = !maxed && canAfford(cost);
-        return `
-          <button class="btn ${ok ? 'good' : maxed ? 'active' : ''}" data-upgrade="${u.key}" ${maxed ? 'disabled' : ''}>
-            <div class="btn-title"><span>${u.title} Lv. ${n}/${u.max}</span><span class="chip ${maxed ? 'good' : ok ? 'good' : 'amber'}">${maxed ? 'Max' : ok ? 'Buy' : 'Need'}</span></div>
-            <div class="btn-desc">${u.desc}</div>
-            <div class="chips">${maxed ? '<span class="chip good">Complete</span>' : chips(cost)}</div>
-          </button>
-        `;
+      const host = document.getElementById('upgrades');
+      const visible = UPGRADES.filter(function(up) { return isStageKnown(up.stage); });
+      host.innerHTML = visible.map(function(up) {
+        const n = state.upgrades[up.key] || 0;
+        const cost = cleanCost(up.cost(n));
+        const disabled = n >= up.max || !canAfford(cost);
+        return '<button class="card-button" type="button" data-upgrade="' + up.key + '" ' + (disabled ? 'disabled' : '') + '>' +
+          '<div class="btn-title"><span>' + escapeHtml(up.title) + '</span><span class="chip">' + n + ' / ' + up.max + '</span></div>' +
+          '<div class="btn-desc">' + escapeHtml(up.desc) + '</div>' +
+          '<div class="cost-row">' + (n >= up.max ? '<span class="chip good">Maxed</span>' : chips(cost)) + '</div>' +
+        '</button>';
       }).join('');
-      [...box.querySelectorAll('[data-upgrade]')].forEach(btn => btn.onclick = () => buyUpgrade(btn.dataset.upgrade));
+      host.querySelectorAll('[data-upgrade]').forEach(function(btn) { btn.addEventListener('click', function() { buyUpgrade(btn.dataset.upgrade); }); });
     }
 
-    function renderChainMap() {
-      const rows = [
-        ['Farmer', 'Manual resource: Food. Farmer mode makes harvest and survival stronger.', isUnlocked('farmer')],
-        ['Apprentice Mage', 'New resource: Mana. Spell: Animated Scarecrow automates Food.', isUnlocked('apprentice')],
-        ['Mage', 'New resource: Focus. Spell: Mana Familiar automates Mana.', isUnlocked('mage')],
-        ['Academy Founder', 'New resource: Knowledge. Ritual: Meditation Circle automates Focus.', isUnlocked('academy')],
-        ['Archmage', 'New resource: Arcana. Spell: Enchanted Faculty automates Knowledge and Gold.', isUnlocked('archmage')]
-      ];
-      document.getElementById('chainMap').innerHTML = rows.map((r, i) => `
-        <div class="chain-row">
-          <div class="stage-dot ${r[2] ? 'done' : 'locked'}">${i + 1}</div>
-          <div>
-            <div class="chain-title">${r[0]}</div>
-            <div class="chain-desc">${r[1]}</div>
-          </div>
-        </div>
-      `).join('');
+    function renderChain() {
+      const host = document.getElementById('chainMap');
+      const visible = AUTOMATION.filter(function(auto) { return isStageKnown(auto.stage); });
+      if (!visible.length) {
+        host.innerHTML = '<div class="btn-desc">The automation chain is still hidden. Reach apprentice magic to reveal the first link.</div>';
+        return;
+      }
+      host.innerHTML = visible.map(function(auto) {
+        const n = state.automation[auto.key] || 0;
+        return '<div class="chain-item"><div><div class="name">' + escapeHtml(auto.title) + '</div><div class="sub">' + escapeHtml(auto.stage) + ' job automates ' + labelFor(auto.automates) + '</div></div><span class="chip good">Level ' + n + '</span></div>';
+      }).join('');
     }
 
-    function renderBoss() {
-      const btn = document.getElementById('bossButton');
-      const ready = isUnlocked('archmage') && state.currentStage === 'archmage' && !state.stats.bossDefeated;
-      btn.disabled = !ready;
-      btn.className = 'btn danger ' + (ready ? '' : 'locked');
-      btn.innerHTML = state.stats.bossDefeated
-        ? '<div class="btn-title"><span>Void King Defeated</span><span class="chip good">Victory</span></div><div class="btn-desc">The realm is safe. You can keep growing the academy economy.</div>'
-        : '<div class="btn-title"><span>Challenge the Void King</span><span class="chip red">' + (ready ? 'Ready' : 'Archmage only') + '</span></div><div class="btn-desc">Cost: 25M arcana, 120K mana, 40K focus, 25 energy. Damage scales with automation, housing, ritual towers, and archmage mastery.</div>';
+    function renderBattle() {
+      const button = document.getElementById('bossButton');
+      const sub = document.getElementById('battleSub');
+      if (!isStageKnown('archmage')) {
+        sub.textContent = 'The final threat is distant. Become an archmage to challenge it directly.';
+      } else {
+        sub.textContent = 'Arcana, mana, focus, and energy are converted into massive damage.';
+      }
+      const cost = { arcana: 25000000, mana: 120000, focus: 40000, energy: 25 };
+      button.disabled = !isUnlocked('archmage') || !canAfford(cost) || state.stats.bossDefeated;
+      button.innerHTML = '<div class="btn-title"><span>' + (state.stats.bossDefeated ? 'Void King Defeated' : 'Challenge the Void King') + '</span><span class="chip red">Archmage only</span></div><div class="btn-desc">Cost: 25M arcana, 120K mana, 40K focus, 25 energy.</div>';
     }
 
     function renderLog() {
-      document.getElementById('log').innerHTML = state.log.map(x => '<div class="log-item">' + escapeHtml(x) + '</div>').join('');
+      document.getElementById('log').innerHTML = state.log.map(function(item) { return '<div class="log-item">' + escapeHtml(item) + '</div>'; }).join('');
+    }
+
+    function renderDevTools() {
+      document.getElementById('devSpeedBadge').textContent = 'Time: ' + (Number(state.dev.timeMult) || 1) + 'x';
     }
 
     function render() {
-      revealUnlocks();
-      renderHero();
+      state = sanitizeState(state);
       renderResources();
+      renderHero();
       renderJobCard();
       renderActions();
       renderStages();
       renderAutomation();
       renderHousing();
       renderUpgrades();
-      renderChainMap();
-      renderBoss();
+      renderChain();
+      renderBattle();
       renderLog();
+      renderDevTools();
     }
 
-    function saveGame(show) {
-      state.version = GAME_VERSION;
-      state.savedAt = Date.now();
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
-      if (show) showToast('Saved');
-    }
+    document.getElementById('houseButton').addEventListener('click', buyHouse);
+    document.getElementById('bossButton').addEventListener('click', challengeBoss);
+    document.getElementById('saveBtn').addEventListener('click', function() { saveGame(true); });
+    document.getElementById('resetBtn').addEventListener('click', resetProgress);
+    document.getElementById('devResetBtn').addEventListener('click', resetProgress);
+    document.getElementById('devResourcesBtn').addEventListener('click', devAddResources);
+    document.getElementById('devTime1Btn').addEventListener('click', function() { setDevSpeed(1); });
+    document.getElementById('devTime10Btn').addEventListener('click', function() { setDevSpeed(10); });
+    document.getElementById('devTime100Btn').addEventListener('click', function() { setDevSpeed(100); });
 
-    function migrateSave(saved) {
-      const version = Number(saved.version || 0);
-      if (version >= GAME_VERSION) return saved;
-      const migrated = { ...saved };
-      migrated.resources = { ...(saved.resources || {}) };
-      for (const [key, scale] of Object.entries(RESOURCE_MIGRATION_SCALE)) {
-        if (key in migrated.resources) migrated.resources[key] = migrated.resources[key] * scale;
-      }
-      migrated.stats = { ...(saved.stats || {}) };
-      if (!migrated.stats.bossDefeated) migrated.stats.bossHp = BOSS_MAX;
-      else migrated.stats.bossHp = 0;
-      if (typeof migrated.stats.xp === 'number') migrated.stats.xp *= 10;
-      migrated.version = GAME_VERSION;
-      migrated.log = Array.isArray(saved.log) ? saved.log.slice(0, 6) : [];
-      migrated.log.unshift('Save migrated to V2.2: resource numbers were scaled up and job mastery was added.');
-      return migrated;
-    }
-
-    function loadGame() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return null;
-        const saved = migrateSave(JSON.parse(raw));
-        const base = initialState();
-        return {
-          ...base,
-          ...saved,
-          version: GAME_VERSION,
-          resources: { ...base.resources, ...(saved.resources || {}) },
-          automation: { ...base.automation, ...(saved.automation || {}) },
-          upgrades: { ...base.upgrades, ...(saved.upgrades || {}) },
-          housing: {
-            ...base.housing,
-            ...(saved.housing || {}),
-            items: { ...base.housing.items, ...((saved.housing && saved.housing.items) || {}) }
-          },
-          jobMastery: {
-            ...base.jobMastery,
-            ...(saved.jobMastery || {})
-          },
-          buffs: { ...base.buffs, ...(saved.buffs || {}) },
-          unlocked: { ...base.unlocked, ...(saved.unlocked || {}) },
-          stats: { ...base.stats, ...(saved.stats || {}) },
-          log: Array.isArray(saved.log) ? saved.log : base.log
-        };
-      } catch (e) { return null; }
-    }
-
-    function resetGame() {
-      if (!confirm('Reset your saved game?')) return;
-      localStorage.removeItem(STORAGE_KEY);
-      state = initialState();
-      lastTick = Date.now();
-      render();
-      saveGame(true);
-      pushLog('Save reset. A new peasant begins again.');
-    }
-
-    function showToast(text) {
-      const el = document.getElementById('toast');
-      el.textContent = text;
-      el.classList.add('show');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => el.classList.remove('show'), 1200);
-    }
-
-    document.getElementById('bossButton').addEventListener('click', bossFight);
-    document.getElementById('houseButton').addEventListener('click', buyHouseTier);
-    document.getElementById('saveBtn').addEventListener('click', () => saveGame(true));
-    document.getElementById('resetBtn').addEventListener('click', resetGame);
-    window.addEventListener('beforeunload', () => saveGame(false));
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) saveGame(false);
-      else { lastTick = Date.now(); render(); }
-    });
-
-    offlineProgress();
+    window.addEventListener('beforeunload', function() { saveGame(false); });
+    setInterval(gameTick, TICK_MS);
+    setInterval(function() { saveGame(false); }, 10000);
     render();
-    saveGame(false);
-    setInterval(() => {
-      const now = Date.now();
-      const elapsed = Math.min(4, Math.max(0, (now - lastTick) / 1000));
-      lastTick = now;
-      tick(elapsed);
-      render();
-      if (Math.floor(now / 5000) !== Math.floor((now - elapsed * 1000) / 5000)) saveGame(false);
-    }, 1000);
   </script>
 </body>
 </html>
