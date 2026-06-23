@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Peasant to Archmage V2.3</title>
+  <title>Peasant to Archmage V2.4</title>
   <style>
     :root {
       --bg: #070a12;
@@ -68,7 +68,7 @@
 
     .resources {
       display: grid;
-      grid-template-columns: repeat(7, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
       gap: 8px;
       margin-top: 10px;
     }
@@ -276,7 +276,7 @@
       <div class="hud-row">
         <div>
           <div class="hud-title">Peasant to Archmage</div>
-          <div class="hud-sub" id="hudStage">Farmer | Food</div>
+          <div class="hud-sub" id="hudStage">Peasant | Survival</div>
         </div>
         <div class="version-pill compact" id="versionPill">Day 1 | Level 1</div>
       </div>
@@ -288,6 +288,7 @@
         <a href="#housingPanel">Home</a>
         <a href="#upgradesPanel">Purchases</a>
         <a href="#chainPanel">Chain</a>
+        <a href="#milestonesPanel">Milestones</a>
         <a href="#battlePanel">Battle</a>
         <a href="#logPanel">Log</a>
       </nav>
@@ -298,17 +299,17 @@
     <header class="hero">
       <div class="topline">
         <div>
-          <div class="eyebrow">V2.3 foundation cleanup</div>
+          <div class="eyebrow">V2.4 peasant foundation</div>
           <h1>Peasant to Archmage</h1>
-          <div class="subtitle">A single-file incremental game. Resources and jobs now reveal as your path expands, Reputation has been removed, and development commands live at the bottom for fast testing.</div>
+          <div class="subtitle">A single-file incremental game. Every character now starts as a Peasant, discovers village work through play, and grows into Farmer before the magical path opens.</div>
         </div>
-        <div class="version-pill">V2.3 progression + dev tools</div>
+        <div class="version-pill">V2.4 peasant + farmer</div>
       </div>
       <div class="hero-bottom">
         <div class="quest-card">
           <div class="small-label">Current job</div>
-          <div class="title" id="stageTitle">Farmer</div>
-          <div class="desc" id="stageDesc">Grow food, manage energy, and stockpile enough harvest to begin magical study.</div>
+          <div class="title" id="stageTitle">Peasant</div>
+          <div class="desc" id="stageDesc">Survive by foraging, taking odd jobs, gathering materials, and saving for your first real tool.</div>
           <div class="hint" id="nextHint"></div>
         </div>
         <div class="quest-card">
@@ -326,7 +327,7 @@
           <div class="section-head">
             <div>
               <h2>Manual actions</h2>
-              <div class="section-sub">Tap actions to drive the early game. The selected job makes its matching action much stronger.</div>
+              <div class="section-sub">Early actions reveal as you prove yourself. The selected job strengthens its matching work.</div>
             </div>
           </div>
           <div class="job-card" id="jobCard"></div>
@@ -337,7 +338,7 @@
           <div class="section-head">
             <div>
               <h2>Career jobs</h2>
-              <div class="section-sub">Jobs only appear when your progress has reached them. Unlocked jobs remain available.</div>
+              <div class="section-sub">Start as a Peasant, then discover village jobs. Farmer is the first fully playable branch.</div>
             </div>
           </div>
           <div class="btn-list" id="stages"></div>
@@ -347,7 +348,7 @@
           <div class="section-head">
             <div>
               <h2>Automation chain</h2>
-              <div class="section-sub">Each revealed magical job automates the resource from the job before it.</div>
+              <div class="section-sub">Mundane production comes first. Magical automation appears later.</div>
             </div>
           </div>
           <div class="btn-list" id="automation"></div>
@@ -357,7 +358,7 @@
           <div class="section-head">
             <div>
               <h2>Housing and passive rest</h2>
-              <div class="section-sub">Buy larger homes with gold, then furnish them for better sleep and passive resource generation.</div>
+              <div class="section-sub">Build shelter with coin and materials, then furnish it for better rest and storage.</div>
             </div>
           </div>
           <div class="home-summary" id="housingSummary"></div>
@@ -370,8 +371,8 @@
         <div class="panel" id="upgradesPanel">
           <div class="section-head">
             <div>
-              <h2>Buildings and upgrades</h2>
-              <div class="section-sub">Use surplus resources to improve production caps and multipliers.</div>
+              <h2>Tools and upgrades</h2>
+              <div class="section-sub">Early tools unlock village jobs and make humble work scale.</div>
             </div>
           </div>
           <div class="btn-list" id="upgrades"></div>
@@ -381,10 +382,20 @@
           <div class="section-head">
             <div>
               <h2>Chain map</h2>
-              <div class="section-sub">Only discovered links in the economy chain are shown.</div>
+              <div class="section-sub">Only discovered links in your village economy are shown.</div>
             </div>
           </div>
           <div class="chain" id="chainMap"></div>
+        </div>
+
+        <div class="panel" id="milestonesPanel">
+          <div class="section-head">
+            <div>
+              <h2>Milestones</h2>
+              <div class="section-sub">Foundation achievements give small permanent benefits and mark your path through village life.</div>
+            </div>
+          </div>
+          <div class="chain" id="milestones"></div>
         </div>
 
         <div class="panel" id="battlePanel">
@@ -434,32 +445,48 @@
   <div class="toast" id="toast">Saved</div>
 
   <script>
-    const GAME_VERSION = 23;
+    const GAME_VERSION = 24;
     const STORAGE_KEY = 'ptarchmage-v2-save';
     const BOSS_MAX = 1000000000;
     const TICK_MS = 250;
 
     const RESOURCES = [
-      { key: 'food', label: 'Food', cap: 12000, note: 'Stage 1 resource' },
-      { key: 'energy', label: 'Energy', cap: 100, note: 'Action stamina' },
-      { key: 'mana', label: 'Mana', cap: 120000, note: 'Stage 2 resource' },
-      { key: 'focus', label: 'Focus', cap: 500000, note: 'Stage 3 resource' },
-      { key: 'gold', label: 'Gold', cap: 2500000, note: 'Trade and tuition' },
-      { key: 'knowledge', label: 'Knowledge', cap: 9000000, note: 'Stage 4 resource' },
-      { key: 'arcana', label: 'Arcana', cap: 300000000, note: 'Stage 5 resource' }
+      { key: 'food', label: 'Food', cap: 500, note: 'Basic survival' },
+      { key: 'energy', label: 'Energy', cap: 80, note: 'Action stamina' },
+      { key: 'materials', label: 'Materials', cap: 300, note: 'Wood, scrap, and stone' },
+      { key: 'gold', label: 'Coin', cap: 220, note: 'Village currency' },
+      { key: 'seeds', label: 'Seeds', cap: 80, note: 'Farmer resource' },
+      { key: 'crops', label: 'Crops', cap: 500, note: 'Field harvests' },
+      { key: 'mana', label: 'Mana', cap: 120000, note: 'Apprentice resource' },
+      { key: 'focus', label: 'Focus', cap: 500000, note: 'Mage resource' },
+      { key: 'knowledge', label: 'Knowledge', cap: 9000000, note: 'Academy resource' },
+      { key: 'arcana', label: 'Arcana', cap: 300000000, note: 'Archmage resource' }
     ];
 
     const STAGES = [
       {
+        key: 'peasant',
+        title: 'Peasant',
+        resource: 'Survival',
+        resourceKeys: ['food', 'energy', 'materials', 'gold'],
+        actionId: 'forage',
+        desc: 'Survive by foraging, taking odd jobs, gathering materials, and saving for your first real tool.',
+        unlockDesc: 'Starting background.',
+        nextHint: 'Forage for food, do odd labor for coin, gather sticks for materials, then buy a Rusty Hoe.',
+        visible: function() { return true; },
+        unlocked: function() { return true; }
+      },
+      {
         key: 'farmer',
         title: 'Farmer',
-        resource: 'Food',
-        resourceKeys: ['food'],
+        resource: 'Seeds & Crops',
+        resourceKeys: ['food', 'seeds', 'crops'],
         actionId: 'harvest',
-        desc: 'Grow food, manage energy, and stockpile enough harvest to begin magical study.',
-        unlockDesc: 'Starting job.',
-        nextHint: 'Harvest until you have 500 food. The next job will reveal itself then.',
-        unlocked: function() { return true; }
+        desc: 'Turn survival into surplus: gather seeds, plant crops, harvest food, and sell extra at the village market.',
+        unlockDesc: 'Requires 100 total food earned and a Rusty Hoe.',
+        nextHint: 'Build a surplus. Keep 500 food stored to reveal the apprentice path.',
+        visible: function(s) { return totalEarned('food', s) >= 60 || (s.upgrades.rustyHoe || 0) >= 1 || !!s.unlocked.farmer; },
+        unlocked: function(s) { return !!s.unlocked.farmer || ((s.upgrades.rustyHoe || 0) >= 1 && totalEarned('food', s) >= 100); }
       },
       {
         key: 'apprentice',
@@ -467,10 +494,11 @@
         resource: 'Mana',
         resourceKeys: ['mana'],
         actionId: 'study',
-        desc: 'Turn food and energy into mana. Your first spell animates farming.',
-        unlockDesc: 'Need 500 food.',
+        desc: 'Turn food, coin, and discipline into your first cantrips. Magic begins as a village craft.',
+        unlockDesc: 'Need Farmer unlocked and 500 stored food.',
         nextHint: 'Study cantrips and buy one Animated Scarecrow to reveal the mage path.',
-        unlocked: function(s) { return (s.resources.food || 0) >= 500 || !!s.unlocked.apprentice; }
+        visible: function(s) { return isUnlocked('farmer', s) && ((s.resources.food || 0) >= 350 || !!s.unlocked.apprentice); },
+        unlocked: function(s) { return !!s.unlocked.apprentice || (isUnlocked('farmer', s) && (s.resources.food || 0) >= 500); }
       },
       {
         key: 'mage',
@@ -480,8 +508,9 @@
         actionId: 'meditate',
         desc: 'Use mana to sharpen your mind. Focus powers stronger magical infrastructure.',
         unlockDesc: 'Need 8K mana and 1 Animated Scarecrow.',
-        nextHint: 'Gather 80K focus and 15K gold to reveal the academy path.',
-        unlocked: function(s) { return ((s.resources.mana || 0) >= 8000 && (s.automation.scarecrow || 0) >= 1) || !!s.unlocked.mage; }
+        nextHint: 'Gather 80K focus and 15K coin to reveal the academy path.',
+        visible: function(s) { return isUnlocked('apprentice', s) && (((s.resources.mana || 0) >= 5000) || !!s.unlocked.mage); },
+        unlocked: function(s) { return !!s.unlocked.mage || ((s.resources.mana || 0) >= 8000 && (s.automation.scarecrow || 0) >= 1); }
       },
       {
         key: 'academy',
@@ -490,9 +519,10 @@
         resourceKeys: ['knowledge', 'gold'],
         actionId: 'teach',
         desc: 'Teach apprentices, earn tuition, and turn knowledge into focus automation.',
-        unlockDesc: 'Need 80K focus and 15K gold.',
+        unlockDesc: 'Need 80K focus and 15K coin.',
         nextHint: 'Build Academy Hall level 2, then gather 2.5M knowledge and 35K mana to reveal the archmage path.',
-        unlocked: function(s) { return ((s.resources.focus || 0) >= 80000 && (s.resources.gold || 0) >= 15000) || !!s.unlocked.academy; }
+        visible: function(s) { return isUnlocked('mage', s) && (((s.resources.focus || 0) >= 50000 && (s.resources.gold || 0) >= 8000) || !!s.unlocked.academy); },
+        unlocked: function(s) { return !!s.unlocked.academy || ((s.resources.focus || 0) >= 80000 && (s.resources.gold || 0) >= 15000); }
       },
       {
         key: 'archmage',
@@ -503,24 +533,42 @@
         desc: 'Compress knowledge, mana, and focus into arcana for the final battle.',
         unlockDesc: 'Need 2.5M knowledge, 35K mana, and Academy Hall level 2.',
         nextHint: 'Create arcana, strengthen the academy, and challenge the Void King.',
-        unlocked: function(s) { return ((s.resources.knowledge || 0) >= 2500000 && (s.resources.mana || 0) >= 35000 && (s.upgrades.academyHall || 0) >= 2) || !!s.unlocked.archmage; }
+        visible: function(s) { return isUnlocked('academy', s) && (((s.resources.knowledge || 0) >= 1500000) || !!s.unlocked.archmage); },
+        unlocked: function(s) { return !!s.unlocked.archmage || ((s.resources.knowledge || 0) >= 2500000 && (s.resources.mana || 0) >= 35000 && (s.upgrades.academyHall || 0) >= 2); }
       }
     ];
 
     const JOB_META = {
+      peasant: {
+        title: 'Peasant',
+        masteryResource: 'food',
+        passiveTarget: 'Village foundations',
+        bonuses: [
+          '+100% Peasant work while selected',
+          '+0.06 energy/sec while selected',
+          'Odd labor and gathering scale with Peasant mastery'
+        ],
+        signature: {
+          key: 'villageHustle',
+          title: 'Village Hustle',
+          desc: 'Spend food to push through extra chores, boosting coin and material gains for 45 seconds.',
+          duration: 45,
+          cost: function() { return { food: 18, energy: 8 }; }
+        }
+      },
       farmer: {
         title: 'Farmer',
         masteryResource: 'food',
-        passiveTarget: 'Animated Scarecrow',
+        passiveTarget: 'Garden Plot',
         bonuses: [
-          '+100% Harvest Food while selected',
-          '+25% Animated Scarecrow food output while selected',
-          '-20% food drain and +0.12 energy/sec while selected'
+          '+100% Farmer actions while selected',
+          '+25% Garden Plot crop output while selected',
+          '-20% food drain and +0.10 energy/sec while selected'
         ],
         signature: {
           key: 'prepareFields',
           title: 'Prepare the Fields',
-          desc: 'Spend energy to boost food production and scarecrows for 60 seconds.',
+          desc: 'Spend energy to boost crop, food, seed, and garden-plot production for 60 seconds.',
           duration: 60,
           cost: function() { return { energy: 25 }; }
         }
@@ -564,14 +612,14 @@
         masteryResource: 'knowledge',
         passiveTarget: 'Meditation Circle',
         bonuses: [
-          '+100% Teach Class knowledge and gold while selected',
+          '+100% Teach Class knowledge and coin while selected',
           '+25% Meditation Circle focus output while selected',
-          '+25% academy gold from teaching while selected'
+          '+25% academy tuition from teaching while selected'
         ],
         signature: {
           key: 'assignStudents',
           title: 'Assign Students',
-          desc: 'Spend knowledge and gold to boost earlier automation for 90 seconds.',
+          desc: 'Spend knowledge and coin to boost earlier automation for 90 seconds.',
           duration: 90,
           cost: function() { return { knowledge: 500000, gold: 100000 }; }
         }
@@ -597,25 +645,92 @@
 
     const ACTIONS = [
       {
-        key: 'harvest',
-        title: 'Harvest Food',
-        stage: 'farmer',
-        desc: 'Spend a little energy to gather food.',
+        key: 'forage',
+        title: 'Forage for Food',
+        stage: 'peasant',
+        desc: 'Search hedges and field edges for berries, roots, and edible greens.',
+        cost: function() { return { energy: 1 }; },
+        effect: function() { return { food: (13 + (state.upgrades.basket || 0) * 3) * actionMultiplier('peasant') * productionMultiplier('food') }; },
+        xp: 5
+      },
+      {
+        key: 'oddLabor',
+        title: 'Do Odd Labor',
+        stage: 'peasant',
+        desc: 'Haul water, sweep stalls, and carry sacks for a few village coins.',
+        visible: function(s) { return totalEarned('food', s) >= 30 || actionCount('forage', s) >= 2 || (s.resources.gold || 0) > 0; },
+        cost: function() { return { food: 4, energy: 3 }; },
+        effect: function() { return { gold: (7 + (state.upgrades.boots || 0) * 2) * actionMultiplier('peasant') * productionMultiplier('gold') }; },
+        xp: 6
+      },
+      {
+        key: 'gatherSticks',
+        title: 'Gather Sticks',
+        stage: 'peasant',
+        desc: 'Collect sticks, scrap wood, stones, and useful castoffs for early tools and shelter.',
+        visible: function(s) { return actionCount('oddLabor', s) >= 1 || totalEarned('food', s) >= 55 || (s.resources.materials || 0) > 0; },
         cost: function() { return { energy: 2 }; },
-        effect: function() { return { food: 42 * actionMultiplier('farmer') * productionMultiplier('food') }; },
-        xp: 8
+        effect: function() { return { materials: (12 + (state.upgrades.handcart || 0) * 4) * actionMultiplier('peasant') * productionMultiplier('materials') }; },
+        xp: 6
+      },
+      {
+        key: 'mendClothes',
+        title: 'Mend Clothes',
+        stage: 'peasant',
+        desc: 'Patch old clothing and simple gear for villagers. A better use for spare materials than selling raw scrap.',
+        visible: function(s) { return actionCount('gatherSticks', s) >= 2 || (s.resources.materials || 0) >= 20; },
+        cost: function() { return { materials: 5, energy: 3 }; },
+        effect: function() { return { gold: 16 * actionMultiplier('peasant') * productionMultiplier('gold') }; },
+        xp: 7
       },
       {
         key: 'rest',
         title: 'Rest',
         stage: null,
-        desc: 'Recover energy at home. Better housing improves this action.',
+        desc: 'Recover energy at home. Better housing and bedding improve this action.',
         cost: function() { return {}; },
         effect: function() {
           const h = housingBonuses();
-          return { energy: 18 + h.restEnergy, focus: isStageKnown('mage') ? h.restFocus : 0 };
+          return { energy: 15 + h.restEnergy, focus: isStageKnown('mage') ? h.restFocus : 0 };
         },
         xp: 3
+      },
+      {
+        key: 'gatherSeeds',
+        title: 'Gather Seeds',
+        stage: 'farmer',
+        desc: 'Search barns, grasses, and market sweepings for seeds worth planting.',
+        cost: function() { return { energy: 3 }; },
+        effect: function() { return { seeds: (7 + (state.upgrades.seedPouch || 0) * 3) * actionMultiplier('farmer') * productionMultiplier('seeds') }; },
+        xp: 8
+      },
+      {
+        key: 'plantCrops',
+        title: 'Plant Crops',
+        stage: 'farmer',
+        desc: 'Spend seeds and labor to turn bare soil into future crops.',
+        cost: function() { return { seeds: 5, materials: 2, energy: 4 }; },
+        effect: function() { return { crops: 48 * actionMultiplier('farmer') * productionMultiplier('crops') }; },
+        xp: 9
+      },
+      {
+        key: 'harvest',
+        title: 'Harvest Crops',
+        stage: 'farmer',
+        desc: 'Turn grown crops into stored food.',
+        cost: function() { return { crops: 25, energy: 4 }; },
+        effect: function() { return { food: 105 * actionMultiplier('farmer') * productionMultiplier('food') }; },
+        xp: 10
+      },
+      {
+        key: 'sellFood',
+        title: 'Sell Surplus Food',
+        stage: 'farmer',
+        desc: 'Trade extra food for coin. The first village economy loop is now yours.',
+        visible: function(s) { return actionCount('harvest', s) >= 1 || (s.resources.food || 0) >= 250; },
+        cost: function() { return { food: 120 }; },
+        effect: function() { return { gold: 55 * actionMultiplier('farmer') * productionMultiplier('gold') }; },
+        xp: 8
       },
       {
         key: 'study',
@@ -637,15 +752,6 @@
         cost: function() { return { mana: 650, energy: 7 }; },
         effect: function() { return { focus: 1500 * actionMultiplier('mage') * productionMultiplier('focus') }; },
         xp: 14
-      },
-      {
-        key: 'sellFood',
-        title: 'Sell Surplus Food',
-        stage: 'mage',
-        desc: 'Trade a chunk of food for gold at the village market.',
-        cost: function() { return { food: 500 }; },
-        effect: function() { return { gold: 650 * productionMultiplier('gold') }; },
-        xp: 9
       },
       {
         key: 'teach',
@@ -673,6 +779,15 @@
 
     const AUTOMATION = [
       {
+        key: 'gardenPlot',
+        stage: 'farmer',
+        title: 'Garden Plot',
+        automates: 'crops',
+        desc: 'Mundane automation: a small tended plot that slowly grows crops from your farming knowledge.',
+        cost: function(n) { return { seeds: Math.floor(18 * Math.pow(1.36, n)), materials: Math.floor(45 * Math.pow(1.42, n)), gold: Math.floor(20 * Math.pow(1.35, n)) }; },
+        rate: function(s) { return 0.65 * (s.automation.gardenPlot || 0) * productionMultiplier('crops', s) * automationOutputMultiplier('gardenPlot', s); }
+      },
+      {
         key: 'scarecrow',
         stage: 'apprentice',
         title: 'Animated Scarecrow',
@@ -686,7 +801,7 @@
         stage: 'mage',
         title: 'Mana Familiar',
         automates: 'mana',
-        desc: 'Mage spell: uses focus to bind a familiar that gathers mana from the air.',
+        desc: 'A small spirit that repeats your cantrips and turns ambient magic into mana.',
         cost: function(n) { return { focus: Math.floor(45000 * Math.pow(1.48, n)), mana: Math.floor(5500 * Math.pow(1.32, n)) }; },
         rate: function(s) { return 42 * (s.automation.familiar || 0) * productionMultiplier('mana', s) * automationOutputMultiplier('familiar', s); }
       },
@@ -695,16 +810,16 @@
         stage: 'academy',
         title: 'Meditation Circle',
         automates: 'focus',
-        desc: 'Academy ritual: students rotate through meditation shifts to generate focus.',
+        desc: 'Students sit in rotation, creating focus while your academy operates.',
         cost: function(n) { return { knowledge: Math.floor(700000 * Math.pow(1.50, n)), gold: Math.floor(120000 * Math.pow(1.36, n)) }; },
         rate: function(s) { return 280 * (s.automation.circle || 0) * productionMultiplier('focus', s) * automationOutputMultiplier('circle', s); }
       },
       {
         key: 'faculty',
         stage: 'archmage',
-        title: 'Enchanted Faculty',
+        title: 'Archmage Faculty',
         automates: 'knowledge',
-        desc: 'Archmage spell: arcana enchants the academy staff. Produces knowledge and tuition.',
+        desc: 'A faculty of mages teaches, researches, and sends tribute to your rituals.',
         cost: function(n) { return { arcana: Math.floor(18000000 * Math.pow(1.55, n)), knowledge: Math.floor(1600000 * Math.pow(1.35, n)), gold: Math.floor(220000 * Math.pow(1.34, n)) }; },
         rate: function(s) { return 2300 * (s.automation.faculty || 0) * productionMultiplier('knowledge', s) * automationOutputMultiplier('faculty', s); },
         goldRate: function(s) { return 160 * (s.automation.faculty || 0) * productionMultiplier('gold', s) * automationOutputMultiplier('faculty', s); }
@@ -712,39 +827,65 @@
     ];
 
     const HOUSE_TIERS = [
-      { title: 'Peasant Hut', desc: 'A roof, a straw mat, and enough quiet to recover after farm work.', stage: 'farmer', cost: null, restRate: 0.06, restAction: 0, energyCap: 0, foodCap: 0, goldCap: 0 },
-      { title: 'Cozy Cottage', desc: 'A real bed and pantry space. This home supports apprentice magic and food storage.', stage: 'apprentice', cost: { gold: 8000, food: 600 }, restRate: 0.18, restAction: 5, energyCap: 10, foodCap: 800, goldCap: 18000 },
-      { title: 'Mage Loft', desc: 'A quiet upstairs room where mana settles naturally overnight.', stage: 'mage', cost: { gold: 24000, mana: 9000 }, restRate: 0.34, restAction: 9, energyCap: 18, foodCap: 1300, manaCap: 14000, goldCap: 42000 },
-      { title: 'Academy Townhouse', desc: 'Enough rooms for study, storage, and visiting apprentices.', stage: 'academy', cost: { gold: 650000, knowledge: 1100000 }, restRate: 0.52, restAction: 14, energyCap: 28, foodCap: 2100, manaCap: 23000, focusCap: 90000, goldCap: 900000, knowledgeCap: 1800000 },
-      { title: 'Wizard Tower', desc: 'A vertical home and laboratory where the whole building hums with magic.', stage: 'archmage', cost: { gold: 1450000, knowledge: 3200000, arcana: 18000000 }, restRate: 0.74, restAction: 20, energyCap: 40, foodCap: 3200, manaCap: 38000, focusCap: 150000, goldCap: 1600000, knowledgeCap: 3400000, arcanaCap: 80000000 },
-      { title: 'Archmage Estate', desc: 'A legendary residence with wards, servants, gardens, and ritual wings.', stage: 'archmage', cost: { gold: 3000000, knowledge: 6200000, arcana: 75000000 }, restRate: 1.02, restAction: 28, energyCap: 55, foodCap: 4800, manaCap: 56000, focusCap: 230000, goldCap: 2600000, knowledgeCap: 5600000, arcanaCap: 150000000 }
+      { title: 'Borrowed Hayloft', desc: 'You sleep where you can. It is free, cold, and enough to begin.', stage: 'peasant', cost: {}, restRate: 0.04, restAction: 0, energyCap: 0 },
+      { title: 'Leaky Shack', desc: 'A crude shelter made from scrap boards. It keeps off some rain and gives you a place to store things.', stage: 'peasant', cost: { materials: 60, gold: 20, food: 25 }, restRate: 0.10, restAction: 4, energyCap: 8, foodCap: 120, materialsCap: 80, goldCap: 80 },
+      { title: 'Peasant Hut', desc: 'A real village hut with a dry corner for tools, food, and sleep.', stage: 'farmer', cost: { materials: 180, gold: 90, food: 140 }, restRate: 0.18, restAction: 8, energyCap: 15, foodCap: 350, materialsCap: 180, goldCap: 220, seedsCap: 30, cropsCap: 250 },
+      { title: 'Farmstead', desc: 'A small working home with rows, storage, and a better place to recover after labor.', stage: 'farmer', cost: { materials: 420, gold: 300, food: 650, crops: 120 }, restRate: 0.28, restAction: 12, energyCap: 24, foodCap: 900, materialsCap: 360, goldCap: 500, seedsCap: 80, cropsCap: 900 },
+      { title: 'Cozy Cottage', desc: 'A real bed and pantry space. This home supports apprentice magic and food storage.', stage: 'apprentice', cost: { gold: 8000, food: 600 }, restRate: 0.38, restAction: 16, energyCap: 34, foodCap: 1600, goldCap: 18000, manaCap: 9000 },
+      { title: 'Mage Loft', desc: 'A quiet upstairs room where mana settles naturally overnight.', stage: 'mage', cost: { gold: 24000, mana: 9000 }, restRate: 0.52, restAction: 22, energyCap: 44, foodCap: 2200, manaCap: 14000, goldCap: 42000, focusCap: 60000 },
+      { title: 'Academy Townhouse', desc: 'Enough rooms for study, storage, and visiting apprentices.', stage: 'academy', cost: { gold: 650000, knowledge: 1100000 }, restRate: 0.70, restAction: 30, energyCap: 60, foodCap: 3100, manaCap: 23000, focusCap: 90000, goldCap: 900000, knowledgeCap: 1800000 },
+      { title: 'Wizard Tower', desc: 'A vertical home and laboratory where the whole building hums with magic.', stage: 'archmage', cost: { gold: 1450000, knowledge: 3200000, arcana: 18000000 }, restRate: 0.92, restAction: 40, energyCap: 78, foodCap: 4500, manaCap: 38000, focusCap: 150000, goldCap: 1600000, knowledgeCap: 3400000, arcanaCap: 80000000 },
+      { title: 'Archmage Estate', desc: 'A legendary residence with wards, servants, gardens, and ritual wings.', stage: 'archmage', cost: { gold: 3000000, knowledge: 6200000, arcana: 75000000 }, restRate: 1.18, restAction: 54, energyCap: 96, foodCap: 6500, manaCap: 56000, focusCap: 230000, goldCap: 2600000, knowledgeCap: 5600000, arcanaCap: 150000000 }
     ];
 
     const HOUSE_ITEMS = [
-      { key: 'bed', title: 'Better Bed', minTier: 0, max: 10, desc: 'Improves passive rest and makes the Rest action stronger.', cost: function(n) { return { gold: Math.floor(2200 * Math.pow(1.42, n)), food: Math.floor(180 * Math.pow(1.22, n)) }; }, effect: function(n) { return '+' + (0.09 * n).toFixed(2) + ' energy/sec, +' + (5 * n) + ' energy when resting'; } },
-      { key: 'pantry', title: 'Stocked Pantry', minTier: 0, max: 10, desc: 'Stores food, reduces food drain, and slightly supports farming.', cost: function(n) { return { gold: Math.floor(2600 * Math.pow(1.44, n)), food: Math.floor(300 * Math.pow(1.25, n)) }; }, effect: function(n) { return '+' + fmt(800 * n) + ' food cap, -' + Math.floor(3 * n) + '% food drain'; } },
-      { key: 'garden', title: 'Kitchen Garden', minTier: 1, max: 10, desc: 'Adds passive food generation and boosts all food production.', cost: function(n) { return { gold: Math.floor(5500 * Math.pow(1.46, n)), food: Math.floor(750 * Math.pow(1.24, n)) }; }, effect: function(n) { return '+' + (0.8 * n).toFixed(1) + ' food/sec, +' + Math.floor(4 * n) + '% food output'; } },
-      { key: 'hearth', title: 'Mana Hearth', minTier: 1, max: 10, desc: 'A small enchanted fireplace that condenses spare mana.', cost: function(n) { return { gold: Math.floor(7000 * Math.pow(1.48, n)), mana: Math.floor(5500 * Math.pow(1.30, n)) }; }, effect: function(n) { return '+' + (7 * n).toFixed(0) + ' mana/sec, +' + Math.floor(4 * n) + '% mana output'; } },
-      { key: 'study', title: 'Quiet Study', minTier: 2, max: 10, desc: 'Improves focus generation, focus recovery, and meditation quality.', cost: function(n) { return { gold: Math.floor(10500 * Math.pow(1.50, n)), mana: Math.floor(9000 * Math.pow(1.32, n)), focus: Math.floor(30000 * Math.pow(1.20, n)) }; }, effect: function(n) { return '+' + fmt(50 * n) + ' focus/sec, +' + Math.floor(4 * n) + '% focus output'; } },
-      { key: 'desk', title: 'Scholar Desk', minTier: 3, max: 10, desc: 'Turns your home into a place where notes become knowledge.', cost: function(n) { return { gold: Math.floor(170000 * Math.pow(1.50, n)), knowledge: Math.floor(800000 * Math.pow(1.30, n)), focus: Math.floor(45000 * Math.pow(1.22, n)) }; }, effect: function(n) { return '+' + fmt(400 * n) + ' knowledge/sec, +' + Math.floor(5 * n) + '% knowledge output'; } },
-      { key: 'workshop', title: 'Enchanted Workshop', minTier: 3, max: 10, desc: 'Produces gold and boosts the academy economy through magical tools.', cost: function(n) { return { gold: Math.floor(210000 * Math.pow(1.52, n)), knowledge: Math.floor(1100000 * Math.pow(1.31, n)), mana: Math.floor(12000 * Math.pow(1.25, n)) }; }, effect: function(n) { return '+' + fmt(50 * n) + ' gold/sec, +' + Math.floor(5 * n) + '% gold output'; } },
-      { key: 'observatory', title: 'Stargazing Observatory', minTier: 4, max: 10, desc: 'Late-game home wing that produces arcana and strengthens final battle damage.', cost: function(n) { return { gold: Math.floor(430000 * Math.pow(1.55, n)), knowledge: Math.floor(2100000 * Math.pow(1.34, n)), arcana: Math.floor(14000000 * Math.pow(1.23, n)) }; }, effect: function(n) { return '+' + fmt(12000 * n) + ' arcana/sec, +' + fmt(6000000 * n) + ' boss damage'; } }
+      { key: 'bed', title: 'Better Bedding', minTier: 0, max: 10, desc: 'Improves passive rest and makes the Rest action stronger.', cost: function(n) { return { materials: Math.floor(16 * Math.pow(1.36, n)), gold: Math.floor(4 * Math.pow(1.35, n)) }; }, effect: function(n) { return '+' + (0.08 * n).toFixed(2) + ' energy/sec, +' + (4 * n) + ' energy when resting'; } },
+      { key: 'pantry', title: 'Food Basket', minTier: 0, max: 10, desc: 'Stores food, reduces food drain, and slightly supports farming.', cost: function(n) { return { materials: Math.floor(18 * Math.pow(1.34, n)), food: Math.floor(20 * Math.pow(1.28, n)) }; }, effect: function(n) { return '+' + fmt(90 * n) + ' food cap, -' + Math.floor(3 * n) + '% food drain'; } },
+      { key: 'shed', title: 'Tool Shed', minTier: 1, max: 10, desc: 'Stores materials and slowly collects useful village scrap.', cost: function(n) { return { materials: Math.floor(80 * Math.pow(1.42, n)), gold: Math.floor(35 * Math.pow(1.38, n)) }; }, effect: function(n) { return '+' + fmt(120 * n) + ' materials cap, +' + (0.12 * n).toFixed(2) + ' materials/sec'; } },
+      { key: 'garden', title: 'Kitchen Garden', minTier: 2, max: 10, desc: 'Adds passive food generation and boosts all food production.', cost: function(n) { return { gold: Math.floor(120 * Math.pow(1.46, n)), food: Math.floor(260 * Math.pow(1.24, n)), crops: Math.floor(60 * Math.pow(1.28, n)) }; }, effect: function(n) { return '+' + (0.55 * n).toFixed(1) + ' food/sec, +' + Math.floor(4 * n) + '% food output'; } },
+      { key: 'hearth', title: 'Mana Hearth', minTier: 4, max: 10, desc: 'A small enchanted fireplace that condenses spare mana.', cost: function(n) { return { gold: Math.floor(7000 * Math.pow(1.48, n)), mana: Math.floor(5500 * Math.pow(1.30, n)) }; }, effect: function(n) { return '+' + (7 * n).toFixed(0) + ' mana/sec, +' + Math.floor(4 * n) + '% mana output'; } },
+      { key: 'study', title: 'Quiet Study', minTier: 5, max: 10, desc: 'Improves focus generation, focus recovery, and meditation quality.', cost: function(n) { return { gold: Math.floor(10500 * Math.pow(1.50, n)), mana: Math.floor(9000 * Math.pow(1.32, n)), focus: Math.floor(30000 * Math.pow(1.20, n)) }; }, effect: function(n) { return '+' + fmt(50 * n) + ' focus/sec, +' + Math.floor(4 * n) + '% focus output'; } },
+      { key: 'desk', title: 'Scholar Desk', minTier: 6, max: 10, desc: 'Turns your home into a place where notes become knowledge.', cost: function(n) { return { gold: Math.floor(170000 * Math.pow(1.50, n)), knowledge: Math.floor(800000 * Math.pow(1.30, n)), focus: Math.floor(45000 * Math.pow(1.22, n)) }; }, effect: function(n) { return '+' + fmt(400 * n) + ' knowledge/sec, +' + Math.floor(5 * n) + '% knowledge output'; } },
+      { key: 'workshop', title: 'Enchanted Workshop', minTier: 6, max: 10, desc: 'Produces coin and boosts the academy economy through magical tools.', cost: function(n) { return { gold: Math.floor(210000 * Math.pow(1.52, n)), knowledge: Math.floor(1100000 * Math.pow(1.31, n)), mana: Math.floor(12000 * Math.pow(1.25, n)) }; }, effect: function(n) { return '+' + fmt(50 * n) + ' coin/sec, +' + Math.floor(5 * n) + '% coin output'; } },
+      { key: 'observatory', title: 'Stargazing Observatory', minTier: 7, max: 10, desc: 'Late-game home wing that produces arcana and strengthens final battle damage.', cost: function(n) { return { gold: Math.floor(430000 * Math.pow(1.55, n)), knowledge: Math.floor(2100000 * Math.pow(1.34, n)), arcana: Math.floor(14000000 * Math.pow(1.23, n)) }; }, effect: function(n) { return '+' + fmt(12000 * n) + ' arcana/sec, +' + fmt(6000000 * n) + ' boss damage'; } }
     ];
 
     const UPGRADES = [
-      { key: 'tools', stage: 'farmer', title: 'Better Farming Tools', desc: 'Increases manual food gain and animated scarecrow output.', max: 10, cost: function(n) { return { food: Math.floor(280 * Math.pow(1.42, n)), gold: Math.floor(800 * Math.pow(1.35, n)) }; } },
+      { key: 'basket', stage: 'peasant', title: 'Woven Basket', desc: 'Increases food cap and makes Forage stronger.', max: 5, visible: function(s) { return totalEarned('materials', s) >= 1 || actionCount('gatherSticks', s) >= 1; }, cost: function(n) { return { food: Math.floor(18 * Math.pow(1.30, n)), materials: Math.floor(10 * Math.pow(1.40, n)) }; } },
+      { key: 'boots', stage: 'peasant', title: 'Sturdy Boots', desc: 'Increases energy cap and improves Odd Labor coin.', max: 5, visible: function(s) { return actionCount('oddLabor', s) >= 1 || (s.resources.gold || 0) > 0; }, cost: function(n) { return { gold: Math.floor(12 * Math.pow(1.45, n)), materials: Math.floor(18 * Math.pow(1.35, n)) }; } },
+      { key: 'handcart', stage: 'peasant', title: 'Wooden Handcart', desc: 'Increases material cap and improves Gather Sticks.', max: 5, visible: function(s) { return actionCount('gatherSticks', s) >= 1 || (s.resources.materials || 0) > 0; }, cost: function(n) { return { materials: Math.floor(38 * Math.pow(1.48, n)), gold: Math.floor(16 * Math.pow(1.42, n)) }; } },
+      { key: 'rustyHoe', stage: 'peasant', title: 'Rusty Hoe', desc: 'Your first real job tool. Owning it and earning 100 total food unlocks Farmer.', max: 1, visible: function(s) { return totalEarned('food', s) >= 40 && totalEarned('materials', s) >= 15 && totalEarned('gold', s) >= 8; }, cost: function() { return { materials: 35, gold: 25, food: 30 }; } },
+      { key: 'seedPouch', stage: 'farmer', title: 'Seed Pouch', desc: 'Increases seed cap and seed-gathering output.', max: 5, cost: function(n) { return { materials: Math.floor(35 * Math.pow(1.42, n)), gold: Math.floor(30 * Math.pow(1.38, n)) }; } },
+      { key: 'tools', stage: 'farmer', title: 'Iron Hoe', desc: 'Increases farmer food and crop gains, and improves Garden Plot output.', max: 10, cost: function(n) { return { food: Math.floor(120 * Math.pow(1.38, n)), gold: Math.floor(50 * Math.pow(1.35, n)), materials: Math.floor(70 * Math.pow(1.34, n)) }; } },
+      { key: 'granary', stage: 'farmer', title: 'Small Granary', desc: 'Greatly increases food and crop storage.', max: 5, cost: function(n) { return { materials: Math.floor(110 * Math.pow(1.45, n)), gold: Math.floor(80 * Math.pow(1.42, n)), food: Math.floor(250 * Math.pow(1.28, n)) }; } },
+      { key: 'compostHeap', stage: 'farmer', title: 'Compost Heap', desc: 'Improves crop production and adds a tiny passive crop trickle.', max: 5, cost: function(n) { return { crops: Math.floor(120 * Math.pow(1.44, n)), materials: Math.floor(80 * Math.pow(1.35, n)) }; } },
       { key: 'spellbook', stage: 'apprentice', title: 'Clean Spellbook', desc: 'Increases mana gains from study and mana familiar output.', max: 10, cost: function(n) { return { mana: Math.floor(4500 * Math.pow(1.44, n)), food: Math.floor(240 * Math.pow(1.28, n)) }; } },
       { key: 'robes', stage: 'mage', title: 'Quiet Robes', desc: 'Increases focus gain and makes meditation more efficient.', max: 10, cost: function(n) { return { focus: Math.floor(38000 * Math.pow(1.47, n)), mana: Math.floor(5200 * Math.pow(1.34, n)) }; } },
-      { key: 'market', stage: 'mage', title: 'Village Market', desc: 'Improves gold earned from selling food and academy tuition.', max: 10, cost: function(n) { return { gold: Math.floor(7500 * Math.pow(1.48, n)), food: Math.floor(700 * Math.pow(1.28, n)) }; } },
+      { key: 'market', stage: 'mage', title: 'Village Market', desc: 'Improves coin earned from selling food and academy tuition.', max: 10, cost: function(n) { return { gold: Math.floor(7500 * Math.pow(1.48, n)), food: Math.floor(700 * Math.pow(1.28, n)) }; } },
       { key: 'academyHall', stage: 'academy', title: 'Academy Hall', desc: 'Expands academy capacity and unlocks the archmage path at level 2.', max: 5, cost: function(n) { return { gold: Math.floor(180000 * Math.pow(1.62, n)), knowledge: Math.floor(650000 * Math.pow(1.48, n)), focus: Math.floor(45000 * Math.pow(1.28, n)) }; } },
       { key: 'ritualTower', stage: 'archmage', title: 'Ritual Tower', desc: 'Increases arcana creation and final boss damage.', max: 8, cost: function(n) { return { arcana: Math.floor(14000000 * Math.pow(1.58, n)), knowledge: Math.floor(1900000 * Math.pow(1.42, n)), gold: Math.floor(250000 * Math.pow(1.36, n)) }; } }
     ];
 
+    const MILESTONES = [
+      { key: 'firstMeal', title: 'First Meal', desc: 'Earn 25 total food.', reward: '+50 food cap.', check: function(s) { return totalEarned('food', s) >= 25; } },
+      { key: 'firstCoin', title: 'First Coin', desc: 'Earn your first village coin.', reward: '+25 coin cap.', check: function(s) { return totalEarned('gold', s) >= 1; } },
+      { key: 'firstMaterials', title: 'First Materials', desc: 'Gather your first useful materials.', reward: '+60 materials cap.', check: function(s) { return totalEarned('materials', s) >= 1; } },
+      { key: 'firstTool', title: 'First Real Tool', desc: 'Buy the Rusty Hoe.', reward: 'Farmer path can unlock.', check: function(s) { return (s.upgrades.rustyHoe || 0) >= 1; } },
+      { key: 'firstShelter', title: 'A Roof of Your Own', desc: 'Move into the Leaky Shack.', reward: '+5 energy cap.', check: function(s) { return (s.housing.tier || 0) >= 1; } },
+      { key: 'firstJob', title: 'First Village Job', desc: 'Begin the Farmer path.', reward: '+5% food and crop output.', check: function(s) { return isUnlocked('farmer', s); } },
+      { key: 'firstSeeds', title: 'Seed Saver', desc: 'Earn 25 total seeds.', reward: '+25 seed cap.', check: function(s) { return totalEarned('seeds', s) >= 25; } },
+      { key: 'firstHarvest', title: 'First Harvest', desc: 'Harvest crops into food once.', reward: '+5% food output.', check: function(s) { return actionCount('harvest', s) >= 1; } },
+      { key: 'firstSurplus', title: 'First Surplus', desc: 'Sell surplus food once.', reward: '+5% coin output.', check: function(s) { return actionCount('sellFood', s) >= 1; } }
+    ];
+
     const RESOURCE_MIGRATION_SCALE = {
       food: 10,
+      materials: 20,
+      gold: 10,
+      seeds: 10,
+      crops: 20,
       mana: 100,
       focus: 1000,
-      gold: 100,
       knowledge: 10000,
       arcana: 1000000,
       energy: 1
@@ -753,26 +894,29 @@
     function initialState() {
       return {
         version: GAME_VERSION,
-        resources: { food: 160, energy: 85, mana: 0, focus: 0, gold: 0, knowledge: 0, arcana: 0 },
-        automation: { scarecrow: 0, familiar: 0, circle: 0, faculty: 0 },
-        upgrades: { tools: 0, spellbook: 0, robes: 0, market: 0, academyHall: 0, ritualTower: 0 },
-        housing: { tier: 0, items: { bed: 0, pantry: 0, garden: 0, hearth: 0, study: 0, desk: 0, workshop: 0, observatory: 0 } },
+        resources: { food: 20, energy: 60, materials: 0, gold: 0, seeds: 0, crops: 0, mana: 0, focus: 0, knowledge: 0, arcana: 0 },
+        totals: { food: 0, energy: 0, materials: 0, gold: 0, seeds: 0, crops: 0, mana: 0, focus: 0, knowledge: 0, arcana: 0 },
+        automation: { gardenPlot: 0, scarecrow: 0, familiar: 0, circle: 0, faculty: 0 },
+        upgrades: { basket: 0, boots: 0, handcart: 0, rustyHoe: 0, seedPouch: 0, tools: 0, granary: 0, compostHeap: 0, spellbook: 0, robes: 0, market: 0, academyHall: 0, ritualTower: 0 },
+        housing: { tier: 0, items: { bed: 0, pantry: 0, shed: 0, garden: 0, hearth: 0, study: 0, desk: 0, workshop: 0, observatory: 0 } },
         jobMastery: {
+          peasant: { level: 1, xp: 0 },
           farmer: { level: 1, xp: 0 },
           apprentice: { level: 1, xp: 0 },
           mage: { level: 1, xp: 0 },
           academy: { level: 1, xp: 0 },
           archmage: { level: 1, xp: 0 }
         },
-        buffs: { prepareFields: 0, enchantField: 0, bindFamiliar: 0, assignStudents: 0, archmageEdict: 0 },
-        unlocked: { farmer: true, apprentice: false, mage: false, academy: false, archmage: false },
-        revealed: { farmer: true, apprentice: false, mage: false, academy: false, archmage: false },
-        currentStage: 'farmer',
-        stats: { level: 1, xp: 0, days: 1, bossHp: BOSS_MAX, bossDefeated: false, totalClicks: 0 },
+        buffs: { villageHustle: 0, prepareFields: 0, enchantField: 0, bindFamiliar: 0, assignStudents: 0, archmageEdict: 0 },
+        unlocked: { peasant: true, farmer: false, apprentice: false, mage: false, academy: false, archmage: false },
+        revealed: { peasant: true, farmer: false, apprentice: false, mage: false, academy: false, archmage: false },
+        milestones: {},
+        currentStage: 'peasant',
+        stats: { level: 1, xp: 0, days: 1, bossHp: BOSS_MAX, bossDefeated: false, totalClicks: 0, actions: {} },
         dev: { timeMult: 1 },
         log: [
-          'Version 2.3 begins: resources and jobs now reveal through progression.',
-          'Reputation has been removed. Use the development commands at the bottom for testing.'
+          'Version 2.4 begins: every character starts as a Peasant.',
+          'Forage, work odd jobs, gather materials, and buy a Rusty Hoe to become a Farmer.'
         ],
         savedAt: Date.now()
       };
@@ -812,6 +956,9 @@
     function stageData(key) { return STAGES.find(function(s) { return s.key === key; }); }
     function activeBuff(key, s) { const target = s || state; return ((target.buffs && target.buffs[key]) || 0) > 0; }
     function buffTime(key, s) { const target = s || state; return Math.ceil((target.buffs && target.buffs[key]) || 0); }
+    function totalEarned(key, s) { const target = s || state; return Math.max((target.totals && target.totals[key]) || 0, (target.resources && target.resources[key]) || 0); }
+    function actionCount(key, s) { const target = s || state; return (target.stats && target.stats.actions && target.stats.actions[key]) || 0; }
+    function milestoneComplete(key, s) { const target = s || state; return !!(target.milestones && target.milestones[key]); }
 
     function escapeHtml(s) {
       return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
@@ -843,8 +990,13 @@
       RESOURCES.forEach(function(r) {
         if (!Number.isFinite(merged.resources[r.key])) merged.resources[r.key] = base.resources[r.key] || 0;
       });
+      merged.totals = Object.assign({}, base.totals, (s && s.totals) || {});
+      RESOURCES.forEach(function(r) {
+        if (!Number.isFinite(merged.totals[r.key])) merged.totals[r.key] = Math.max(0, merged.resources[r.key] || 0);
+      });
       merged.automation = Object.assign({}, base.automation, (s && s.automation) || {});
       merged.upgrades = Object.assign({}, base.upgrades, (s && s.upgrades) || {});
+      if ((s && s.upgrades && s.upgrades.tools) && !merged.upgrades.tools) merged.upgrades.tools = s.upgrades.tools;
       merged.housing = Object.assign({}, base.housing, (s && s.housing) || {});
       merged.housing.items = Object.assign({}, base.housing.items, (s && s.housing && s.housing.items) || {});
       merged.jobMastery = Object.assign({}, base.jobMastery, (s && s.jobMastery) || {});
@@ -853,15 +1005,20 @@
       });
       merged.buffs = Object.assign({}, base.buffs, (s && s.buffs) || {});
       merged.unlocked = Object.assign({}, base.unlocked, (s && s.unlocked) || {});
+      merged.unlocked.peasant = true;
       merged.revealed = Object.assign({}, base.revealed, (s && s.revealed) || {});
+      merged.revealed.peasant = true;
       Object.keys(merged.unlocked).forEach(function(k) { if (merged.unlocked[k]) merged.revealed[k] = true; });
+      merged.milestones = Object.assign({}, base.milestones, (s && s.milestones) || {});
       merged.stats = Object.assign({}, base.stats, (s && s.stats) || {});
+      merged.stats.actions = Object.assign({}, base.stats.actions, (s && s.stats && s.stats.actions) || {});
       if (!Number.isFinite(merged.stats.bossHp)) merged.stats.bossHp = BOSS_MAX;
       merged.dev = Object.assign({}, base.dev, (s && s.dev) || {});
       if (![1, 10, 100].includes(Number(merged.dev.timeMult))) merged.dev.timeMult = 1;
       if (!Array.isArray(merged.log)) merged.log = base.log.slice();
       merged.log = merged.log.slice(0, 8);
-      if (!stageData(merged.currentStage)) merged.currentStage = 'farmer';
+      if (!stageData(merged.currentStage)) merged.currentStage = 'peasant';
+      if (!isUnlocked(merged.currentStage, merged)) merged.currentStage = 'peasant';
       merged.version = GAME_VERSION;
       return merged;
     }
@@ -906,11 +1063,13 @@
 
     function isStageKnown(stageKey, s) {
       const target = s || state;
-      if (stageKey === 'farmer') return true;
+      if (stageKey === 'peasant') return true;
       if (target.unlocked && target.unlocked[stageKey]) return true;
       if (target.revealed && target.revealed[stageKey]) return true;
       const data = stageData(stageKey);
-      return !!(data && data.unlocked(target));
+      if (!data) return false;
+      if (typeof data.visible === 'function' && data.visible(target)) return true;
+      return !!(data.unlocked && data.unlocked(target));
     }
 
     function isUnlocked(stageKey, s) {
@@ -918,12 +1077,21 @@
       return !!(target.unlocked && target.unlocked[stageKey]);
     }
 
+    function canUnlockStage(stageKey, s) {
+      const target = s || state;
+      const data = stageData(stageKey);
+      return !!(data && data.unlocked && data.unlocked(target));
+    }
+
     function resourceVisible(key, s) {
       const target = s || state;
       if (key === 'food' || key === 'energy') return true;
-      if ((target.resources[key] || 0) > 0) return true;
-      if (key === 'mana' || key === 'focus') return isStageKnown('apprentice', target);
-      if (key === 'gold') return isStageKnown('mage', target);
+      if ((target.resources[key] || 0) > 0 || totalEarned(key, target) > 0) return true;
+      if (key === 'materials') return actionCount('gatherSticks', target) > 0 || actionCount('oddLabor', target) > 0;
+      if (key === 'gold') return actionCount('oddLabor', target) > 0 || actionCount('mendClothes', target) > 0;
+      if (key === 'seeds' || key === 'crops') return isStageKnown('farmer', target);
+      if (key === 'mana') return isStageKnown('apprentice', target);
+      if (key === 'focus') return isStageKnown('mage', target);
       if (key === 'knowledge') return isStageKnown('academy', target);
       if (key === 'arcana') return isStageKnown('archmage', target);
       return true;
@@ -937,7 +1105,7 @@
       if (state.stats.bossDefeated) return 'The Void King is defeated. You are the Archmage of the realm.';
       const unknown = firstUnknownStage();
       if (!unknown) return currentStage().nextHint;
-      if (unknown.key === 'apprentice') return STAGES[0].nextHint;
+      if (unknown.key === 'farmer') return STAGES[0].nextHint;
       const previous = STAGES[Math.max(0, stageIndex(unknown.key) - 1)];
       return previous.nextHint;
     }
@@ -965,6 +1133,7 @@
       const tier = houseTierData(target);
       const bed = houseItemLevel('bed', target);
       const pantry = houseItemLevel('pantry', target);
+      const shed = houseItemLevel('shed', target);
       const garden = houseItemLevel('garden', target);
       const hearth = houseItemLevel('hearth', target);
       const study = houseItemLevel('study', target);
@@ -972,17 +1141,21 @@
       const workshop = houseItemLevel('workshop', target);
       const observatory = houseItemLevel('observatory', target);
       return {
-        energyRegen: tier.restRate + bed * 0.09,
-        restEnergy: tier.restAction + bed * 5,
+        energyRegen: tier.restRate + bed * 0.08,
+        restEnergy: tier.restAction + bed * 4,
         restFocus: 40 + study * 2000 + Math.floor(bed / 2) * 10,
-        foodGen: garden * 0.8 + pantry * 0.25,
+        materialsGen: shed * 0.12,
+        foodGen: garden * 0.55 + pantry * 0.10,
+        cropGen: (target.upgrades.compostHeap || 0) * 0.06,
         manaGen: hearth * 7,
         focusGen: study * 50,
         knowledgeGen: desk * 400,
         goldGen: workshop * 50,
         arcanaGen: observatory * 12000,
         foodDrainMult: Math.max(0.45, 1 - pantry * 0.03),
-        foodMult: 1 + garden * 0.04 + pantry * 0.02,
+        foodMult: 1 + garden * 0.04 + pantry * 0.015,
+        materialsMult: 1 + shed * 0.04,
+        cropMult: 1 + garden * 0.04 + (target.upgrades.compostHeap || 0) * 0.08,
         manaMult: 1 + hearth * 0.04,
         focusMult: 1 + study * 0.04,
         goldMult: 1 + workshop * 0.05,
@@ -996,7 +1169,7 @@
       const target = s || state;
       const tier = houseTierData(target);
       if (tier.stage === stageKey) return 0.25;
-      if ((target.housing && target.housing.tier || 0) >= 5 && stageKey === 'archmage') return 0.35;
+      if ((target.housing && target.housing.tier || 0) >= 7 && stageKey === 'archmage') return 0.35;
       return 0;
     }
 
@@ -1005,14 +1178,18 @@
       const base = (RESOURCES.find(function(r) { return r.key === key; }) || { cap: 1000 }).cap;
       const house = houseTierData(target);
       const pantry = houseItemLevel('pantry', target);
+      const shed = houseItemLevel('shed', target);
       let cap = base;
-      if (key === 'food') cap += (target.upgrades.tools || 0) * 900 + pantry * 800 + (house.foodCap || 0);
+      if (key === 'food') cap += (target.upgrades.basket || 0) * 140 + (target.upgrades.granary || 0) * 650 + pantry * 90 + (house.foodCap || 0) + (milestoneComplete('firstMeal', target) ? 50 : 0);
+      if (key === 'energy') cap += (house.energyCap || 0) + houseItemLevel('bed', target) * 2 + (target.upgrades.boots || 0) * 5 + (milestoneComplete('firstShelter', target) ? 5 : 0);
+      if (key === 'materials') cap += (target.upgrades.handcart || 0) * 120 + shed * 120 + (house.materialsCap || 0) + (milestoneComplete('firstMaterials', target) ? 60 : 0);
+      if (key === 'gold') cap += (target.upgrades.market || 0) * 250000 + (house.goldCap || 0) + (milestoneComplete('firstCoin', target) ? 25 : 0);
+      if (key === 'seeds') cap += (target.upgrades.seedPouch || 0) * 45 + (house.seedsCap || 0) + (milestoneComplete('firstSeeds', target) ? 25 : 0);
+      if (key === 'crops') cap += (target.upgrades.granary || 0) * 700 + (target.upgrades.compostHeap || 0) * 280 + (house.cropsCap || 0);
       if (key === 'mana') cap += (target.upgrades.spellbook || 0) * 9000 + (house.manaCap || 0);
       if (key === 'focus') cap += (target.upgrades.robes || 0) * 60000 + (target.upgrades.academyHall || 0) * 35000 + (house.focusCap || 0);
-      if (key === 'gold') cap += (target.upgrades.market || 0) * 250000 + (house.goldCap || 0);
       if (key === 'knowledge') cap += (target.upgrades.academyHall || 0) * 1600000 + (house.knowledgeCap || 0);
       if (key === 'arcana') cap += (target.upgrades.ritualTower || 0) * 60000000 + (house.arcanaCap || 0);
-      if (key === 'energy') cap += (house.energyCap || 0) + houseItemLevel('bed', target) * 2;
       if (target.currentStage === 'mage' && (key === 'mana' || key === 'focus')) cap *= 1.10;
       return cap;
     }
@@ -1021,7 +1198,13 @@
       if (key === 'reputation') return;
       const target = s || state;
       if (!(key in target.resources)) target.resources[key] = 0;
-      target.resources[key] = clamp((target.resources[key] || 0) + amount, 0, capFor(key, target));
+      const before = target.resources[key] || 0;
+      target.resources[key] = clamp(before + amount, 0, capFor(key, target));
+      const gained = Math.max(0, target.resources[key] - before);
+      if (gained > 0 && target === state) {
+        if (!target.totals) target.totals = {};
+        target.totals[key] = (target.totals[key] || 0) + gained;
+      }
     }
 
     function canAfford(cost, s) {
@@ -1048,7 +1231,7 @@
 
     function masteryNeed(stageKey, s) {
       const lvl = masteryLevel(stageKey, s || state);
-      return 150 + (lvl - 1) * 90;
+      return 120 + (lvl - 1) * 80;
     }
 
     function gainMastery(stageKey, amount, skipLog) {
@@ -1080,14 +1263,21 @@
       const target = s || state;
       const h = housingBonuses(target);
       let mult = 1;
-      if (resource === 'food') mult += (target.upgrades.tools || 0) * 0.12 + h.foodMult - 1;
+      if (resource === 'food') mult += (target.upgrades.basket || 0) * 0.04 + (target.upgrades.tools || 0) * 0.12 + (target.upgrades.granary || 0) * 0.03 + h.foodMult - 1;
+      if (resource === 'materials') mult += (target.upgrades.handcart || 0) * 0.12 + h.materialsMult - 1;
+      if (resource === 'gold') mult += (target.upgrades.boots || 0) * 0.04 + (target.upgrades.market || 0) * 0.15 + h.goldMult - 1;
+      if (resource === 'seeds') mult += (target.upgrades.seedPouch || 0) * 0.12;
+      if (resource === 'crops') mult += (target.upgrades.tools || 0) * 0.10 + h.cropMult - 1;
       if (resource === 'mana') mult += (target.upgrades.spellbook || 0) * 0.13 + h.manaMult - 1;
       if (resource === 'focus') mult += (target.upgrades.robes || 0) * 0.14 + h.focusMult - 1;
-      if (resource === 'gold') mult += (target.upgrades.market || 0) * 0.15 + h.goldMult - 1;
       if (resource === 'knowledge') mult += (target.upgrades.academyHall || 0) * 0.16 + h.knowledgeMult - 1;
       if (resource === 'arcana') mult += (target.upgrades.ritualTower || 0) * 0.18 + h.arcanaMult - 1;
+      if (milestoneComplete('firstJob', target) && (resource === 'food' || resource === 'crops')) mult *= 1.05;
+      if (milestoneComplete('firstHarvest', target) && resource === 'food') mult *= 1.05;
+      if (milestoneComplete('firstSurplus', target) && resource === 'gold') mult *= 1.05;
       if (activeBuff('archmageEdict', target)) mult *= 1.75;
-      if (activeBuff('prepareFields', target) && resource === 'food') mult *= 1.75;
+      if (activeBuff('villageHustle', target) && (resource === 'materials' || resource === 'gold')) mult *= 1.65;
+      if (activeBuff('prepareFields', target) && ['food', 'seeds', 'crops'].includes(resource)) mult *= 1.75;
       if (activeBuff('enchantField', target) && resource === 'food') mult *= 1.55;
       if (activeBuff('bindFamiliar', target) && resource === 'mana') mult *= 1.55;
       if (activeBuff('assignStudents', target) && ['food', 'mana', 'focus'].includes(resource)) mult *= 1.45;
@@ -1098,6 +1288,7 @@
       let mult = 1 + (masteryLevel(stageKey) - 1) * 0.03 + houseStageBonus(stageKey);
       if (state.currentStage === stageKey) mult *= 2;
       if (activeBuff('archmageEdict')) mult *= 1.7;
+      if (stageKey === 'peasant' && activeBuff('villageHustle')) mult *= 1.45;
       if (stageKey === 'farmer' && activeBuff('prepareFields')) mult *= 1.75;
       if (stageKey === 'apprentice' && activeBuff('enchantField')) mult *= 1.35;
       if (stageKey === 'mage' && activeBuff('bindFamiliar')) mult *= 1.35;
@@ -1108,6 +1299,11 @@
     function automationOutputMultiplier(autoKey, s) {
       const target = s || state;
       let mult = 1;
+      if (autoKey === 'gardenPlot') {
+        if (target.currentStage === 'farmer') mult *= 1.25;
+        if (activeBuff('prepareFields', target)) mult *= 1.75;
+        mult *= 1 + (target.upgrades.tools || 0) * 0.06 + (target.upgrades.compostHeap || 0) * 0.07;
+      }
       if (autoKey === 'scarecrow') {
         if (target.currentStage === 'farmer' || target.currentStage === 'apprentice') mult *= 1.25;
         if (activeBuff('prepareFields', target) || activeBuff('enchantField', target)) mult *= 1.75;
@@ -1128,22 +1324,25 @@
     }
 
     function estimateRates() {
-      const rates = { food: 0, mana: 0, focus: 0, gold: 0, knowledge: 0, arcana: 0, energy: 0 };
+      const rates = { food: 0, energy: 0, materials: 0, gold: 0, seeds: 0, crops: 0, mana: 0, focus: 0, knowledge: 0, arcana: 0 };
       const h = housingBonuses();
       rates.energy += h.energyRegen;
-      if (state.currentStage === 'farmer') rates.energy += 0.12;
+      if (state.currentStage === 'peasant') rates.energy += 0.06;
+      if (state.currentStage === 'farmer') rates.energy += 0.10;
+      rates.materials += h.materialsGen * productionMultiplier('materials');
       rates.food += h.foodGen * productionMultiplier('food');
+      rates.crops += h.cropGen * productionMultiplier('crops');
       rates.mana += h.manaGen * productionMultiplier('mana');
       rates.focus += h.focusGen * productionMultiplier('focus');
       rates.knowledge += h.knowledgeGen * productionMultiplier('knowledge');
       rates.gold += h.goldGen * productionMultiplier('gold');
       rates.arcana += h.arcanaGen * productionMultiplier('arcana');
       AUTOMATION.forEach(function(auto) {
-        if (!isStageKnown(auto.stage)) return;
+        if (!isUnlocked(auto.stage)) return;
         rates[auto.automates] += auto.rate(state);
         if (auto.goldRate) rates.gold += auto.goldRate(state);
       });
-      const drain = 0.035 * h.foodDrainMult * (state.currentStage === 'farmer' ? 0.80 : 1);
+      const drain = 0.018 * h.foodDrainMult * (state.currentStage === 'farmer' ? 0.80 : 1);
       if ((state.resources.food || 0) > 0) rates.food -= drain;
       return rates;
     }
@@ -1188,6 +1387,10 @@
         showToastMessage('Unlock that job first.');
         return;
       }
+      if (action.visible && !action.visible(state)) {
+        showToastMessage('This work has not been revealed yet.');
+        return;
+      }
       const cost = cleanCost(action.cost());
       if (!spend(cost)) {
         showToastMessage('Need more resources.');
@@ -1197,6 +1400,8 @@
       Object.entries(effects).forEach(function(entry) {
         if (entry[1] > 0) addResource(entry[0], entry[1]);
       });
+      if (!state.stats.actions) state.stats.actions = {};
+      state.stats.actions[key] = (state.stats.actions[key] || 0) + 1;
       if (action.stage) gainMastery(action.stage, action.xp || 8);
       gainPlayerXp(action.xp || 5);
       state.stats.totalClicks += 1;
@@ -1206,11 +1411,18 @@
     }
 
     function checkMilestones() {
-      if (!state.revealed) state.revealed = { farmer: true, apprentice: false, mage: false, academy: false, archmage: false };
+      if (!state.revealed) state.revealed = { peasant: true };
       STAGES.forEach(function(stage) {
-        if (!state.revealed[stage.key] && stage.unlocked(state) && stage.key !== 'farmer') {
+        if (!state.revealed[stage.key] && isStageKnown(stage.key) && stage.key !== 'peasant') {
           state.revealed[stage.key] = true;
-          pushLog(stage.title + ' path revealed. Open Career Jobs to begin it.', true);
+          pushLog(stage.title + ' path discovered. Open Career Jobs to see the requirements.', true);
+        }
+      });
+      if (!state.milestones) state.milestones = {};
+      MILESTONES.forEach(function(m) {
+        if (!state.milestones[m.key] && m.check(state)) {
+          state.milestones[m.key] = true;
+          pushLog('Milestone: ' + m.title + '. ' + m.reward, true);
         }
       });
     }
@@ -1219,7 +1431,12 @@
       const stage = stageData(stageKey);
       if (!stage || !isStageKnown(stageKey)) return;
       if (!state.unlocked[stageKey]) {
+        if (!canUnlockStage(stageKey)) {
+          showToastMessage(stage.unlockDesc || 'Requirements not met yet.');
+          return;
+        }
         state.unlocked[stageKey] = true;
+        state.revealed[stageKey] = true;
         pushLog('New job unlocked: ' + stage.title + '.', true);
       }
       state.currentStage = stageKey;
@@ -1229,7 +1446,7 @@
 
     function buyAutomation(key) {
       const auto = AUTOMATION.find(function(a) { return a.key === key; });
-      if (!auto || !isStageKnown(auto.stage)) return;
+      if (!auto || !isUnlocked(auto.stage)) return;
       const n = state.automation[key] || 0;
       const cost = cleanCost(auto.cost(n));
       if (!spend(cost)) {
@@ -1246,7 +1463,8 @@
 
     function buyUpgrade(key) {
       const up = UPGRADES.find(function(u) { return u.key === key; });
-      if (!up || !isStageKnown(up.stage)) return;
+      if (!up || !isUnlocked(up.stage)) return;
+      if (up.visible && !up.visible(state)) return;
       const n = state.upgrades[key] || 0;
       if (n >= up.max) return;
       const cost = cleanCost(up.cost(n));
@@ -1266,8 +1484,8 @@
       const nextIndex = (state.housing.tier || 0) + 1;
       const next = HOUSE_TIERS[nextIndex];
       if (!next) return;
-      if (!isStageKnown(next.stage)) {
-        showToastMessage('A larger home has not been revealed yet.');
+      if (!isUnlocked(next.stage)) {
+        showToastMessage('A larger home has not been unlocked yet.');
         return;
       }
       if (!spend(next.cost || {})) {
@@ -1276,6 +1494,7 @@
       }
       state.housing.tier = nextIndex;
       pushLog('Moved into ' + next.title + '.', true);
+      checkMilestones();
       render();
       saveGame(false);
     }
@@ -1357,8 +1576,9 @@
 
     function devAddResources() {
       RESOURCES.forEach(function(r) {
-        if (r.key === 'energy') state.resources.energy = capFor('energy');
-        else state.resources[r.key] = capFor(r.key);
+        state.resources[r.key] = capFor(r.key);
+        if (!state.totals) state.totals = {};
+        state.totals[r.key] = Math.max(state.totals[r.key] || 0, state.resources[r.key]);
       });
       pushLog('Dev command: resources filled to current caps.', true);
       checkMilestones();
@@ -1385,7 +1605,7 @@
         const cap = capFor(r.key);
         const rate = lastRates[r.key] || 0;
         const rateText = rate ? (rate > 0 ? '+' : '') + fmtRate(rate) + '/sec' : r.note;
-        const colorClass = r.key === 'energy' || r.key === 'food' ? ' green' : r.key === 'gold' ? ' gold' : '';
+        const colorClass = r.key === 'energy' || r.key === 'food' || r.key === 'crops' ? ' green' : r.key === 'gold' ? ' gold' : r.key === 'arcana' ? ' red' : '';
         return '<div class="res-card">' +
           '<div class="label">' + escapeHtml(r.label) + '</div>' +
           '<div class="value">' + fmt(value) + '</div>' +
@@ -1434,8 +1654,9 @@
     function renderActions() {
       const host = document.getElementById('actions');
       const visible = ACTIONS.filter(function(action) {
-        if (!action.stage) return true;
-        return isUnlocked(action.stage);
+        if (action.stage && !isUnlocked(action.stage)) return false;
+        if (action.visible && !action.visible(state)) return false;
+        return true;
       });
       host.innerHTML = visible.map(function(action) {
         const cost = cleanCost(action.cost());
@@ -1459,12 +1680,13 @@
       host.innerHTML = visible.map(function(stage) {
         const unlocked = isUnlocked(stage.key);
         const selected = state.currentStage === stage.key;
+        const canUnlock = canUnlockStage(stage.key);
         const meta = JOB_META[stage.key];
-        const action = unlocked ? (selected ? 'Selected' : 'Select job') : 'Begin path';
+        const action = unlocked ? (selected ? 'Selected' : 'Select job') : (canUnlock ? 'Begin path' : 'Requirements');
         return '<button class="card-button" type="button" data-stage="' + stage.key + '">' +
-          '<div class="btn-title"><span>' + escapeHtml(stage.title) + '</span><span class="chip ' + (unlocked ? 'good' : 'gold') + '">' + escapeHtml(action) + '</span></div>' +
+          '<div class="btn-title"><span>' + escapeHtml(stage.title) + '</span><span class="chip ' + (unlocked ? 'good' : canUnlock ? 'gold' : '') + '">' + escapeHtml(action) + '</span></div>' +
           '<div class="btn-desc">' + escapeHtml(stage.desc) + '</div>' +
-          '<div class="status"><span class="chip">Focus: ' + escapeHtml(stage.resource) + '</span><span class="chip">Mastery ' + masteryLevel(stage.key) + '</span><span class="chip">Boosts ' + escapeHtml(meta.passiveTarget) + '</span></div>' +
+          '<div class="status"><span class="chip">Focus: ' + escapeHtml(stage.resource) + '</span><span class="chip">Mastery ' + masteryLevel(stage.key) + '</span><span class="chip">' + escapeHtml(stage.unlockDesc) + '</span><span class="chip">Boosts ' + escapeHtml(meta.passiveTarget) + '</span></div>' +
         '</button>';
       }).join('');
       host.querySelectorAll('[data-stage]').forEach(function(btn) { btn.addEventListener('click', function() { unlockOrSelectStage(btn.dataset.stage); }); });
@@ -1472,9 +1694,9 @@
 
     function renderAutomation() {
       const host = document.getElementById('automation');
-      const visible = AUTOMATION.filter(function(auto) { return isStageKnown(auto.stage); });
+      const visible = AUTOMATION.filter(function(auto) { return isUnlocked(auto.stage); });
       if (!visible.length) {
-        host.innerHTML = '<div class="btn-desc">No spells revealed yet. Reach the apprentice path to discover your first automation.</div>';
+        host.innerHTML = '<div class="btn-desc">No automation yet. Unlock Farmer to build the first mundane production link: Garden Plot.</div>';
         return;
       }
       host.innerHTML = visible.map(function(auto) {
@@ -1495,19 +1717,27 @@
     function renderHousing() {
       const tier = houseTierData();
       const h = housingBonuses();
+      const chipsList = [
+        '<span class="chip">+' + fmtRate(h.energyRegen) + ' energy/sec</span>',
+        resourceVisible('materials') ? '<span class="chip">+' + fmtRate(h.materialsGen) + ' materials/sec</span>' : '',
+        resourceVisible('food') ? '<span class="chip">+' + fmtRate(h.foodGen) + ' food/sec</span>' : '',
+        resourceVisible('crops') ? '<span class="chip">+' + fmtRate(h.cropGen) + ' crops/sec</span>' : '',
+        resourceVisible('mana') ? '<span class="chip">+' + fmtRate(h.manaGen) + ' mana/sec</span>' : '',
+        resourceVisible('focus') ? '<span class="chip">+' + fmtRate(h.focusGen) + ' focus/sec</span>' : ''
+      ].filter(Boolean).join('');
       document.getElementById('housingSummary').innerHTML =
         '<div class="split-row"><strong>' + escapeHtml(tier.title) + '</strong><span class="chip">Tier ' + (state.housing.tier || 0) + '</span></div>' +
         '<div style="margin-top:6px">' + escapeHtml(tier.desc) + '</div>' +
-        '<div class="status"><span class="chip">+' + fmtRate(h.energyRegen) + ' energy/sec</span><span class="chip">+' + fmtRate(h.foodGen) + ' food/sec</span><span class="chip">+' + fmtRate(h.manaGen) + ' mana/sec</span><span class="chip">+' + fmtRate(h.focusGen) + ' focus/sec</span></div>';
+        '<div class="status">' + chipsList + '</div>';
 
       const houseButton = document.getElementById('houseButton');
       const next = HOUSE_TIERS[(state.housing.tier || 0) + 1];
       if (!next) {
         houseButton.disabled = true;
         houseButton.innerHTML = '<div class="btn-title"><span>Best home owned</span><span class="chip good">Max</span></div><div class="btn-desc">No larger home exists yet.</div>';
-      } else if (!isStageKnown(next.stage)) {
+      } else if (!isUnlocked(next.stage)) {
         houseButton.disabled = true;
-        houseButton.innerHTML = '<div class="btn-title"><span>Next home not revealed</span><span class="chip">Progress further</span></div><div class="btn-desc">A larger home will appear when your career reaches it.</div>';
+        houseButton.innerHTML = '<div class="btn-title"><span>Next home not unlocked</span><span class="chip">Progress further</span></div><div class="btn-desc">A larger home will appear when your career reaches it.</div>';
       } else {
         const cost = cleanCost(next.cost || {});
         houseButton.disabled = !canAfford(cost);
@@ -1533,7 +1763,11 @@
 
     function renderUpgrades() {
       const host = document.getElementById('upgrades');
-      const visible = UPGRADES.filter(function(up) { return isStageKnown(up.stage); });
+      const visible = UPGRADES.filter(function(up) {
+        if (!isUnlocked(up.stage)) return false;
+        if (up.visible && !up.visible(state)) return false;
+        return true;
+      });
       host.innerHTML = visible.map(function(up) {
         const n = state.upgrades[up.key] || 0;
         const cost = cleanCost(up.cost(n));
@@ -1549,14 +1783,27 @@
 
     function renderChain() {
       const host = document.getElementById('chainMap');
-      const visible = AUTOMATION.filter(function(auto) { return isStageKnown(auto.stage); });
-      if (!visible.length) {
-        host.innerHTML = '<div class="btn-desc">The automation chain is still hidden. Reach apprentice magic to reveal the first link.</div>';
-        return;
-      }
-      host.innerHTML = visible.map(function(auto) {
-        const n = state.automation[auto.key] || 0;
-        return '<div class="chain-item"><div><div class="name">' + escapeHtml(auto.title) + '</div><div class="sub">' + escapeHtml(auto.stage) + ' job automates ' + labelFor(auto.automates) + '</div></div><span class="chip good">Level ' + n + '</span></div>';
+      const rows = [];
+      rows.push({ name: 'Forage', sub: 'Food fuels every early action.', badge: actionCount('forage') + 'x', visible: true });
+      rows.push({ name: 'Odd Labor', sub: 'Food and energy become coin.', badge: actionCount('oddLabor') + 'x', visible: actionCount('oddLabor') > 0 || totalEarned('food') >= 20 });
+      rows.push({ name: 'Gather Sticks', sub: 'Energy becomes materials for tools and shelter.', badge: actionCount('gatherSticks') + 'x', visible: actionCount('gatherSticks') > 0 || actionCount('oddLabor') > 0 });
+      rows.push({ name: 'Rusty Hoe', sub: 'First tool that unlocks Farmer once you have earned 100 total food.', badge: (state.upgrades.rustyHoe || 0) ? 'Owned' : 'Tool', visible: (state.upgrades.rustyHoe || 0) || totalEarned('materials') >= 15 });
+      rows.push({ name: 'Farmer', sub: 'Seeds and crops become reliable surplus.', badge: isUnlocked('farmer') ? 'Unlocked' : 'Discovered', visible: isStageKnown('farmer') });
+      AUTOMATION.forEach(function(auto) {
+        rows.push({ name: auto.title, sub: auto.stage + ' job automates ' + labelFor(auto.automates), badge: 'Level ' + ((state.automation && state.automation[auto.key]) || 0), visible: isUnlocked(auto.stage) });
+      });
+      const visibleRows = rows.filter(function(r) { return r.visible; });
+      host.innerHTML = visibleRows.map(function(row) {
+        return '<div class="chain-item"><div><div class="name">' + escapeHtml(row.name) + '</div><div class="sub">' + escapeHtml(row.sub) + '</div></div><span class="chip good">' + escapeHtml(row.badge) + '</span></div>';
+      }).join('');
+    }
+
+    function renderMilestones() {
+      const host = document.getElementById('milestones');
+      if (!host) return;
+      host.innerHTML = MILESTONES.map(function(m) {
+        const done = milestoneComplete(m.key);
+        return '<div class="chain-item"><div><div class="name">' + escapeHtml(m.title) + '</div><div class="sub">' + escapeHtml(m.desc) + ' Reward: ' + escapeHtml(m.reward) + '</div></div><span class="chip ' + (done ? 'good' : '') + '">' + (done ? 'Done' : 'Open') + '</span></div>';
       }).join('');
     }
 
@@ -1592,6 +1839,7 @@
       renderHousing();
       renderUpgrades();
       renderChain();
+      renderMilestones();
       renderBattle();
       renderLog();
       renderDevTools();
